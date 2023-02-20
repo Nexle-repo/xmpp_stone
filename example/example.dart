@@ -17,8 +17,15 @@ void main(List<String> arguments) {
   var password = 'Aa123456@';
   var jid = Jid.fromFullJid(userAtDomain);
   var account = XmppAccountSettings(
-      userAtDomain, jid.local, jid.domain, password, 18897,
-      resource: 'xmppstone');
+    userAtDomain,
+    jid.local,
+    jid.domain,
+    password,
+    18899,
+    resource: 'xmppstone',
+    wsPath: 'xmpp-websocket',
+    wsProtocols: ['xmpp'],
+  );
   var connection = Connection(account);
   connection.connect();
   MessagesListener messagesListener = ExampleMessagesListener();

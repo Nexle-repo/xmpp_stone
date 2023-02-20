@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+<<<<<<< Updated upstream
+    <list default="true" id="b75ec84c-15fb-402b-bc6e-1572d298fda4" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/lib/src/connection/XmppWebsocketApi.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/src/connection/XmppWebsocketHtml.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/src/connection/XmppWebsocketIo.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/Connection.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/Connection.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/account/XmppAccountSettings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/account/XmppAccountSettings.dart" afterDir="false" />
+    </list>
+=======
+    <list default="true" id="c2213007-dfc8-4699-a775-71198c88bcdb" name="Changes" comment="" />
+>>>>>>> Stashed changes
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+<<<<<<< Updated upstream
+  <component name="ProjectId" id="2LzeL5fjKchzRmWmP0hhSAC8gam" />
+=======
+  <component name="ProjectId" id="2LzvYx7IJ9BrALdU5yKiNvdU4cf" />
+>>>>>>> Stashed changes
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "cidr.known.project.marker": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "show.migrate.to.gradle.popup": "false"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+<<<<<<< Updated upstream
+      <changelist id="b75ec84c-15fb-402b-bc6e-1572d298fda4" name="Changes" comment="" />
+      <created>1676878278460</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1676878278460</updated>
+    </task>
+    <servers />
+  </component>
+=======
+      <changelist id="c2213007-dfc8-4699-a775-71198c88bcdb" name="Changes" comment="" />
+      <created>1676886776822</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1676886776822</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+>>>>>>> Stashed changes
+</project>

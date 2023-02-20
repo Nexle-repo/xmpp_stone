@@ -43,10 +43,8 @@ class ConnectionNegotiatorManager {
 
   void negotiateFeatureList(xml.XmlElement element) {
     Log.d(TAG, 'Negotiating features');
-    var nonzas = element.descendants
-        .whereType<xml.XmlElement>()
-        .map((element) => Nonza.parse(element))
-        .toList();
+    var nonzas =
+        element.childElements.map((element) => Nonza.parse(element)).toList();
     supportedNegotiatorList.forEach((negotiator) {
       var matchingNonzas = negotiator.match(nonzas);
       if (matchingNonzas != null && matchingNonzas.isNotEmpty) {
@@ -98,7 +96,9 @@ class ConnectionNegotiatorManager {
   void _initSupportedNegotiatorList() {
     var streamManagement = StreamManagementModule.getInstance(_connection);
     streamManagement.reset();
-    supportedNegotiatorList.add(StartTlsNegotiator(_connection)); //priority 1
+    if (_connection.isTlsRequired()) {
+      supportedNegotiatorList.add(StartTlsNegotiator(_connection)); //priority 1
+    }
     supportedNegotiatorList
         .add(SaslAuthenticationFeature(_connection, _accountSettings.password));
     if (streamManagement.isResumeAvailable()) {
