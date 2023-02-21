@@ -1,25 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:collection/collection.dart' show IterableExtension;
-import 'package:synchronized/synchronized.dart';
 import 'package:universal_io/io.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:xml/xml.dart' as xml;
+import 'package:synchronized/synchronized.dart';
 import 'package:xmpp_stone/src/ReconnectionManager.dart';
-import 'package:xmpp_stone/src/account/XmppAccountSettings.dart';
-import 'package:xmpp_stone/src/data/Jid.dart';
+
 import 'package:xmpp_stone/src/elements/nonzas/Nonza.dart';
-import 'package:xmpp_stone/src/elements/stanzas/AbstractStanza.dart';
-import 'package:xmpp_stone/src/extensions/ping/PingManager.dart';
 import 'package:xmpp_stone/src/features/ConnectionNegotatiorManager.dart';
 import 'package:xmpp_stone/src/features/servicediscovery/CarbonsNegotiator.dart';
 import 'package:xmpp_stone/src/features/servicediscovery/MAMNegotiator.dart';
 import 'package:xmpp_stone/src/features/servicediscovery/ServiceDiscoveryNegotiator.dart';
 import 'package:xmpp_stone/src/features/streammanagement/StreamManagmentModule.dart';
 import 'package:xmpp_stone/src/parser/StanzaParser.dart';
-import 'package:xmpp_stone/src/presence/PresenceManager.dart';
-import 'package:xmpp_stone/src/roster/RosterManager.dart';
 import 'package:xmpp_stone/xmpp_stone.dart';
+
+import  'connection/XmppWebsocketHtml.dart' as xmppSocket;
 
 import 'logger/Log.dart';
 
@@ -76,7 +72,7 @@ class Connection {
   }
 
   static void removeInstance(XmppAccountSettings account) {
-    instances.remove(account);
+    instances.removeWhere((key, value) => key == account.fullJid.userAtDomain);
   }
 
   String? errorMessage;
@@ -126,10 +122,10 @@ class Connection {
     account.resource = jid.resource;
   }
 
-  Socket? _socket;
+  xmppSocket.XmppWebSocket? _socket;
 
   // for testing purpose
-  set socket(Socket value) {
+  set socket(xmppSocket.XmppWebSocket? value) {
     _socket = value;
   }
 
@@ -147,13 +143,7 @@ class Connection {
   }
 
   void _openStream() {
-    var streamOpeningString = """
-<?xml version='1.0'?>
-<stream:stream xmlns='jabber:client' version='1.0' xmlns:stream='http://etherx.jabber.org/streams'
-to='${fullJid.domain}'
-xml:lang='en'
->
-""";
+    var streamOpeningString = _socket?.getStreamOpeningElement(fullJid.domain);
     write(streamOpeningString);
   }
 
@@ -204,24 +194,29 @@ xml:lang='en'
     connectionNegotatiorManager.init();
     setState(XmppConnectionState.SocketOpening);
     try {
-      return await Socket.connect(account.host ?? account.domain, account.port)
-          .then((Socket socket) {
+      var socket = xmppSocket.createSocket();
+
+      return await socket
+          .connect(
+        account.host ?? account.domain,
+        account.port,
+        wsProtocols: account.wsProtocols,
+        wsPath: account.wsPath,
+        map: prepareStreamResponse,
+      )
+          .then((socket) {
         // if not closed in meantime
         if (_state != XmppConnectionState.Closed) {
           setState(XmppConnectionState.SocketOpened);
           _socket = socket;
-          socket
-              .cast<List<int>>()
-              .transform(utf8.decoder)
-              .map(prepareStreamResponse)
-              .listen(handleResponse, onDone: handleConnectionDone);
+          socket.listen(handleResponse, onDone: handleConnectionDone);
           _openStream();
         } else {
           Log.d(TAG, 'Closed in meantime');
           socket.close();
         }
       });
-    } on SocketException catch (error) {
+    } catch (error) {
       Log.e(TAG, 'Socket Exception' + error.toString());
       handleConnectionError(error.toString());
     }
@@ -306,36 +301,30 @@ xml:lang='en'
     if (fullResponse.isNotEmpty) {
       xml.XmlNode? xmlResponse;
       try {
-        xmlResponse = xml.XmlDocument.parse(fullResponse).firstChild;
+        xmlResponse = xml.XmlDocument.parse(fullResponse.replaceAll(RegExp(r'<\?(xml.+?)\>'), '')).firstChild;
       } catch (e) {
         _unparsedXmlResponse += fullResponse.substring(
             0, fullResponse.length - 13); //remove  xmpp_stone end tag
         xmlResponse = xml.XmlElement(xml.XmlName('error'));
       }
-//      xmlResponse.descendants.whereType<xml.XmlElement>().forEach((element) {
-//        Log.d("element: " + element.name.local);
-//      });
+
       //TODO: Improve parser for children only
-      xmlResponse!.descendants
-          .whereType<xml.XmlElement>()
+      xmlResponse!.childElements
           .where((element) => startMatcher(element))
           .forEach((element) => processInitialStream(element));
 
-      xmlResponse.children
-          .whereType<xml.XmlElement>()
+      xmlResponse.childElements
           .where((element) => stanzaMatcher(element))
           .map((xmlElement) => StanzaParser.parseStanza(xmlElement))
           .forEach((stanza) => _inStanzaStreamController.add(stanza));
 
-      xmlResponse.descendants
-          .whereType<xml.XmlElement>()
+      xmlResponse.childElements
           .where((element) => featureMatcher(element))
           .forEach((feature) =>
               connectionNegotatiorManager.negotiateFeatureList(feature));
 
       //TODO: Probably will introduce bugs!!!
-      xmlResponse.children
-          .whereType<xml.XmlElement>()
+      xmlResponse.childElements
           .where((element) => nonzaMatcher(element))
           .map((xmlElement) => Nonza.parse(xmlElement))
           .forEach((nonza) => _inNonzaStreamController.add(nonza));
@@ -401,10 +390,13 @@ xml:lang='en'
 
   void startSecureSocket() {
     Log.d(TAG, 'startSecureSocket');
-    SecureSocket.secure(_socket!, onBadCertificate: _validateBadCertificate)
+
+    _socket!
+        .secure(onBadCertificate: _validateBadCertificate)
         .then((secureSocket) {
-      _socket = secureSocket;
-      _socket!
+      if (secureSocket == null) return;
+
+      secureSocket
           .cast<List<int>>()
           .transform(utf8.decoder)
           .map(prepareStreamResponse)
@@ -453,6 +445,10 @@ xml:lang='en'
 
   bool _validateBadCertificate(X509Certificate certificate) {
     return true;
+  }
+
+  bool isTlsRequired() {
+    return xmppSocket.isTlsRequired();
   }
 
   void handleConnectionDone() {
