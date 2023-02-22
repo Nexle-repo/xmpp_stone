@@ -71,6 +71,7 @@ class Message {
       if (forwarded != null) {
         var message = forwarded.getChild('message');
         if (message != null) {
+          var messageId = message.getAttribute('id')?.value;
           Jid? to;
           if(message.getAttribute('to') != null && message.getAttribute('to')!.value != null){
             to = Jid.fromFullJid(message.getAttribute('to')!.value!);
@@ -93,7 +94,8 @@ class Message {
               isForwarded: true,
               isDelayed: delayed,
               chatState: chatState,
-              type: type);
+              messageId: messageId,
+              type: type,);
         }
       }
     } catch (e) {
