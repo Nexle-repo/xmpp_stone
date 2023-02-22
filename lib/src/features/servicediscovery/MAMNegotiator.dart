@@ -14,9 +14,10 @@ import 'Feature.dart';
 class MAMNegotiator extends Negotiator {
   static const TAG = 'MAMNegotiator';
 
-  static final Map<Connection, MAMNegotiator> _instances = {};
+  static final Map<Connection?, MAMNegotiator> _instances =
+      <Connection?, MAMNegotiator>{};
 
-  static MAMNegotiator getInstance(Connection connection) {
+  static MAMNegotiator getInstance(Connection? connection) {
     var instance = _instances[connection];
     if (instance == null) {
       instance = MAMNegotiator(connection);
@@ -25,16 +26,11 @@ class MAMNegotiator extends Negotiator {
     return instance;
   }
 
-  static void removeInstance(Connection connection) {
-    _instances[connection]?._subscription?.cancel();
-    _instances.remove(connection);
-  }
-
   late IqStanza _myUnrespondedIqStanza;
 
-  StreamSubscription<AbstractStanza?>? _subscription;
+  late StreamSubscription<AbstractStanza?> _subscription;
 
-  final Connection _connection;
+  final Connection? _connection;
 
   final List<MamQueryParameters> _supportedParameters = [];
 
@@ -73,7 +69,7 @@ class MAMNegotiator extends Negotiator {
       enabled = true;
       state = NegotiatorState.NEGOTIATING;
       sendRequest();
-      _subscription = _connection.inStanzasStream.listen(checkStanzas);
+      _subscription = _connection!.inStanzasStream.listen(checkStanzas);
     }
   }
 
@@ -83,7 +79,7 @@ class MAMNegotiator extends Negotiator {
     query.addAttribute(XmppAttribute('xmlns', 'urn:xmpp:mam:2'));
     iqStanza.addChild(query);
     _myUnrespondedIqStanza = iqStanza;
-    _connection.writeStanza(iqStanza);
+    _connection!.writeStanza(iqStanza);
   }
 
   void checkStanzas(AbstractStanza? stanza) {
@@ -92,7 +88,7 @@ class MAMNegotiator extends Negotiator {
       if (x != null) {
         x.children.forEach((element) {
           if (element is FieldElement) {
-            switch(element.varAttr) {
+            switch (element.varAttr) {
               case 'start':
                 _supportedParameters.add(MamQueryParameters.START);
                 break;
@@ -116,7 +112,7 @@ class MAMNegotiator extends Negotiator {
         });
       }
       state = NegotiatorState.DONE;
-      _subscription?.cancel();
+      _subscription.cancel();
     }
   }
 

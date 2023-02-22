@@ -1,12 +1,33 @@
 import 'dart:convert';
 
-import 'package:collection/collection.dart' show IterableExtension;
 import 'package:image/image.dart' as img;
 import 'package:xmpp_stone/src/elements/XmppAttribute.dart';
 import 'package:xmpp_stone/src/elements/XmppElement.dart';
 
+enum TelephonePremiseType { WORK, HOME }
+
+enum TelephoneVoiceType { VOICE, FAX, MSG }
+
+class VCardTelephone {
+  TelephonePremiseType? premiseType;
+  TelephoneVoiceType? voiceType;
+  String? number;
+}
+
 class VCard extends XmppElement {
   var _imageData;
+  String? fullName;
+  String? familyName;
+  String? givenName;
+  String? prefixName;
+  String? nickName;
+  String? url;
+  String? bDay;
+  String? organisationName;
+  String? organisationUnit;
+  String? title;
+  String? role;
+  String? jabberId;
 
   img.Image? _image;
 
@@ -17,33 +38,10 @@ class VCard extends XmppElement {
     name = 'vCard';
     addAttribute(XmppAttribute('xmlns', 'vcard-temp'));
     _parseImage();
+    _parseAttributes();
   }
 
-  String? get fullName => getChild('FN')?.textValue;
-
-  String? get familyName => getChild('N')?.getChild('FAMILY')?.textValue;
-
-  String? get givenName => getChild('N')?.getChild('GIVEN')?.textValue;
-
-  String? get prefixName => getChild('N')?.getChild('PREFIX')?.textValue;
-
-  String? get nickName => getChild('NICKNAME')?.textValue;
-
-  String? get url => getChild('URL')?.textValue;
-
-  String? get bDay => getChild('BDAY')?.textValue;
-
-  String? get organisationName =>
-      getChild('ORG')?.getChild('ORGNAME')?.textValue;
-
-  String? get organizationUnit =>
-      getChild('ORG')?.getChild('ORGUNIT')?.textValue;
-
-  String? get title => getChild('TITLE')?.textValue;
-
-  String? get role => getChild('ROLE')?.textValue;
-
-  String? get jabberId => getChild('JABBERID')?.textValue;
+  // TODO - START: getItem, imageData, image and phones, etc.. are not mapped yet.
 
   String? getItem(String itemName) => getChild(itemName)?.textValue;
 
@@ -57,10 +55,11 @@ class VCard extends XmppElement {
     var homePhones = <PhoneItem>[];
     children
         .where((element) =>
-            (element.name == 'TEL' && element.getChild('HOME') != null))
+            (element!.name == 'TEL' && element.getChild('HOME') != null))
         .forEach((element) {
-      var typeString = element.children.firstWhereOrNull(
-          (element) => (element.name != 'HOME' && element.name != 'NUMBER'));
+      var typeString = element!.children.firstWhere(
+          (element) => (element!.name != 'HOME' && element.name != 'NUMBER'),
+          orElse: () => null);
       if (typeString != null) {
         var type = getPhoneTypeFromString(typeString.name);
         var number = element.getChild('NUMBER')?.textValue;
@@ -73,16 +72,18 @@ class VCard extends XmppElement {
   }
 
   String? get emailHome {
-    var element = children.firstWhereOrNull(
+    var element = children.firstWhere(
         (element) =>
-            (element.name == 'EMAIL' && element.getChild('HOME') != null));
+            (element!.name == 'EMAIL' && element.getChild('HOME') != null),
+        orElse: () => null);
     return element?.getChild('USERID')?.textValue;
   }
 
   String? get emailWork {
-    var element = children.firstWhereOrNull(
+    var element = children.firstWhere(
         (element) =>
-            (element.name == 'EMAIL' && element.getChild('WORK') != null));
+            (element!.name == 'EMAIL' && element.getChild('WORK') != null),
+        orElse: () => null);
     return element?.getChild('USERID')?.textValue;
   }
 
@@ -114,6 +115,8 @@ class VCard extends XmppElement {
     return PhoneType.OTHER;
   }
 
+  // TODO - END: getItem, imageData, image and phones, etc.. are not mapped yet.
+
   void _parseImage() {
     var base64Image = getChild('PHOTO')?.getChild('BINVAL')?.textValue;
     if (base64Image != null) {
@@ -121,10 +124,107 @@ class VCard extends XmppElement {
       _image = img.decodeImage(_imageData);
     }
   }
+
+  void _parseAttributes() {
+    fullName = getChild('FN')?.textValue;
+    familyName = getChild('N')?.getChild('FAMILY')?.textValue;
+    givenName = getChild('N')?.getChild('GIVEN')?.textValue;
+    prefixName = getChild('N')?.getChild('PREFIX')?.textValue;
+    nickName = getChild('NICKNAME')?.textValue;
+    url = getChild('URL')?.textValue;
+    bDay = getChild('BDAY')?.textValue;
+    organisationName = getChild('ORG')?.getChild('ORGNAME')?.textValue;
+    organisationUnit = getChild('ORG')?.getChild('ORGUNIT')?.textValue;
+    title = getChild('TITLE')?.textValue;
+    role = getChild('ROLE')?.textValue;
+    jabberId = getChild('JABBERID')?.textValue;
+  }
+
+  XmppElement buildXMLWithAttributes() {
+    var vCardElement = XmppElement();
+    vCardElement.name = 'vCard';
+    vCardElement.addAttribute(XmppAttribute('xmlns', 'vcard-temp'));
+
+    var attrFN = XmppElement();
+    attrFN.name = 'FN';
+    attrFN.textValue = fullName;
+    vCardElement.addChild(attrFN);
+
+    var attrN = XmppElement();
+    attrN.name = 'N';
+
+    var attrFamilyName = XmppElement();
+    attrFamilyName.name = 'FAMILY';
+    attrFamilyName.textValue = familyName;
+    attrN.addChild(attrFamilyName);
+
+    var attrGivenName = XmppElement();
+    attrGivenName.name = 'GIVEN';
+    attrGivenName.textValue = givenName;
+    attrN.addChild(attrGivenName);
+
+    var attrPrefixName = XmppElement();
+    attrPrefixName.name = 'PREFIX';
+    attrPrefixName.textValue = prefixName;
+    attrN.addChild(attrPrefixName);
+
+    vCardElement.addChild(attrN);
+
+    var attrNickname = XmppElement();
+    attrNickname.name = 'NICKNAME';
+    attrNickname.textValue = nickName;
+    vCardElement.addChild(attrNickname);
+
+    var attrBDay = XmppElement();
+    attrBDay.name = 'BDAY';
+    attrBDay.textValue = bDay;
+    vCardElement.addChild(attrBDay);
+
+    var attrURL = XmppElement();
+    attrURL.name = 'URL';
+    attrURL.textValue = url;
+    vCardElement.addChild(attrURL);
+
+    var attrTitle = XmppElement();
+    attrTitle.name = 'TITLE';
+    attrTitle.textValue = title;
+    vCardElement.addChild(attrTitle);
+
+    var attrRole = XmppElement();
+    attrRole.name = 'ROLE';
+    attrRole.textValue = role;
+    vCardElement.addChild(attrRole);
+
+    var attrJabberId = XmppElement();
+    attrJabberId.name = 'JABBERID';
+    attrJabberId.textValue = jabberId;
+    vCardElement.addChild(attrJabberId);
+
+    var attrOrg = XmppElement();
+    attrOrg.name = 'ORG';
+
+    var attrOrgName = XmppElement();
+    attrOrgName.name = 'ORGNAME';
+    attrOrgName.textValue = organisationName;
+    attrOrg.addChild(attrOrgName);
+
+    var attrOrgUnit = XmppElement();
+    attrOrgUnit.name = 'ORGUNIT';
+    attrOrgUnit.textValue = organisationUnit;
+    attrOrg.addChild(attrOrgUnit);
+
+    vCardElement.addChild(attrOrg);
+
+    return vCardElement;
+  }
 }
 
 class InvalidVCard extends VCard {
   InvalidVCard(XmppElement? element) : super(element);
+}
+
+class UpdateAckVCard extends VCard {
+  UpdateAckVCard(XmppElement element) : super(element);
 }
 
 class PhoneItem {

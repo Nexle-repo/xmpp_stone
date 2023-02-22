@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:universal_io/io.dart';
 
 XmppWebSocket createSocket() {
@@ -11,7 +12,9 @@ bool isTlsRequired() {
 
 abstract class XmppWebSocket extends Stream<String> {
   Future<XmppWebSocket> connect<S>(String host, int port,
-      {String Function(String event)? map, List<String>? wsProtocols, String? wsPath});
+      {String Function(String event)? map,
+      List<String>? wsProtocols,
+      String? wsPath});
 
   void write(Object? message);
 

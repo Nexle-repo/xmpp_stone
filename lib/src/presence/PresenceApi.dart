@@ -21,7 +21,9 @@ class PresenceData {
   PresenceShowElement? showElement;
   String? status;
   Jid? jid; // if Jid is Null or self jid its self presence
-  PresenceData(this.showElement, this.status, this.jid);
+  int? priority;
+  PresenceStanza? presenceStanza;
+  PresenceData(this.showElement, this.status, this.jid, {this.priority = -1, this.presenceStanza = null});
 }
 
 enum SubscriptionEventType { REQUEST, ACCEPTED, DECLINED }

@@ -12,17 +12,19 @@ import 'package:xmpp_stone/src/features/Negotiator.dart';
 import '../elements/nonzas/Nonza.dart';
 
 class SessionInitiationNegotiator extends Negotiator {
-  final Connection _connection;
+  Connection? _connection;
   StreamSubscription<AbstractStanza?>? subscription;
 
   IqStanza? sentRequest;
 
-  SessionInitiationNegotiator(this._connection) {
+  SessionInitiationNegotiator(Connection? connection) {
+    _connection = connection;
     expectedName = 'SessionInitiationNegotiator';
   }
   @override
   List<Nonza> match(List<Nonza> requests) {
-    var nonza = requests.firstWhereOrNull((request) => request.name == 'session');
+    var nonza =
+        requests.firstWhereOrNull((request) => request.name == 'session');
     return nonza != null ? [nonza] : [];
   }
 
@@ -30,7 +32,7 @@ class SessionInitiationNegotiator extends Negotiator {
   void negotiate(List<Nonza> nonzas) {
     if (match(nonzas).isNotEmpty) {
       state = NegotiatorState.NEGOTIATING;
-      subscription = _connection.inStanzasStream.listen(parseStanza);
+      subscription = _connection!.inStanzasStream.listen(parseStanza);
       sendSessionInitiationStanza();
     }
   }
@@ -40,7 +42,7 @@ class SessionInitiationNegotiator extends Negotiator {
       var idValue = stanza.getAttribute('id')?.value;
       if (idValue != null &&
           idValue == sentRequest?.getAttribute('id')?.value) {
-        _connection.sessionReady();
+        _connection!.sessionReady();
         state = NegotiatorState.DONE;
       }
     }
@@ -53,9 +55,9 @@ class SessionInitiationNegotiator extends Negotiator {
     var attribute =
         XmppAttribute('xmlns', 'urn:ietf:params:xml:ns:xmpp-session');
     sessionElement.addAttribute(attribute);
-    stanza.toJid = _connection.serverName;
+    stanza.toJid = _connection!.serverName;
     stanza.addChild(sessionElement);
     sentRequest = stanza;
-    _connection.writeStanza(stanza);
+    _connection!.writeStanza(stanza);
   }
 }

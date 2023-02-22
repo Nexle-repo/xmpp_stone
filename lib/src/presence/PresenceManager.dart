@@ -4,21 +4,22 @@ import 'package:xmpp_stone/src/Connection.dart';
 import 'package:xmpp_stone/src/data/Jid.dart';
 import 'package:xmpp_stone/src/elements/stanzas/AbstractStanza.dart';
 import 'package:xmpp_stone/src/elements/stanzas/PresenceStanza.dart';
+import 'package:xmpp_stone/src/logger/Log.dart';
 import 'package:xmpp_stone/src/presence/PresenceApi.dart';
 
 class PresenceManager implements PresenceApi {
+  static final LOG_TAG = 'PresenceManager';
   final Connection _connection;
-
-  late StreamSubscription<XmppConnectionState> _xmppConnectionStateSubscription;
-  late StreamSubscription<PresenceStanza?> _presenceStanzaSubscription;
 
   List<PresenceStanza> requests = <PresenceStanza>[];
 
-  final StreamController<PresenceData> _presenceStreamController = StreamController<PresenceData>.broadcast();
+  final StreamController<PresenceData> _presenceStreamController =
+      StreamController<PresenceData>.broadcast();
 
   final StreamController<SubscriptionEvent> _subscribeStreamController =
       StreamController<SubscriptionEvent>.broadcast();
-  final StreamController<PresenceErrorEvent> _errorStreamController = StreamController<PresenceErrorEvent>.broadcast();
+  final StreamController<PresenceErrorEvent> _errorStreamController =
+      StreamController<PresenceErrorEvent>.broadcast();
 
   PresenceData _selfPresence = PresenceData(PresenceShowElement.CHAT, '', null);
 
@@ -43,99 +44,101 @@ class PresenceManager implements PresenceApi {
     return _errorStreamController.stream;
   }
 
-  static Map<Connection, PresenceManager> instances = {};
+  static Map<Connection?, PresenceManager> instances =
+      <Connection?, PresenceManager>{};
 
-  static PresenceManager getInstance(Connection connection) {
+  static PresenceManager getInstance(Connection? connection) {
     var manager = instances[connection];
     if (manager == null) {
-      manager = PresenceManager(connection);
+      manager = PresenceManager(connection!);
       instances[connection] = manager;
     }
     return manager;
   }
 
-  static void removeInstance(Connection connection) {
-    instances[connection]?._presenceStanzaSubscription.cancel();
-    instances[connection]?._xmppConnectionStateSubscription.cancel();
-    instances.remove(connection);
-  }
-
   PresenceManager(this._connection) {
-    _presenceStanzaSubscription = _connection.inStanzasStream
+    _connection.inStanzasStream
         .where((abstractStanza) => abstractStanza is PresenceStanza)
         .map((stanza) => stanza as PresenceStanza?)
         .listen(_processPresenceStanza);
-    _xmppConnectionStateSubscription =
-        _connection.connectionStateStream.listen(_connectionStateHandler);
+    _connection.connectionStateStream.listen(_connectionStateHandler);
   }
 
   @override
-  void acceptSubscription(Jid? to) {
+  void acceptSubscription(Jid? to) async {
     var presenceStanza = PresenceStanza.withType(PresenceType.SUBSCRIBED);
     presenceStanza.id = _getPresenceId();
     presenceStanza.toJid = to;
     requests.add(presenceStanza);
-    _connection.writeStanza(presenceStanza);
+    await _connection.writeStanzaWithQueue(presenceStanza);
   }
 
   @override
-  void declineSubscription(Jid to) {
+  void declineSubscription(Jid to) async {
     var presenceStanza = PresenceStanza.withType(PresenceType.UNSUBSCRIBED);
     presenceStanza.id = _getPresenceId();
     presenceStanza.toJid = to;
     requests.add(presenceStanza);
-    _connection.writeStanza(presenceStanza);
+    await _connection.writeStanzaWithQueue(presenceStanza);
   }
 
   @override
-  void sendDirectPresence(PresenceData presence, Jid to) {
+  void sendDirectPresence(PresenceData presence, Jid to) async {
     var presenceStanza = PresenceStanza();
     presenceStanza.toJid = to;
     presenceStanza.show = presence.showElement;
     presenceStanza.status = presence.status;
-    _connection.writeStanza(presenceStanza);
+    await _connection.writeStanzaWithQueue(presenceStanza);
   }
 
   @override
-  void askDirectPresence(Jid to) {
+  void askDirectPresence(Jid to) async {
     var presenceStanza = PresenceStanza.withType(PresenceType.PROBE);
     presenceStanza.toJid = to;
     presenceStanza.fromJid = _connection.fullJid;
-    _connection.writeStanza(presenceStanza);
+    await _connection.writeStanzaWithQueue(presenceStanza);
   }
 
   @override
-  void sendPresence(PresenceData presence) {
+  void sendPresence(PresenceData presence) async {
     var presenceStanza = PresenceStanza();
     presenceStanza.show = presence.showElement;
     presenceStanza.status = presence.status;
-    _connection.writeStanza(presenceStanza);
+    if (presence.priority != -1) {
+      presenceStanza.priority = presence.priority;
+      presenceStanza.fromJid = _connection.fullJid;
+    }
+    Log.d(LOG_TAG, presenceStanza.buildXmlString());
+    await _connection.writeStanzaWithQueue(presenceStanza);
   }
 
   @override
-  void subscribe(Jid to) {
+  void subscribe(Jid to) async {
     var presenceStanza = PresenceStanza.withType(PresenceType.SUBSCRIBE);
     presenceStanza.id = _getPresenceId();
     presenceStanza.toJid = to;
     requests.add(presenceStanza);
-    _connection.writeStanza(presenceStanza);
+    await _connection.writeStanzaWithQueue(presenceStanza);
   }
 
   @override
-  void unsubscribe(Jid to) {
+  void unsubscribe(Jid to) async {
     var presenceStanza = PresenceStanza.withType(PresenceType.UNSUBSCRIBE);
     presenceStanza.id = _getPresenceId();
     presenceStanza.toJid = to;
     requests.add(presenceStanza);
-    _connection.writeStanza(presenceStanza);
+    await _connection.writeStanzaWithQueue(presenceStanza);
   }
 
   void _processPresenceStanza(PresenceStanza? presenceStanza) {
-    if (presenceStanza!.type == null) {
+    Log.d(LOG_TAG, presenceStanza!.buildXmlString());
+    if (presenceStanza.type == null) {
       //presence event
-      _presenceStreamController.add(PresenceData(presenceStanza.show, presenceStanza.status, presenceStanza.fromJid));
+      _presenceStreamController.add(PresenceData(
+          presenceStanza.show, presenceStanza.status, presenceStanza.fromJid,
+          presenceStanza: presenceStanza));
     } else {
-      switch (presenceStanza.type) {
+      switch (presenceStanza.type!) {
         case PresenceType.SUBSCRIBE:
           var subscriptionEvent = SubscriptionEvent();
           subscriptionEvent.type = SubscriptionEventType.REQUEST;
@@ -163,7 +166,9 @@ class PresenceManager implements PresenceApi {
           break;
         case PresenceType.UNAVAILABLE:
           //presence event
-          _presenceStreamController.add(PresenceData(PresenceShowElement.XA, 'Unavailable', presenceStanza.fromJid));
+          _presenceStreamController.add(PresenceData(
+              PresenceShowElement.XA, 'Unavailable', presenceStanza.fromJid,
+              presenceStanza: presenceStanza));
           break;
       }
     }
@@ -175,21 +180,23 @@ class PresenceManager implements PresenceApi {
 
   void _connectionStateHandler(XmppConnectionState state) {
     if (state == XmppConnectionState.Ready) {
-      //_getRosters();
-      _sendInitialPresence();
+      // _sendInitialPresence();
+      sendPresence(PresenceData(
+          PresenceShowElement.CHAT, 'Working', _connection.fullJid));
     }
   }
 
-  void _sendInitialPresence() {
-    var initialPresence = PresenceStanza();
-    _connection.writeStanza(initialPresence);
-  }
+  // void _sendInitialPresence() {
+  //   var initialPresence = PresenceStanza();
+  //   _connection.writeStanza(initialPresence);
+  // }
 
   void _handleErrorEvent(PresenceStanza presenceStanza) {
     //TODO Add more handling
     var errorEvent = PresenceErrorEvent();
     errorEvent.presenceStanza = presenceStanza;
-    var errorTypeString = presenceStanza.getChild('error')?.getAttribute('type')?.value;
+    var errorTypeString =
+        presenceStanza.getChild('error')?.getAttribute('type')?.value;
     if (errorTypeString != null && errorTypeString == 'modify') {
       errorEvent.type = PresenceErrorType.MODIFY;
     }

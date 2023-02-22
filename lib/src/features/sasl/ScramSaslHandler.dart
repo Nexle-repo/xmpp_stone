@@ -19,7 +19,7 @@ class ScramSaslHandler implements AbstractSaslHandler {
   static const CLIENT_NONCE_LENGTH = 48;
   static const TAG = 'ScramSaslHandler';
 
-  final Connection _connection;
+  late Connection _connection;
   late StreamSubscription<Nonza> subscription;
   final _completer = Completer<AuthenticationResult>();
   ScramStates _scramState = ScramStates.INITIAL;
@@ -35,9 +35,10 @@ class ScramSaslHandler implements AbstractSaslHandler {
 
   late var serverSignature;
 
-  ScramSaslHandler(this._connection, String? password, this._mechanism) {
-    _username = _connection.fullJid.local;
+  ScramSaslHandler(Connection connection, String? password, this._mechanism) {
+    _username = connection.fullJid.local;
     _password = password;
+    _connection = connection;
     initMechanism();
     generateRandomClientNonce();
   }
@@ -60,13 +61,17 @@ class ScramSaslHandler implements AbstractSaslHandler {
   }
 
   void generateRandomClientNonce() {
-    var bytes = List<int>.generate(
-        CLIENT_NONCE_LENGTH, (index) => Random.secure().nextInt(256));
+    var bytes = List<int>.filled(CLIENT_NONCE_LENGTH, 0, growable: false);
+    for (var i = 0; i < CLIENT_NONCE_LENGTH; i++) {
+      bytes[i] = Random.secure().nextInt(256);
+    }
+
     _clientNonce = base64.encode(bytes);
   }
 
   void sendInitialMessage() {
-    _initialMessage = 'n=${saslEscape(normalize(_username!))},r=$_clientNonce';
+    _initialMessage =
+        'n=${saslEscape(normalize(_username!))},r=${_clientNonce}';
     var bytes = utf8.encode('n,,$_initialMessage');
     var message = CryptoUtils.bytesToBase64(bytes, false, false);
     var nonza = Nonza();
@@ -173,10 +178,11 @@ class ScramSaslHandler implements AbstractSaslHandler {
     } catch (e) {
       _fireAuthFailed('Invalid key');
     }
-
-    var clientProof = List<int>.generate(
-        clientKey.length, (i) => clientKey[i] ^ clientSignature[i]);
-
+    var clientProof =
+        List<int>.filled(clientKey.length, 0, growable: false);
+    for (var i = 0; i < clientKey.length; i++) {
+      clientProof[i] = clientKey[i] ^ clientSignature[i];
+    }
     var clientFinalMessage =
         '$clientFinalMessageBare,p=${base64.encode(clientProof)}';
     var response = Nonza();

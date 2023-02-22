@@ -11,10 +11,11 @@ import '../logger/Log.dart';
 
 class StartTlsNegotiator extends Negotiator {
   static const TAG = 'StartTlsNegotiator';
-  final Connection _connection;
+  Connection? _connection;
   late StreamSubscription<Nonza> subscription;
 
-  StartTlsNegotiator(this._connection) {
+  StartTlsNegotiator(Connection? connection) {
+    _connection = connection;
     expectedName = 'StartTlsNegotiator';
     expectedNameSpace = 'urn:ietf:params:xml:ns:xmpp-tls';
     priorityLevel = 1;
@@ -25,27 +26,26 @@ class StartTlsNegotiator extends Negotiator {
     Log.d(TAG, 'negotiating starttls');
     if (match(nonzas) != null) {
       state = NegotiatorState.NEGOTIATING;
-      subscription = _connection.inNonzasStream.listen(checkNonzas);
-      _connection.writeNonza(StartTlsResponse());
+      subscription = _connection!.inNonzasStream.listen(checkNonzas);
+      _connection!.writeNonza(StartTlsResponse());
     }
   }
 
   void checkNonzas(Nonza nonza) {
     if (nonza.name == 'proceed') {
-      _connection.startSecureSocket();
+      _connection!.startSecureSocket();
       state = NegotiatorState.DONE_CLEAN_OTHERS;
       subscription.cancel();
     } else if (nonza.name == 'failure') {
-      _connection.startTlsFailed();
+      _connection!.startTlsFailed();
     }
   }
 
   @override
   List<Nonza> match(List<Nonza> requests) {
-    var nonza = requests.firstWhereOrNull(
-        (request) =>
-            request.name == 'starttls' &&
-            request.getAttribute('xmlns')?.value == expectedNameSpace);
+    var nonza = requests.firstWhereOrNull((request) =>
+        request.name == 'starttls' &&
+        request.getAttribute('xmlns')?.value == expectedNameSpace);
     return nonza != null ? [nonza] : [];
   }
 }

@@ -17,25 +17,21 @@ class ServiceDiscoveryNegotiator extends Negotiator {
   static const String NAMESPACE_DISCO_INFO =
       'http://jabber.org/protocol/disco#info';
 
-  static final Map<Connection, ServiceDiscoveryNegotiator> _instances = {};
+  static final Map<Connection?, ServiceDiscoveryNegotiator> _instances =
+      <Connection?, ServiceDiscoveryNegotiator>{};
 
-  static ServiceDiscoveryNegotiator getInstance(Connection connection) {
+  static ServiceDiscoveryNegotiator getInstance(Connection? connection) {
     var instance = _instances[connection];
     if (instance == null) {
-      instance = ServiceDiscoveryNegotiator(connection);
+      instance = ServiceDiscoveryNegotiator(connection!);
       _instances[connection] = instance;
     }
     return instance;
   }
 
-  static void removeInstance(Connection connection) {
-    _instances[connection]?.subscription?.cancel();
-    _instances.remove(connection);
-  }
-
   IqStanza? fullRequestStanza;
 
-  StreamSubscription<AbstractStanza?>? subscription;
+  late StreamSubscription<AbstractStanza?> subscription;
 
   final Connection _connection;
 
@@ -79,8 +75,7 @@ class ServiceDiscoveryNegotiator extends Negotiator {
       state = NegotiatorState.NEGOTIATING;
       subscription = _connection.inStanzasStream.listen(_parseStanza);
       _sendServiceDiscoveryRequest();
-    } else if (state == NegotiatorState.DONE) {
-    }
+    } else if (state == NegotiatorState.DONE) {}
   }
 
   void _sendServiceDiscoveryRequest() {
@@ -116,14 +111,14 @@ class ServiceDiscoveryNegotiator extends Negotiator {
         _errorStreamController.add(errorStanza);
       }
     }
-    subscription?.cancel();
-    _connection.connectionNegotatiorManager.addFeatures(_supportedFeatures);
+    subscription.cancel();
+    _connection.connectionNegotiationManager.addFeatures(_supportedFeatures);
     state = NegotiatorState.DONE;
   }
 
   bool isFeatureSupported(String feature) {
-    return _supportedFeatures.firstWhereOrNull(
-            (element) => element.xmppVar == feature) !=
+    return _supportedFeatures
+            .firstWhereOrNull((element) => element.textValue == feature) !=
         null;
   }
 
@@ -136,7 +131,7 @@ class ServiceDiscoveryNegotiator extends Negotiator {
         stanza.toJid!.fullJid == _connection.fullJid.fullJid &&
         stanza.children
             .where((element) =>
-                element.name == 'query' &&
+                element!.name == 'query' &&
                 element.getAttribute('xmlns')?.value == NAMESPACE_DISCO_INFO)
             .isNotEmpty;
   }
@@ -146,12 +141,10 @@ class ServiceDiscoveryNegotiator extends Negotiator {
     //iqStanza.fromJid = _connection.fullJid; //do not send for now
     iqStanza.toJid = request.fromJid;
     var query = XmppElement();
-    query.name = 'query';
     query.addAttribute(XmppAttribute('xmlns', NAMESPACE_DISCO_INFO));
     SERVICE_DISCOVERY_SUPPORT_LIST.forEach((featureName) {
       var featureElement = XmppElement();
-      featureElement.name = 'feature';
-      featureElement.addAttribute(XmppAttribute('var', featureName));
+      featureElement.addAttribute(XmppAttribute('feature', featureName));
       query.addChild(featureElement);
     });
     iqStanza.addChild(query);

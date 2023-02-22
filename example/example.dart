@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:console/console.dart';
 import 'package:universal_io/io.dart';
-import 'package:xmpp_stone/src/features/servicediscovery/ServiceDiscoveryNegotiator.dart';
 import 'package:xmpp_stone/src/logger/Log.dart';
 import 'package:xmpp_stone/xmpp_stone.dart';
 
@@ -27,31 +26,45 @@ void main(List<String> arguments) {
     wsPath: 'xmpp-websocket',
     wsProtocols: ['xmpp'],
   );
+  var manager = XMPPClientManager(
+    userAtDomain,
+    password,
+    port: 18899,
+    resource: 'xmppstone',
+    wsPath: 'xmpp-websocket',
+    wsProtocols: ['xmpp'],
+    onReady: (XMPPClientManager context) {
+      context.listens();
+      context.presenceSend(PresenceShowElement.CHAT, description: 'Working');
+    },
+    onLog: (String time, String message) {},
+    onMessage: (XMPPMessageParams message, ListenerType listenerType) async {
+      print('recieved message: ${message.message!.body}');
+      print('${listenerType.toString()}');
+    },
+    onPresence: (PresenceData presenceData) async {
+      if (presenceData.presenceStanza != null) {
+        print('presenceData ${presenceData.presenceStanza?.buildXmlString()}');
+      }
+    },
+    onPresenceSubscription: (SubscriptionEvent subscriptionEvent) async {},
+    onPing: () async {},
+    // onArchiveRetrieved: (AbstractStanza stanza) {
+    //     log('Flutter dart finishing retrieval of archive : ${stanza.buildXmlString()})');
+    // },
+    onState: (XmppConnectionState state) {
+      print('XmppConnectionState $state');
+      // print('status of ${this.name} ' + state.toString());
+    },
+  );
+  manager.createSession();
+  /*
   var connection = Connection(account);
   connection.connect();
-  connection.inNonzasStream.listen((event) { 
-    Log.d(TAG, 'inNonzasStream: ${event.buildXmlString()}');
-  });
-  connection.outNonzasStream.listen((event) { 
-    Log.d(TAG, 'outNonzasStream: ${event.buildXmlString()}');
-  });
-  connection.outStanzasStream.listen((event) { 
-    Log.d(TAG, 'outStanzasStream: ${event.buildXmlString()}');
-  });
-
-  ServiceDiscoveryNegotiator.getInstance(connection).subscription?.onData((data) {
-        Log.d(TAG, 'ServiceDiscoveryNegotiator: ${data?.buildXml()}');
-
-  });
-
-  PrivacyListsManager.getInstance(connection).listsChangesStream.listen((data) {
-        Log.d(TAG, 'PrivacyListsManager: $data');
-
-  });
-  connection.inStanzasStream.listen((event) async { 
-    final stanza = event is MessageStanza? event as MessageStanza? : null;
-    Log.d(TAG, 'inStanzasStream: ${event?.buildXmlString()} ---- ${stanza?.buildXmlString()}');
-
+  connection.inStanzasStream.listen((event) async {
+    final stanza = event is MessageStanza ? event as MessageStanza? : null;
+    Log.d(TAG, 'inStanzasStream: ${event?.buildXmlString()} ---- ${stanza
+        ?.buildXmlString()}');
   });
   MessagesListener messagesListener = ExampleMessagesListener();
   ExampleConnectionStateChangedListener(connection, messagesListener);
@@ -68,6 +81,8 @@ void main(List<String> arguments) {
   _getConsoleStream().asBroadcastStream().listen((String str) {
     messageHandler.sendMessage(receiverJid, str);
   });
+
+   */
 }
 
 class ExampleConnectionStateChangedListener
@@ -96,11 +111,7 @@ class ExampleConnectionStateChangedListener
       sleep(const Duration(seconds: 1));
       var receiver = 'rhp#testing_31@dev24.nexlesoft.com';
       var receiverJid = Jid.fromFullJid(receiver);
-      rosterManager.addRosterItem(Buddy(receiverJid)).then((result) {
-        if (result.description != null) {
-          Log.d(TAG, 'add roster ${result.description}');
-        }
-      });
+
       sleep(const Duration(seconds: 1));
       vCardManager.getVCardFor(receiverJid).then((vCard) {
         Log.d(TAG, 'Receiver info ${vCard.buildXmlString()}');

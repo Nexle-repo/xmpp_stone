@@ -25,7 +25,10 @@ dependencies:
   collection: ^1.15.0
   universal_io: ^2.2.0
   web_socket_channel: ^2.2.0
+  jose: ^0.3.2
 
 dev_dependencies:
   test: ^1.16.8
   mockito: ^5.0.3
+  uuid: ^3.0.5
+  dart_jsonwebtoken: ^2.4.1

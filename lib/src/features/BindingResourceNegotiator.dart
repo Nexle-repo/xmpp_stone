@@ -9,21 +9,24 @@ import 'package:xmpp_stone/src/elements/nonzas/Nonza.dart';
 import 'package:xmpp_stone/src/elements/stanzas/AbstractStanza.dart';
 import 'package:xmpp_stone/src/elements/stanzas/IqStanza.dart';
 import 'package:xmpp_stone/src/features/Negotiator.dart';
+import 'package:xmpp_stone/src/logger/Log.dart';
 import '../elements/nonzas/Nonza.dart';
 
 class BindingResourceConnectionNegotiator extends Negotiator {
-  final Connection _connection;
+  Connection? _connection;
   late StreamSubscription<AbstractStanza?> subscription;
   static const String BIND_NAME = 'bind';
   static const String BIND_ATTRIBUTE = 'urn:ietf:params:xml:ns:xmpp-bind';
 
-  BindingResourceConnectionNegotiator(this._connection) {
+  BindingResourceConnectionNegotiator(Connection? connection) {
+    _connection = connection;
     priorityLevel = 100;
     expectedName = 'BindingResourceConnectionNegotiator';
   }
   @override
   List<Nonza> match(List<Nonza> requests) {
-    var nonza = requests.firstWhereOrNull((request) => request.name == BIND_NAME);
+    var nonza =
+        requests.firstWhereOrNull((request) => request.name == BIND_NAME);
     return nonza != null ? [nonza] : [];
   }
 
@@ -31,8 +34,8 @@ class BindingResourceConnectionNegotiator extends Negotiator {
   void negotiate(List<Nonza> nonzas) {
     if (match(nonzas).isNotEmpty) {
       state = NegotiatorState.NEGOTIATING;
-      subscription = _connection.inStanzasStream.listen(parseStanza);
-      sendBindRequestStanza(_connection.account.resource);
+      subscription = _connection!.inStanzasStream.listen(parseStanza);
+      sendBindRequestStanza(_connection!.account.resource);
     }
   }
 
@@ -42,7 +45,7 @@ class BindingResourceConnectionNegotiator extends Negotiator {
       var jidValue = element?.getChild('jid')?.textValue;
       if (jidValue != null) {
         var jid = Jid.fromFullJid(jidValue);
-        _connection.fullJidRetrieved(jid);
+        _connection!.fullJidRetrieved(jid);
         state = NegotiatorState.DONE;
         subscription.cancel();
       }
@@ -60,6 +63,7 @@ class BindingResourceConnectionNegotiator extends Negotiator {
     var attribute = XmppAttribute('xmlns', BIND_ATTRIBUTE);
     bindElement.addAttribute(attribute);
     stanza.addChild(bindElement);
-    _connection.writeStanza(stanza);
+    Log.d('resource-binding', 'Handle resource binding sent');
+    _connection!.writeStanza(stanza);
   }
 }

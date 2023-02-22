@@ -1,13 +1,16 @@
-import '../XmppAttribute.dart';
-import '../XmppElement.dart';
+import 'package:xmpp_stone/src/elements/XmppAttribute.dart';
+import 'package:xmpp_stone/src/elements/XmppElement.dart';
 
 class FieldElement extends XmppElement {
-
   FieldElement() {
     name = 'field';
   }
 
-  FieldElement.build({String? varAttr, String? typeAttr, String? value}) {
+  FieldElement.build(
+      {String? varAttr,
+      String? typeAttr,
+      String? value,
+      List<String> values = const []}) {
     name = 'field';
     if (varAttr != null) {
       addAttribute(XmppAttribute('var', varAttr));
@@ -19,6 +22,19 @@ class FieldElement extends XmppElement {
       var valueElement = XmppElement();
       valueElement.name = 'value';
       valueElement.textValue = value;
+      addChild(valueElement);
+    }
+    if (values.isNotEmpty) {
+      values.forEach((childValue) {
+        var valueElement = XmppElement();
+        valueElement.name = 'value';
+        valueElement.textValue = childValue;
+        addChild(valueElement);
+      });
+    }
+    if (values.isEmpty && value == null) {
+      var valueElement = XmppElement();
+      valueElement.name = 'value';
       addChild(valueElement);
     }
   }

@@ -8,9 +8,10 @@ import 'package:xmpp_stone/src/elements/XmppElement.dart';
 import 'package:xmpp_stone/src/elements/stanzas/AbstractStanza.dart';
 import 'package:xmpp_stone/src/elements/stanzas/IqStanza.dart';
 import 'package:xmpp_stone/src/extensions/vcard_temp/VCard.dart';
+import 'package:xmpp_stone/src/logger/Log.dart';
 
 class VCardManager {
-  static Map<Connection, VCardManager> instances = {};
+  static Map<Connection, VCardManager> instances = <Connection, VCardManager>{};
 
   static VCardManager getInstance(Connection connection) {
     var manager = instances[connection];
@@ -29,42 +30,52 @@ class VCardManager {
     _connection.inStanzasStream.listen(_processStanza);
   }
 
-  final Map<String, Tuple2<IqStanza, Completer>> _myUnrespondedIqStanzas = {};
+  final Map<String?, Tuple2<IqStanza, Completer>> _myUnrespondedIqStanzas =
+      <String?, Tuple2<IqStanza, Completer>>{};
 
-  final Map<String, VCard> _vCards = {};
+  final Map<String?, VCard> _vCards = <String?, VCard>{};
 
-  Future<VCard> getSelfVCard() {
+  Future<VCard> getSelfVCard() async {
     var completer = Completer<VCard>();
-    var iqStanza =
-        IqStanza(AbstractStanza.getRandomId(), IqStanzaType.GET);
+    var iqStanza = IqStanza(AbstractStanza.getRandomId(), IqStanzaType.GET);
     iqStanza.fromJid = _connection.fullJid;
     var vCardElement = XmppElement();
     vCardElement.name = 'vCard';
     vCardElement.addAttribute(XmppAttribute('xmlns', 'vcard-temp'));
     iqStanza.addChild(vCardElement);
-    _myUnrespondedIqStanzas[iqStanza.id!] = Tuple2(iqStanza, completer);
-    _connection.writeStanza(iqStanza);
+    _myUnrespondedIqStanzas[iqStanza.id] = Tuple2(iqStanza, completer);
+    await _connection.writeStanzaWithQueue(iqStanza);
+    return completer.future;
+  }
+
+  Future<VCard> updateSelfVCard(VCard selfCard) async {
+    var completer = Completer<VCard>();
+    var iqStanza = IqStanza(AbstractStanza.getRandomId(), IqStanzaType.SET);
+    var vCardElement = selfCard.buildXMLWithAttributes();
+    iqStanza.addChild(vCardElement);
+    _myUnrespondedIqStanzas[iqStanza.id] = Tuple2(iqStanza, completer);
+    // TODO: remove
+    await _connection.writeStanzaWithQueue(iqStanza);
     return completer.future;
   }
 
   Future<VCard> getVCardFor(Jid jid) {
     var completer = Completer<VCard>();
-    var iqStanza =
-        IqStanza(AbstractStanza.getRandomId(), IqStanzaType.GET);
+    var iqStanza = IqStanza(AbstractStanza.getRandomId(), IqStanzaType.GET);
     iqStanza.fromJid = _connection.fullJid;
     iqStanza.toJid = jid;
     var vCardElement = XmppElement();
     vCardElement.name = 'vCard';
     vCardElement.addAttribute(XmppAttribute('xmlns', 'vcard-temp'));
     iqStanza.addChild(vCardElement);
-    _myUnrespondedIqStanzas[iqStanza.id!] = Tuple2(iqStanza, completer);
-    _connection.writeStanza(iqStanza);
+    _myUnrespondedIqStanzas[iqStanza.id] = Tuple2(iqStanza, completer);
+    _connection.writeStanzaWithQueue(iqStanza);
     return completer.future;
   }
 
   void _connectionStateProcessor(XmppConnectionState event) {}
 
-  Map<String, VCard> getAllReceivedVCards() {
+  Map<String?, VCard> getAllReceivedVCards() {
     return _vCards;
   }
 
@@ -74,6 +85,8 @@ class VCardManager {
       if (_myUnrespondedIqStanzas[stanza.id] != null) {
         if (stanza.type == IqStanzaType.RESULT) {
           var vCardChild = stanza.getChild('vCard');
+          Log.d('VCARD',
+              'manager.vCardUpdate::my info ${stanza.buildXmlString()}');
           if (vCardChild != null) {
             var vCard = VCard(vCardChild);
             if (stanza.fromJid != null) {
@@ -82,6 +95,9 @@ class VCardManager {
               _vCards[_connection.fullJid.userAtDomain] = vCard;
             }
             unrespondedStanza!.item2.complete(vCard);
+          } else {
+            // vCardChild is null because of the result response of updating the card
+            unrespondedStanza!.item2.complete(UpdateAckVCard(XmppElement()));
           }
         } else if (stanza.type == IqStanzaType.ERROR) {
           unrespondedStanza!.item2

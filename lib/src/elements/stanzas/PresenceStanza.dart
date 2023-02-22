@@ -10,7 +10,8 @@ class PresenceStanza extends AbstractStanza {
 
   PresenceStanza.withType(PresenceType type) {
     name = 'presence';
-    addAttribute(XmppAttribute('type', type.toString().split('.').last.toLowerCase()));
+    addAttribute(
+        XmppAttribute('type', type.toString().split('.').last.toLowerCase()));
   }
 
   set type(PresenceType? value) {
@@ -34,15 +35,19 @@ class PresenceStanza extends AbstractStanza {
   }
 
   //status with no language prefs
+  @override
   String? get status {
-    var statusElement =
-        children.firstWhereOrNull((element) => element.name == 'status' && element.attributes.isEmpty);
+    var statusElement = children.firstWhere(
+        (element) => element!.name == 'status' && element.attributes.isEmpty,
+        orElse: () => null);
     return statusElement?.textValue;
   }
 
+  @override
   set status(String? value) {
-    var childElement =
-        children.firstWhereOrNull((element) => element.name == 'status' && element.attributes.isEmpty);
+    var childElement = children.firstWhere(
+        (element) => element!.name == 'status' && element.attributes.isEmpty,
+        orElse: () => null);
     if (childElement == null) {
       var element = XmppElement();
       element.name = 'status';
@@ -54,9 +59,7 @@ class PresenceStanza extends AbstractStanza {
   }
 
   int? get priority {
-    var priority = getChild('priority');
-
-    return priority == null || priority.textValue == null ? null : int.tryParse(priority.textValue!);
+    return int.tryParse(getChild('priority')?.textValue! ?? '0');
   }
 
   set priority(int? value) {
@@ -101,8 +104,9 @@ class PresenceStanza extends AbstractStanza {
   }
 
   void _setChildValue(String childName, String value) {
-    var childElement =
-        children.firstWhereOrNull((element) => element.name == childName && element.attributes.isEmpty);
+    var childElement = children.firstWhere(
+        (element) => element!.name == childName && element.attributes.isEmpty,
+        orElse: () => null);
     if (childElement == null) {
       var element = XmppElement();
       element.name = childName;
@@ -114,7 +118,8 @@ class PresenceStanza extends AbstractStanza {
   }
 
   void _setAttributeValue(String attrName, String value) {
-    var attr = attributes.firstWhereOrNull((attribute) => attribute.name == name);
+    var attr =
+        attributes.firstWhereOrNull((attribute) => attribute.name == name);
     if (attr == null) {
       var element = XmppElement();
       element.name = attrName;

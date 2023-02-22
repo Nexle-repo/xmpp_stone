@@ -1,11 +1,31 @@
 import 'package:xmpp_stone/src/data/Jid.dart';
 
 class Buddy {
-  SubscriptionType? subscriptionType;
+  SubscriptionType? _subscriptionType;
 
-  String? name;
+  SubscriptionAskType? _subscriptionAskType;
 
-  Jid? accountJid;
+  String? _name;
+
+  Jid? _accountJid;
+
+  Jid? get accountJid => _accountJid;
+
+  set accountJid(Jid? value) {
+    _accountJid = value;
+  }
+
+  SubscriptionType? get subscriptionType => _subscriptionType;
+
+  set subscriptionType(SubscriptionType? value) {
+    _subscriptionType = value;
+  }
+
+  SubscriptionAskType? get subscriptionAskType => _subscriptionAskType;
+
+  set subscriptionAskType(SubscriptionAskType? value) {
+    _subscriptionAskType = value;
+  }
 
   Jid? _jid;
 
@@ -18,6 +38,12 @@ class Buddy {
   @override
   String toString() {
     return _jid!.fullJid!;
+  }
+
+  String? get name => _name;
+
+  set name(String? value) {
+    _name = value;
   }
 
   static SubscriptionType? typeFromString(String? typeString) {
@@ -33,6 +59,18 @@ class Buddy {
     }
     return null;
   }
+
+  static SubscriptionAskType? typeAskFromString(String? typeString) {
+    switch (typeString) {
+      case 'none':
+        return SubscriptionAskType.NONE;
+      case 'subscribe':
+        return SubscriptionAskType.SUBSCRIBE;
+    }
+    return SubscriptionAskType.NA;
+  }
 }
 
 enum SubscriptionType { NONE, TO, FROM, BOTH }
+
+enum SubscriptionAskType { NA, NONE, SUBSCRIBE }

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:universal_io/io.dart';
 
+import 'package:universal_io/io.dart';
 import 'package:xmpp_stone/src/connection/XmppWebsocketApi.dart';
 
 export 'XmppWebsocketApi.dart';
@@ -23,7 +23,9 @@ class XmppWebSocketIo extends XmppWebSocket {
 
   @override
   Future<XmppWebSocket> connect<S>(String host, int port,
-      {String Function(String event)? map, List<String>? wsProtocols, String? wsPath}) async {
+      {String Function(String event)? map,
+      List<String>? wsProtocols,
+      String? wsPath}) async {
     await Socket.connect(host, port).then((Socket socket) {
       _socket = socket;
 

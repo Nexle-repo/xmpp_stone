@@ -3,14 +3,20 @@ import 'package:xmpp_stone/src/elements/XmppAttribute.dart';
 import 'AbstractStanza.dart';
 
 class IqStanza extends AbstractStanza {
-  IqStanzaType type = IqStanzaType.SET;
+  IqStanzaType _type = IqStanzaType.SET;
+
+  IqStanzaType get type => _type;
+
+  set type(IqStanzaType value) {
+    _type = value;
+  }
 
   IqStanza(String? id, IqStanzaType type) {
     name = 'iq';
     this.id = id;
-    this.type = type;
+    _type = type;
     addAttribute(
-        XmppAttribute('type', type.toString().split('.').last.toLowerCase()));
+        XmppAttribute('type', _type.toString().split('.').last.toLowerCase()));
   }
 }
 
