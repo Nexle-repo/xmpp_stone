@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:console/console.dart';
 import 'package:universal_io/io.dart';
+import 'package:xmpp_stone/src/features/servicediscovery/ServiceDiscoveryNegotiator.dart';
 import 'package:xmpp_stone/src/logger/Log.dart';
 import 'package:xmpp_stone/xmpp_stone.dart';
 
@@ -12,7 +13,7 @@ void main(List<String> arguments) {
   Log.logLevel = LogLevel.DEBUG;
   Log.logXmpp = false;
   Log.d(TAG, 'Type user@domain:');
-  var userAtDomain = 'rhp#testing_30@dev24.nexlesoft.com';
+  var userAtDomain = 'rhp#testing_35@dev24.nexlesoft.com';
   Log.d(TAG, 'Type password');
   var password = 'Aa123456@';
   var jid = Jid.fromFullJid(userAtDomain);
@@ -28,6 +29,30 @@ void main(List<String> arguments) {
   );
   var connection = Connection(account);
   connection.connect();
+  connection.inNonzasStream.listen((event) { 
+    Log.d(TAG, 'inNonzasStream: ${event.buildXmlString()}');
+  });
+  connection.outNonzasStream.listen((event) { 
+    Log.d(TAG, 'outNonzasStream: ${event.buildXmlString()}');
+  });
+  connection.outStanzasStream.listen((event) { 
+    Log.d(TAG, 'outStanzasStream: ${event.buildXmlString()}');
+  });
+
+  ServiceDiscoveryNegotiator.getInstance(connection).subscription?.onData((data) {
+        Log.d(TAG, 'ServiceDiscoveryNegotiator: ${data?.buildXml()}');
+
+  });
+
+  PrivacyListsManager.getInstance(connection).listsChangesStream.listen((data) {
+        Log.d(TAG, 'PrivacyListsManager: $data');
+
+  });
+  connection.inStanzasStream.listen((event) async { 
+    final stanza = event is MessageStanza? event as MessageStanza? : null;
+    Log.d(TAG, 'inStanzasStream: ${event?.buildXmlString()} ---- ${stanza?.buildXmlString()}');
+
+  });
   MessagesListener messagesListener = ExampleMessagesListener();
   ExampleConnectionStateChangedListener(connection, messagesListener);
   var presenceManager = PresenceManager.getInstance(connection);
@@ -69,7 +94,7 @@ class ExampleConnectionStateChangedListener
       var rosterManager = RosterManager.getInstance(_connection);
       messageHandler.messagesStream.listen(_messagesListener.onNewMessage);
       sleep(const Duration(seconds: 1));
-      var receiver = 'rhp#testing_11@dev24.nexlesoft.com';
+      var receiver = 'rhp#testing_31@dev24.nexlesoft.com';
       var receiverJid = Jid.fromFullJid(receiver);
       rosterManager.addRosterItem(Buddy(receiverJid)).then((result) {
         if (result.description != null) {
