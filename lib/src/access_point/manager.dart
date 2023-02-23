@@ -89,6 +89,7 @@ class XMPPClientManager {
   late xmpp.PresenceManager _presenceManager;
   late ConnectionManagerStateChangedListener _connectionStateListener;
   late ConnectionResponseListener _connectionResponseListener;
+  late bool _logXmpp;
 
   StreamSubscription? messageListener;
   StreamSubscription? _rosterList;
@@ -114,12 +115,14 @@ class XMPPClientManager {
     this.writeQueueMs = 200,
     String? resource,
     String? wsPath,
+    bool logXmpp = false,
     List<String>? wsProtocols,
   }) {
     personel = XMPPClientPersonel(jid, password);
     LOG_TAG = '$LOG_TAG/$jid';
     _onReady = onReady;
     _onLog = onLog;
+    _logXmpp = logXmpp;
     _onMessage = onMessage;
     _onPresence = onPresence;
     _onState = onState;
@@ -137,7 +140,7 @@ class XMPPClientManager {
 
   XMPPClientManager createSession() {
     Log.logLevel = LogLevel.DEBUG;
-    Log.logXmpp = false;
+    Log.logXmpp = _logXmpp;
     var jid = xmpp.Jid.fromFullJid(personel.jid);
     Log.d(LOG_TAG, 'Connecting to $host');
     var account = xmpp.XmppAccountSettings(
