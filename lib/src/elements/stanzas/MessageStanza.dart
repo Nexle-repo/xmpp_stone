@@ -67,7 +67,7 @@ class MessageStanza extends AbstractStanza
     final currentElement = element ?? this;
     final bodyElement = currentElement.children.firstWhere((element) => element?.name == 'body', orElse: () => null);
     if (currentElement.children.isEmpty || bodyElement != null) {
-      return bodyElement != null ? bodyElement.textValue : currentElement.textValue;
+      return bodyElement != null ? bodyElement.textValue : currentElement.name == 'body' ? currentElement.textValue : null;
      
     }
     return getBodyCarbon(element: currentElement.children.first);
