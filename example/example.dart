@@ -12,7 +12,7 @@ void main(List<String> arguments) {
   Log.logLevel = LogLevel.DEBUG;
   Log.logXmpp = false;
   Log.d(TAG, 'Type user@domain:');
-  var userAtDomain = 'rhp#testing_11@dev24.nexlesoft.com';
+  var userAtDomain = 'rhp#testing_12@dev24.nexlesoft.com';
   Log.d(TAG, 'Type password');
   var password = '1111';
   var jid = Jid.fromFullJid(userAtDomain);
@@ -41,7 +41,8 @@ void main(List<String> arguments) {
       print('[onLog]: $message');
     },
     onMessage: (XMPPMessageParams message, ListenerType listenerType) async {
-      print('[recieved message]: ${message.message!.body} ---- ${message.message!.getBodyCarbon()} - [TYPE]: $listenerType');
+      print('[recieved message]: ${message.message!.body} ---- ${message.message?.getBodyCarbon()} - [TYPE]: $listenerType');
+      print('${listenerType.toString()}');
     },
     onPresence: (PresenceData presenceData) async {
       if (presenceData.presenceStanza != null) {

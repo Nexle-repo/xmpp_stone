@@ -48,10 +48,8 @@ class ConnectionNegotiationManager {
 
   void negotiateFeatureList(xml.XmlElement element) {
     Log.d(TAG, 'Negotiating features');
-    var nonzas = element.descendants
-        .whereType<xml.XmlElement>()
-        .map((element) => Nonza.parse(element))
-        .toList();
+    var nonzas =
+        element.childElements.map((element) => Nonza.parse(element)).toList();
     supportedNegotiatorList.forEach((negotiator) {
       var matchingNonzas = negotiator.match(nonzas);
       if (matchingNonzas != null && matchingNonzas.isNotEmpty) {

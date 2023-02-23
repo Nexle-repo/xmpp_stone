@@ -376,7 +376,7 @@ xml:lang='en'
       xml.XmlNode? xmlResponse;
       Log.d(this.toString(), 'Receiving full response:\n: ${fullResponse}');
       try {
-        xmlResponse = xml.XmlDocument.parse(fullResponse).firstChild;
+        xmlResponse = xml.XmlDocument.parse(fullResponse.replaceAll(RegExp(r'<\?(xml.+?)\>'), '')).firstChild;
       } catch (e) {
         _unparsedXmlResponse += fullResponse.substring(
             0, fullResponse.length - 13); //remove  xmpp_stone end tag

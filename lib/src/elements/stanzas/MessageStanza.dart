@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:xmpp_stone/src/elements/XmppAttribute.dart';
 import 'package:xmpp_stone/src/elements/XmppElement.dart';
 import 'package:xmpp_stone/src/elements/forms/XElement.dart';
@@ -63,8 +65,9 @@ class MessageStanza extends AbstractStanza
 
   String? getBodyCarbon({XmppElement? element}) {
     final currentElement = element ?? this;
-    if (currentElement.children.isEmpty) {
-      return currentElement.name == 'body' && currentElement.attributes.isEmpty ? currentElement.textValue : null;
+    final bodyElement = currentElement.children.firstWhere((element) => element?.name == 'body', orElse: () => null);
+    if (currentElement.children.isEmpty || bodyElement != null) {
+      return bodyElement != null ? bodyElement.textValue : currentElement.textValue;
      
     }
     return getBodyCarbon(element: currentElement.children.first);
