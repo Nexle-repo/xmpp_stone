@@ -61,6 +61,15 @@ class MessageStanza extends AbstractStanza
           orElse: () => null)
       ?.textValue;
 
+  String? getBodyCarbon({XmppElement? element}) {
+    final currentElement = element ?? this;
+    if (currentElement.children.isEmpty) {
+      return currentElement.name == 'body' && currentElement.attributes.isEmpty ? currentElement.textValue : null;
+     
+    }
+    return getBodyCarbon(element: currentElement.children.first);
+  }
+
   set body(String? value) {
     var element = XmppElement();
     element.name = 'body';

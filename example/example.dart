@@ -12,9 +12,9 @@ void main(List<String> arguments) {
   Log.logLevel = LogLevel.DEBUG;
   Log.logXmpp = false;
   Log.d(TAG, 'Type user@domain:');
-  var userAtDomain = 'rhp#testing_35@dev24.nexlesoft.com';
+  var userAtDomain = 'rhp#testing_11@dev24.nexlesoft.com';
   Log.d(TAG, 'Type password');
-  var password = 'Aa123456@';
+  var password = '1111';
   var jid = Jid.fromFullJid(userAtDomain);
   var account = XmppAccountSettings(
     userAtDomain,
@@ -37,23 +37,32 @@ void main(List<String> arguments) {
       context.listens();
       context.presenceSend(PresenceShowElement.CHAT, description: 'Working');
     },
-    onLog: (String time, String message) {},
+    onLog: (String time, String message) {
+      print('[onLog]: $message');
+    },
     onMessage: (XMPPMessageParams message, ListenerType listenerType) async {
-      print('recieved message: ${message.message!.body}');
-      print('${listenerType.toString()}');
+      print('[recieved message]: ${message.message!.body} ---- ${message.message!.getBodyCarbon()} - [TYPE]: $listenerType');
     },
     onPresence: (PresenceData presenceData) async {
       if (presenceData.presenceStanza != null) {
-        print('presenceData ${presenceData.presenceStanza?.buildXmlString()}');
+        print('[presenceData] ${presenceData.presenceStanza?.buildXmlString()}');
       }
     },
-    onPresenceSubscription: (SubscriptionEvent subscriptionEvent) async {},
+    onRosterList: (buddies) {
+      print("[onRosterList] ${buddies.length}");
+    },
+    onArchiveRetrieved: (msg) {
+      print("[onArchiveRetrieved] $msg");
+    },
+    onPresenceSubscription: (SubscriptionEvent subscriptionEvent) async {
+      print("[onPresenceSubscription] $subscriptionEvent");
+    },
     onPing: () async {},
     // onArchiveRetrieved: (AbstractStanza stanza) {
     //     log('Flutter dart finishing retrieval of archive : ${stanza.buildXmlString()})');
     // },
     onState: (XmppConnectionState state) {
-      print('XmppConnectionState $state');
+      print('[XmppConnectionState] $state');
       // print('status of ${this.name} ' + state.toString());
     },
   );
@@ -101,21 +110,6 @@ class ExampleConnectionStateChangedListener
   void onConnectionStateChanged(XmppConnectionState state) {
     if (state == XmppConnectionState.Ready) {
       Log.d(TAG, 'Connected');
-      var vCardManager = VCardManager(_connection);
-      vCardManager.getSelfVCard().then((vCard) {
-        Log.d(TAG, 'Your info ${vCard.buildXmlString()}');
-      });
-      var messageHandler = MessageHandler.getInstance(_connection);
-      var rosterManager = RosterManager.getInstance(_connection);
-      messageHandler.messagesStream.listen(_messagesListener.onNewMessage);
-      sleep(const Duration(seconds: 1));
-      var receiver = 'rhp#testing_31@dev24.nexlesoft.com';
-      var receiverJid = Jid.fromFullJid(receiver);
-
-      sleep(const Duration(seconds: 1));
-      vCardManager.getVCardFor(receiverJid).then((vCard) {
-        Log.d(TAG, 'Receiver info ${vCard.buildXmlString()}');
-      });
       var presenceManager = PresenceManager.getInstance(_connection);
       presenceManager.presenceStream.listen(_onPresence);
     }
