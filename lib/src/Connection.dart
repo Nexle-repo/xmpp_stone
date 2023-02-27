@@ -429,10 +429,9 @@ xml:lang='en'
         state != XmppConnectionState.SocketOpening;
   }
 
-  Future writeClose(socket) async {
-    socket.write('</stream:stream>');
-    await socket.flush();
-    await socket.close();
+  Future writeClose(xmppSocket.XmppWebSocket? socket) async {
+    socket?.write('</stream:stream>');
+    socket?.close();
   }
 
   void write(message) {

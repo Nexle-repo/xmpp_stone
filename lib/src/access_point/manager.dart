@@ -656,16 +656,7 @@ class XMPPClientManager {
 
   // Send 1-1 message
   Future<xmpp.MessageStanza> sendMessage(String message, String receiver,
-      {MessageParams additional = const MessageParams(
-          millisecondTs: 0,
-          customString: '',
-          messageId: '',
-          receipt: ReceiptRequestType.RECEIVED,
-          messageType: MessageStanzaType.CHAT,
-          chatStateType: ChatStateType.None,
-          ampMessageType: AmpMessageType.None,
-          options: XmppCommunicationConfig(shallWaitStanza: false),
-          hasEncryptedBody: false)}) {
+      {MessageParams additional = MessageParams.defaultMessageParams}) {
     return _messageHandler.sendMessage(xmpp.Jid.fromFullJid(receiver), message,
         additional: additional);
   }
