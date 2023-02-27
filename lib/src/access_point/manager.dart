@@ -779,6 +779,21 @@ class XMPPClientManager {
     return await omemoManager.envelopeEncryptionContent(params);
   }
 
+  // Pin or unpin a message
+  Future<xmpp.MessageStanza> pinMessage(String receiver, String messageId, bool isPinned,
+      {MessageParams additional = const MessageParams(
+          millisecondTs: 0,
+          customString: '',
+          messageId: '',
+          receipt: ReceiptRequestType.RECEIVED,
+          messageType: MessageStanzaType.CHAT,
+          chatStateType: ChatStateType.None,
+          ampMessageType: AmpMessageType.None,
+          options: XmppCommunicationConfig(shallWaitStanza: false),
+          hasEncryptedBody: false)}) {
+    return _messageHandler.pinMessage(xmpp.Jid.fromFullJid(receiver), messageId, isPinned, additional: additional);
+  }
+
   /// Listeners
 
   void listens() {

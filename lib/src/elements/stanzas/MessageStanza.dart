@@ -5,9 +5,11 @@ import 'package:xmpp_stone/src/elements/XmppElement.dart';
 import 'package:xmpp_stone/src/elements/forms/XElement.dart';
 import 'package:xmpp_stone/src/elements/messages/Amp.dart';
 import 'package:xmpp_stone/src/elements/messages/AmpRuleElement.dart';
+import 'package:xmpp_stone/src/elements/messages/ApplyToElement.dart';
 import 'package:xmpp_stone/src/elements/messages/CustomElement.dart';
 import 'package:xmpp_stone/src/elements/messages/CustomSubElement.dart';
 import 'package:xmpp_stone/src/elements/messages/DelayElement.dart';
+import 'package:xmpp_stone/src/elements/messages/PinnedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/ReceiptReceivedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/ReceiptRequestElement.dart';
 import 'package:xmpp_stone/src/elements/messages/TimeElement.dart';
@@ -19,6 +21,7 @@ import 'package:xmpp_stone/src/elements/messages/mam/ResultElement.dart';
 import 'package:xmpp_stone/src/elements/messages/mam/StanzaIdElement.dart';
 import 'package:xmpp_stone/src/elements/stanzas/AbstractStanza.dart';
 import 'package:xmpp_stone/src/extensions/advanced_messaging_processing/AmpInterface.dart';
+import 'package:xmpp_stone/src/extensions/apply_to/ApplyToInterface.dart';
 import 'package:xmpp_stone/src/extensions/mam/ArchiveResultInterface.dart';
 import 'package:xmpp_stone/src/extensions/mam/ArchiveStanzaIdInterface.dart';
 import 'package:xmpp_stone/src/extensions/message_carbon/SentInterface.dart';
@@ -38,7 +41,8 @@ class MessageStanza extends AbstractStanza
         SentInterface,
         ArchiveResultInterface,
         ArchiveStanzaIdInterface,
-        MessageInvitationInterface {
+        MessageInvitationInterface,
+        ApplyToInterface {
   MessageStanzaType? _type;
 
   MessageStanzaType? get type => _type;
@@ -78,6 +82,40 @@ class MessageStanza extends AbstractStanza
     element.name = 'body';
     element.textValue = value;
     addChild(element);
+  }
+
+  String? get getPinnedValue {
+    final applyTo = this.children.firstWhere((element) {
+      return element?.name == 'apply-to';
+    }, orElse: () => null);
+    final pinAction = applyTo?.children.firstWhere((element) {
+      return element?.name == 'pin-action';
+    }, orElse: () => null);;
+    return pinAction?.textValue; 
+  }
+
+  @override
+  ApplyToInterface addPinMessage(String messageId, bool isPinned) {
+    addChild(ApplyToElement.buildPinMessage(messageId, isPinned));
+    return this;
+  }
+  
+  @override
+  XmppElement? getApplyTo() {
+    return ApplyToElement.parse(this);
+  }
+
+  @override
+  bool isPinMessage() {
+    var applyTo = ApplyToElement.parse(this);
+    if (applyTo == null) {
+      return false;
+    }
+    var pin = PinnedElement.parse(ApplyToElement.parse(this));
+    if (pin != null) {
+      return true;
+    }
+    return false;
   }
 
   String? get subject => children

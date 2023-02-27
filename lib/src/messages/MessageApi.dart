@@ -8,4 +8,6 @@ abstract class MessageApi {
       {MessageParams additional});
   Future<MessageStanza> sendSecureMessage(Jid to, EncryptElement encryptElement,
       {MessageParams additional});
+  Future<MessageStanza> pinMessage(Jid to, String messageId, bool isPinned,
+      {MessageParams additional});
 }

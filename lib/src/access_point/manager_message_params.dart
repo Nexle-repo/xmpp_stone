@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:xmpp_stone/src/extensions/chat_states/ChatStateDecoration.dart';
 import 'package:xmpp_stone/xmpp_stone.dart' as xmpp;
 
@@ -116,6 +115,14 @@ class XMPPMessageParams {
 
   bool get isGroupInvitationMessage {
     return message!.getInvitation() != null;
+  }
+
+  bool get isApplyToMessage {
+    return message!.getApplyTo() != null;
+  }
+
+  bool get isPinMessage {
+    return message!.isPinMessage();
   }
 
   xmpp.XmppElement? get archiveMessage {

@@ -167,4 +167,67 @@ class MessageHandler implements MessageApi {
           hasEncryptedBody: false)}) {
     return _sendMessageStanza(to, '', additional, encryptElement);
   }
+  
+  @override
+  Future<MessageStanza> pinMessage(Jid to, String messageId, bool isPinned, 
+    {MessageParams additional = const MessageParams(
+        millisecondTs: 0,
+        customString: '',
+        messageId: '',
+        receipt: ReceiptRequestType.NONE,
+        messageType: MessageStanzaType.CHAT,
+        chatStateType: ChatStateType.None,
+        ampMessageType: AmpMessageType.None,
+        hasEncryptedBody: false,
+        options: XmppCommunicationConfig(shallWaitStanza: false),
+      )}) {
+        return _pinMessageStanza(to, messageId, isPinned, additional);
+  }
+
+  Future<MessageStanza> _pinMessageStanza(Jid? jid, String messageId, bool isPinned,
+      MessageParams additional) async {
+    final stanza = MessageStanza(
+        additional.messageId.isEmpty
+            ? AbstractStanza.getRandomId()
+            : additional.messageId,
+        additional.messageType);
+    stanza.toJid = jid;
+    stanza.fromJid = _connection!.fullJid;
+    // Validation
+    if (stanza.toJid == null || stanza.fromJid == null) {
+      throw InvalidJidMessageStanzaException();
+    }
+
+    stanza.addPinMessage(messageId, isPinned);
+
+    if (additional.millisecondTs != 0) {
+      stanza.addTime(additional.millisecondTs);
+    }
+
+    if (additional.customString.isNotEmpty) {
+      stanza.addCustom(additional.customString);
+    }
+
+    if (additional.chatStateType != ChatStateType.None) {
+      ChatStateDecoration(message: stanza).setState(additional.chatStateType);
+    }
+
+    // Add receipt delivery
+    if (additional.receipt == ReceiptRequestType.RECEIVED) {
+      stanza.addReceivedReceipt();
+    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
+      stanza.addRequestReceipt();
+    }
+
+    if (additional.ampMessageType == AmpMessageType.Delivery) {
+      // Add request stanza from server?
+      stanza.addAmpDeliverDirect();
+    }
+
+    await _connection!.writeStanzaWithQueue(stanza);
+
+    return stanza;
+    // Could not wait for the ack, there is no ack sent (r, c type)
+    // return responseHandler.set<MessageStanza>(stanza.id!, stanza);
+  }
 }
