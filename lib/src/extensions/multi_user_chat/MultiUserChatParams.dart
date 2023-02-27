@@ -516,25 +516,21 @@ MONGOOSEIM
 class JoinGroupChatroomParams {
   final String affiliation;
   final String role;
-  final DateTime historySince;
-  final bool shouldGetHistory;
+  final DateTime? historySince;
 
   const JoinGroupChatroomParams({
     required this.affiliation,
     required this.role,
-    required this.historySince,
-    required this.shouldGetHistory,
+    this.historySince,
   });
 
   static JoinGroupChatroomParams build({
-    required DateTime historySince,
-    required bool shouldGetHistory,
+    DateTime? historySince,
   }) {
     return JoinGroupChatroomParams(
       affiliation: 'member',
       role: 'participant',
       historySince: historySince,
-      shouldGetHistory: shouldGetHistory,
     );
   }
 
@@ -545,7 +541,7 @@ class JoinGroupChatroomParams {
 
     XmppElement itemHistory = XmppElement();
     itemHistory.name = 'history';
-    itemHistory.addAttribute(XmppAttribute('since', historySince.toString()));
+    itemHistory.addAttribute(XmppAttribute('since', historySince?.toString()));
     xElement.addChild(itemHistory);
 
     return xElement;
