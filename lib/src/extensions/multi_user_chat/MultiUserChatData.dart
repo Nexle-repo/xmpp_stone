@@ -359,15 +359,40 @@ class GetUsersResponse extends GroupResponse {
   }
 }
 
+class AddUserField {
+  final String affiliation;
+  final Jid? toJid;
+  final Jid? fromJid;
+
+  AddUserField({this.affiliation = 'none', this.toJid, this.fromJid,});
+}
+
 class AddUsersResponse extends GroupResponse {
-  static AddUsersResponse parse(AbstractStanza stanza) {
+  AddUserField? addUserField;
+  static AddUsersResponse parse(
+      AbstractStanza stanza, AbstractStanza stanzaData) {
     final response = BaseResponse.parseError(stanza);
 
     final _response = AddUsersResponse();
     _response.response = response;
     if (response.runtimeType == BaseValidResponse) {
       // Parse further
-      _response.success = true;
+      try {
+        final queryElement = stanzaData.getChild('query');
+        final addUserElement = queryElement!.getChild('item');
+        final affiliationAttribute =
+            addUserElement!.getAttribute('affiliation');
+        final jidAttribute = addUserElement.getAttribute('jid');
+        _response.addUserField = AddUserField(
+          toJid: Jid.fromFullJid(jidAttribute?.value ?? ''),
+          affiliation: affiliationAttribute?.value ?? 'none',
+          fromJid: stanza.fromJid,
+        );
+
+        _response.success = true;
+      } catch (e) {
+        _response.success = false;
+      }
     } else {
       _response.success = false;
     }

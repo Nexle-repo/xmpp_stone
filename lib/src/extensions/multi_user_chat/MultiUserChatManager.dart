@@ -316,7 +316,7 @@ class MultiUserChatManager {
           response = GetUsersResponse.parse(stanza);
           break;
         case AddUsersResponse:
-          response = AddUsersResponse.parse(stanza);
+          response = AddUsersResponse.parse(stanza, res.item1);
           break;
       }
       res.item2.complete(response);
