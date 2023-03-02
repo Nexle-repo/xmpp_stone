@@ -785,6 +785,28 @@ class XMPPClientManager {
     return _messageHandler.pinMessage(xmpp.Jid.fromFullJid(receiver), messageId, isPinned, additional: additional);
   }
 
+  // Quote a message
+  Future<xmpp.MessageStanza> quoteMessage(
+    String receiver, 
+    String messageId, 
+    String body,
+    String quoteText,
+    String userId,
+    String username,
+    String? messageType,
+    String? expts,
+      {MessageParams additional = const MessageParams(
+          millisecondTs: 0,
+          customString: '',
+          messageId: '',
+          receipt: ReceiptRequestType.RECEIVED,
+          messageType: MessageStanzaType.CHAT,
+          chatStateType: ChatStateType.None,
+          ampMessageType: AmpMessageType.None,
+          options: XmppCommunicationConfig(shallWaitStanza: false),
+          hasEncryptedBody: false)}) {
+    return _messageHandler.quoteMessage(xmpp.Jid.fromFullJid(receiver), messageId, body, quoteText, userId, username, messageType, expts, additional: additional);
+  }
   /// Listeners
 
   void listens() {

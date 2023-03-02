@@ -125,6 +125,10 @@ class XMPPMessageParams {
     return message!.isPinMessage();
   }
 
+  bool get isQuoteMessage {
+    return message!.isQuoteMessage();
+  }
+
   xmpp.XmppElement? get archiveMessage {
     return isArchive ? message!.getArchiveMessage() : null;
   }

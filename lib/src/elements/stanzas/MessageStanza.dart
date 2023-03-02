@@ -5,11 +5,12 @@ import 'package:xmpp_stone/src/elements/XmppElement.dart';
 import 'package:xmpp_stone/src/elements/forms/XElement.dart';
 import 'package:xmpp_stone/src/elements/messages/Amp.dart';
 import 'package:xmpp_stone/src/elements/messages/AmpRuleElement.dart';
-import 'package:xmpp_stone/src/elements/messages/ApplyToElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ApplyToElement.dart';
 import 'package:xmpp_stone/src/elements/messages/CustomElement.dart';
 import 'package:xmpp_stone/src/elements/messages/CustomSubElement.dart';
 import 'package:xmpp_stone/src/elements/messages/DelayElement.dart';
-import 'package:xmpp_stone/src/elements/messages/PinnedElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ExampleCustomElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/PinnedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/ReceiptReceivedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/ReceiptRequestElement.dart';
 import 'package:xmpp_stone/src/elements/messages/TimeElement.dart';
@@ -19,9 +20,11 @@ import 'package:xmpp_stone/src/elements/messages/carbon/SentElement.dart';
 import 'package:xmpp_stone/src/elements/messages/invitation/InviteElement.dart';
 import 'package:xmpp_stone/src/elements/messages/mam/ResultElement.dart';
 import 'package:xmpp_stone/src/elements/messages/mam/StanzaIdElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/QuoteElement.dart';
 import 'package:xmpp_stone/src/elements/stanzas/AbstractStanza.dart';
 import 'package:xmpp_stone/src/extensions/advanced_messaging_processing/AmpInterface.dart';
 import 'package:xmpp_stone/src/extensions/apply_to/ApplyToInterface.dart';
+import 'package:xmpp_stone/src/extensions/example_custom/ExampleCustomInterface.dart';
 import 'package:xmpp_stone/src/extensions/mam/ArchiveResultInterface.dart';
 import 'package:xmpp_stone/src/extensions/mam/ArchiveStanzaIdInterface.dart';
 import 'package:xmpp_stone/src/extensions/message_carbon/SentInterface.dart';
@@ -30,6 +33,7 @@ import 'package:xmpp_stone/src/extensions/message_delivery/DelayInterface.dart';
 import 'package:xmpp_stone/src/extensions/message_delivery/ReceiptInterface.dart';
 import 'package:xmpp_stone/src/extensions/message_delivery/TimeInterface.dart';
 import 'package:xmpp_stone/src/extensions/multi_user_chat/message_invitation_interface/MessageInvitationInterface.dart';
+import 'package:xmpp_stone/src/extensions/quote_message/quote_message.dart';
 
 class MessageStanza extends AbstractStanza
     implements
@@ -42,7 +46,8 @@ class MessageStanza extends AbstractStanza
         ArchiveResultInterface,
         ArchiveStanzaIdInterface,
         MessageInvitationInterface,
-        ApplyToInterface {
+        ApplyToInterface,
+        ExampleCustomInterface {
   MessageStanzaType? _type;
 
   MessageStanzaType? get type => _type;
@@ -90,14 +95,48 @@ class MessageStanza extends AbstractStanza
     }, orElse: () => null);
     final pinAction = applyTo?.children.firstWhere((element) {
       return element?.name == 'pin-action';
-    }, orElse: () => null);;
+    }, orElse: () => null);
     return pinAction?.textValue; 
+  }
+
+  QuoteMessage get quoteData {
+    final applyTo = this.children.firstWhere((element) {
+      return element?.name == 'apply-to';
+    }, orElse: () => null);
+    final custom = this.children.firstWhere((element) {
+      return element?.name == 'custom';
+    }, orElse: () => null);;
+    final model = QuoteMessage(
+      refMsgId: applyTo?.getAttribute("id")?.value ?? "", 
+      refMsgShortDesc: custom?.textValue ?? "", 
+      refMsgType: custom?.getAttribute('type')?.value ?? "", 
+      refUserId: int.parse(applyTo?.getAttribute("userId")?.value ?? ""),
+      refUsername: applyTo?.getAttribute("username")?.value ?? ""
+    );
+    return model; 
   }
 
   @override
   ApplyToInterface addPinMessage(String messageId, bool isPinned) {
     addChild(ApplyToElement.buildPinMessage(messageId, isPinned));
     return this;
+  }
+
+  @override
+  ApplyToInterface addQuoteMessage(String messageId, String userId, String username) {
+    addChild(ApplyToElement.buildQuoteMessage(messageId, userId, username));
+    return this;
+  }
+
+  @override
+  ExampleCustomInterface addQuoteCustom(String type, String expts, String text) {
+     addChild(ExampleCustomElement.buildQuote(type, expts, text));
+    return this;
+  }
+
+  @override
+  XmppElement? getExampleCustom() {
+    return ExampleCustomElement.parse(this);
   }
   
   @override
@@ -111,8 +150,21 @@ class MessageStanza extends AbstractStanza
     if (applyTo == null) {
       return false;
     }
-    var pin = PinnedElement.parse(ApplyToElement.parse(this));
+    var pin = PinnedElement.parse(applyTo);
     if (pin != null) {
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  bool isQuoteMessage() {
+    var applyTo = ApplyToElement.parse(this);
+    if (applyTo == null) {
+      return false;
+    }
+    var quote = QuoteElement.parse(applyTo);
+    if (quote != null) {
       return true;
     }
     return false;

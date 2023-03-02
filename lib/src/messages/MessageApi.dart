@@ -10,4 +10,15 @@ abstract class MessageApi {
       {MessageParams additional});
   Future<MessageStanza> pinMessage(Jid to, String messageId, bool isPinned,
       {MessageParams additional});
+  Future<MessageStanza> quoteMessage(
+    Jid to, 
+    String messageId,
+    String body,
+    String quoteText,
+    String userId,
+    String username,
+    String? messageType,
+    String? expts,
+    {MessageParams additional}
+  );
 }

@@ -230,4 +230,86 @@ class MessageHandler implements MessageApi {
     // Could not wait for the ack, there is no ack sent (r, c type)
     // return responseHandler.set<MessageStanza>(stanza.id!, stanza);
   }
+
+  @override
+  Future<MessageStanza> quoteMessage(
+    Jid to, 
+    String messageId,
+    String body,
+    String quoteText, 
+    String userId, 
+    String username, 
+    String? messageType, 
+    String? expts, 
+    {MessageParams additional = const MessageParams(
+          millisecondTs: 0,
+          customString: '',
+          messageId: '',
+          receipt: ReceiptRequestType.NONE,
+          messageType: MessageStanzaType.CHAT,
+          chatStateType: ChatStateType.None,
+          ampMessageType: AmpMessageType.None,
+          options: XmppCommunicationConfig(shallWaitStanza: false),
+          hasEncryptedBody: false)}) {
+    return _quoteMessageStanza(to, messageId, body, quoteText, userId, username, messageType, expts, additional);
+  }
+
+  Future<MessageStanza> _quoteMessageStanza(
+    Jid? jid, 
+    String messageId,
+    String body, 
+    String quoteText,
+    String userId,
+    String username,
+    String? messageType,
+    String? expts,
+    MessageParams additional,
+  ) async {
+    final stanza = MessageStanza(
+        additional.messageId.isEmpty
+            ? AbstractStanza.getRandomId()
+            : additional.messageId,
+        additional.messageType);
+    stanza.toJid = jid;
+    stanza.fromJid = _connection!.fullJid;
+    // Validation
+    if (stanza.toJid == null || stanza.fromJid == null) {
+      throw InvalidJidMessageStanzaException();
+    }
+
+    stanza.body = body;
+
+    stanza.addQuoteMessage(messageId, userId, username);
+    stanza.addQuoteCustom(messageType ?? 'txt', expts ?? '0', quoteText);
+
+    if (additional.millisecondTs != 0) {
+      stanza.addTime(additional.millisecondTs);
+    }
+
+    if (additional.customString.isNotEmpty) {
+      stanza.addCustom(additional.customString);
+    }
+
+    if (additional.chatStateType != ChatStateType.None) {
+      ChatStateDecoration(message: stanza).setState(additional.chatStateType);
+    }
+
+    // Add receipt delivery
+    if (additional.receipt == ReceiptRequestType.RECEIVED) {
+      stanza.addReceivedReceipt();
+    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
+      stanza.addRequestReceipt();
+    }
+
+    if (additional.ampMessageType == AmpMessageType.Delivery) {
+      // Add request stanza from server?
+      stanza.addAmpDeliverDirect();
+    }
+
+    await _connection!.writeStanzaWithQueue(stanza);
+
+    return stanza;
+    // Could not wait for the ack, there is no ack sent (r, c type)
+    // return responseHandler.set<MessageStanza>(stanza.id!, stanza);
+  }
 }

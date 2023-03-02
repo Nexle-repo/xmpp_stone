@@ -1,5 +1,5 @@
-import '../XmppAttribute.dart';
-import '../XmppElement.dart';
+import '../../XmppAttribute.dart';
+import '../../XmppElement.dart';
 
 class PinnedElement extends XmppElement {
   static String elementName = 'pin-action';
