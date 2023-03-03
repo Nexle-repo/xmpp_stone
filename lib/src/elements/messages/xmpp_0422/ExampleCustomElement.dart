@@ -7,10 +7,11 @@ class ExampleCustomElement extends XmppElement {
     name = elementName;
   }
 
-  ExampleCustomElement.buildQuote(String type, String expts, String text) {
+  ExampleCustomElement.buildQuote(String type, String expts, String text, String refMsgTitle) {
     name = ExampleCustomElement.elementName;
     addAttribute(XmppAttribute('xmlns', 'rhp:urn:example:custom'));
     addAttribute(XmppAttribute('type', type));
+    addAttribute(XmppAttribute('refMsgTitle', refMsgTitle));
     addAttribute(XmppAttribute('expts', expts));
     textValue = text;
   }

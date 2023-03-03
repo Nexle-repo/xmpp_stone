@@ -111,7 +111,8 @@ class MessageStanza extends AbstractStanza
       refMsgShortDesc: custom?.textValue ?? "", 
       refMsgType: custom?.getAttribute('type')?.value ?? "", 
       refUserId: int.parse(applyTo?.getAttribute("userId")?.value ?? ""),
-      refUsername: applyTo?.getAttribute("username")?.value ?? ""
+      refUsername: applyTo?.getAttribute("username")?.value ?? "",
+      refMsgTitle: custom?.getAttribute('refMsgTitle')?.value ?? ""
     );
     return model; 
   }
@@ -129,8 +130,8 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
-  ExampleCustomInterface addQuoteCustom(String type, String expts, String text) {
-     addChild(ExampleCustomElement.buildQuote(type, expts, text));
+  ExampleCustomInterface addQuoteCustom(String type, String expts, String text, String refMsgTitle) {
+     addChild(ExampleCustomElement.buildQuote(type, expts, text, refMsgTitle));
     return this;
   }
 

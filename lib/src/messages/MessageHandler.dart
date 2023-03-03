@@ -280,7 +280,7 @@ class MessageHandler implements MessageApi {
     stanza.body = body;
 
     stanza.addQuoteMessage(messageId, userId, username);
-    stanza.addQuoteCustom(messageType ?? 'txt', expts ?? '0', quoteText);
+    stanza.addQuoteCustom(messageType ?? 'txt', expts ?? '0', quoteText, username);
 
     if (additional.millisecondTs != 0) {
       stanza.addTime(additional.millisecondTs);
