@@ -807,6 +807,22 @@ class XMPPClientManager {
           hasEncryptedBody: false)}) {
     return _messageHandler.quoteMessage(xmpp.Jid.fromFullJid(receiver), messageId, body, quoteText, userId, username, messageType, expts, additional: additional);
   }
+
+  // recall a message
+  Future<xmpp.MessageStanza> recallMessage(String receiver, List<String> messageIds, String fromUserId,
+      {MessageParams additional = const MessageParams(
+          millisecondTs: 0,
+          customString: '',
+          messageId: '',
+          receipt: ReceiptRequestType.RECEIVED,
+          messageType: MessageStanzaType.CHAT,
+          chatStateType: ChatStateType.None,
+          ampMessageType: AmpMessageType.None,
+          options: XmppCommunicationConfig(shallWaitStanza: false),
+          hasEncryptedBody: false)}) {
+    return _messageHandler.recallMessage(xmpp.Jid.fromFullJid(receiver), messageIds, fromUserId, additional: additional);
+  }
+
   /// Listeners
 
   void listens() {

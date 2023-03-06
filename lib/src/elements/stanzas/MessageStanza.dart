@@ -21,6 +21,7 @@ import 'package:xmpp_stone/src/elements/messages/invitation/InviteElement.dart';
 import 'package:xmpp_stone/src/elements/messages/mam/ResultElement.dart';
 import 'package:xmpp_stone/src/elements/messages/mam/StanzaIdElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/QuoteElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/RecalledElement.dart';
 import 'package:xmpp_stone/src/elements/stanzas/AbstractStanza.dart';
 import 'package:xmpp_stone/src/extensions/advanced_messaging_processing/AmpInterface.dart';
 import 'package:xmpp_stone/src/extensions/apply_to/ApplyToInterface.dart';
@@ -34,6 +35,7 @@ import 'package:xmpp_stone/src/extensions/message_delivery/ReceiptInterface.dart
 import 'package:xmpp_stone/src/extensions/message_delivery/TimeInterface.dart';
 import 'package:xmpp_stone/src/extensions/multi_user_chat/message_invitation_interface/MessageInvitationInterface.dart';
 import 'package:xmpp_stone/src/extensions/quote_message/quote_message.dart';
+import '../../extensions/recalled_message/RecalledMessageInterface.dart';
 
 class MessageStanza extends AbstractStanza
     implements
@@ -47,7 +49,8 @@ class MessageStanza extends AbstractStanza
         ArchiveStanzaIdInterface,
         MessageInvitationInterface,
         ApplyToInterface,
-        ExampleCustomInterface {
+        ExampleCustomInterface,
+        RecalledMessageInterface {
   MessageStanzaType? _type;
 
   MessageStanzaType? get type => _type;
@@ -115,6 +118,14 @@ class MessageStanza extends AbstractStanza
       refMsgTitle: custom?.getAttribute('refMsgTitle')?.value ?? ""
     );
     return model; 
+  }
+
+  List<String>? get getRecalledMessageIds {
+    final recalled = this.getRecalledMessage();
+    if (recalled != null && recalled.textValue != null) {
+      return recalled.textValue!.split(',');
+    }
+    return null;
   }
 
   @override
@@ -316,6 +327,22 @@ class MessageStanza extends AbstractStanza
     } else {
       return null;
     }
+  }
+  
+  @override
+  RecalledMessageInterface addRecallMessage(String fromUserId, String listMessageId) {
+    addChild(RecalledElement.build(fromUserId, listMessageId));
+    return this;
+  }
+  
+  @override
+  XmppElement? getRecalledMessage() {
+    return RecalledElement.parse(this);
+  }
+  
+  @override
+  bool isRecalledMessage() {
+    return this.getRecalledMessage() != null;
   }
 }
 

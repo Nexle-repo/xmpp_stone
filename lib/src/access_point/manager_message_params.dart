@@ -129,6 +129,10 @@ class XMPPMessageParams {
     return message!.isQuoteMessage();
   }
 
+  bool get isRecallMessage {
+    return message!.isRecalledMessage();
+  }
+
   xmpp.XmppElement? get archiveMessage {
     return isArchive ? message!.getArchiveMessage() : null;
   }

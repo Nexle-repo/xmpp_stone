@@ -21,4 +21,9 @@ abstract class MessageApi {
     String? expts,
     {MessageParams additional}
   );
+
+  Future<MessageStanza> recallMessage(Jid jid, 
+    List<String> messageId,
+    String userId,
+      {MessageParams additional});
 }
