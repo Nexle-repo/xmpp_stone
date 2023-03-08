@@ -27,6 +27,7 @@ export 'src/elements/XmppElement.dart';
 export 'src/features/message_archive/MessageArchiveManager.dart';
 export 'src/features/message_archive/MessageArchiveListener.dart';
 export 'src/features/message_archive/MessageArchiveData.dart';
+export 'src/extensions/muc_info_data/MUCInfoData.dart';
 export 'src/extensions/multi_user_chat/MultiUserChatData.dart';
 export 'src/extensions/multi_user_chat/MultiUserChatManager.dart';
 export 'src/extensions/multi_user_chat/MultiUserChatParams.dart';

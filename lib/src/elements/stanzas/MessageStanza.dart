@@ -10,6 +10,7 @@ import 'package:xmpp_stone/src/elements/messages/CustomElement.dart';
 import 'package:xmpp_stone/src/elements/messages/CustomSubElement.dart';
 import 'package:xmpp_stone/src/elements/messages/DelayElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ExampleCustomElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/MUCInfoElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/PinnedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/ReceiptReceivedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/ReceiptRequestElement.dart';
@@ -33,6 +34,7 @@ import 'package:xmpp_stone/src/extensions/message_delivery/CustomInterface.dart'
 import 'package:xmpp_stone/src/extensions/message_delivery/DelayInterface.dart';
 import 'package:xmpp_stone/src/extensions/message_delivery/ReceiptInterface.dart';
 import 'package:xmpp_stone/src/extensions/message_delivery/TimeInterface.dart';
+import 'package:xmpp_stone/src/extensions/muc_info_data/MUCInfoData.dart';
 import 'package:xmpp_stone/src/extensions/multi_user_chat/message_invitation_interface/MessageInvitationInterface.dart';
 import 'package:xmpp_stone/src/extensions/quote_message/quote_message.dart';
 import '../../extensions/recalled_message/RecalledMessageInterface.dart';
@@ -77,10 +79,14 @@ class MessageStanza extends AbstractStanza
 
   String? getBodyCarbon({XmppElement? element}) {
     final currentElement = element ?? this;
-    final bodyElement = currentElement.children.firstWhere((element) => element?.name == 'body', orElse: () => null);
+    final bodyElement = currentElement.children
+        .firstWhere((element) => element?.name == 'body', orElse: () => null);
     if (currentElement.children.isEmpty || bodyElement != null) {
-      return bodyElement != null ? bodyElement.textValue : currentElement.name == 'body' ? currentElement.textValue : null;
-     
+      return bodyElement != null
+          ? bodyElement.textValue
+          : currentElement.name == 'body'
+              ? currentElement.textValue
+              : null;
     }
     return getBodyCarbon(element: currentElement.children.first);
   }
@@ -99,7 +105,7 @@ class MessageStanza extends AbstractStanza
     final pinAction = applyTo?.children.firstWhere((element) {
       return element?.name == 'pin-action';
     }, orElse: () => null);
-    return pinAction?.textValue; 
+    return pinAction?.textValue;
   }
 
   QuoteMessage get quoteData {
@@ -108,16 +114,31 @@ class MessageStanza extends AbstractStanza
     }, orElse: () => null);
     final custom = this.children.firstWhere((element) {
       return element?.name == 'custom';
-    }, orElse: () => null);;
+    }, orElse: () => null);
+    ;
     final model = QuoteMessage(
-      refMsgId: applyTo?.getAttribute("id")?.value ?? "", 
-      refMsgShortDesc: custom?.textValue ?? "", 
-      refMsgType: custom?.getAttribute('type')?.value ?? "", 
-      refUserId: int.parse(applyTo?.getAttribute("userId")?.value ?? ""),
-      refUsername: applyTo?.getAttribute("username")?.value ?? "",
-      refMsgTitle: custom?.getAttribute('refMsgTitle')?.value ?? ""
+        refMsgId: applyTo?.getAttribute("id")?.value ?? "",
+        refMsgShortDesc: custom?.textValue ?? "",
+        refMsgType: custom?.getAttribute('type')?.value ?? "",
+        refUserId: int.parse(applyTo?.getAttribute("userId")?.value ?? ""),
+        refUsername: applyTo?.getAttribute("username")?.value ?? "",
+        refMsgTitle: custom?.getAttribute('refMsgTitle')?.value ?? "");
+    return model;
+  }
+
+  MUCInfoData? get mucInfoData {
+    final applyTo = this.children.firstWhere((element) {
+      return element?.name == 'apply-to';
+    }, orElse: () => null);
+    final data = applyTo?.children.firstWhere((element) {
+      return element?.name == MUCInfoElement.elementName;
+    }, orElse: () => null);
+    if (applyTo == null || data == null) return null;
+    final model = MUCInfoData(
+      subject: data.getAttribute('subject')?.value ?? "",
+      coverUrl: data.getAttribute('coverUrl')?.value ?? "",
     );
-    return model; 
+    return model;
   }
 
   List<String>? get getRecalledMessageIds {
@@ -135,22 +156,49 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
-  ApplyToInterface addQuoteMessage(String messageId, String userId, String username) {
+  ApplyToInterface addQuoteMessage(
+      String messageId, String userId, String username) {
     addChild(ApplyToElement.buildQuoteMessage(messageId, userId, username));
     return this;
   }
 
   @override
-  ExampleCustomInterface addQuoteCustom(String type, String expts, String text, String refMsgTitle) {
-     addChild(ExampleCustomElement.buildQuote(type, expts, text, refMsgTitle));
+  ExampleCustomInterface addQuoteCustom(
+      String type, String expts, String text, String refMsgTitle) {
+    addChild(ExampleCustomElement.buildQuote(type, expts, text, refMsgTitle));
     return this;
+  }
+
+  @override
+  ApplyToInterface addMUCInfo({
+    String? subjectChanged,
+    String? coverUrlChanged,
+  }) {
+    addChild(ApplyToElement.buildMUCInfo(
+      subjectChanged: subjectChanged,
+      coverUrlChanged: coverUrlChanged,
+    ));
+    return this;
+  }
+
+  @override
+  bool isMUCInfo() {
+    var applyTo = ApplyToElement.parse(this);
+    if (applyTo == null) {
+      return false;
+    }
+    var info = MUCInfoElement.parse(applyTo);
+    if (info != null) {
+      return true;
+    }
+    return false;
   }
 
   @override
   XmppElement? getExampleCustom() {
     return ExampleCustomElement.parse(this);
   }
-  
+
   @override
   XmppElement? getApplyTo() {
     return ApplyToElement.parse(this);
@@ -328,18 +376,19 @@ class MessageStanza extends AbstractStanza
       return null;
     }
   }
-  
+
   @override
-  RecalledMessageInterface addRecallMessage(String fromUserId, String listMessageId) {
+  RecalledMessageInterface addRecallMessage(
+      String fromUserId, String listMessageId) {
     addChild(RecalledElement.build(fromUserId, listMessageId));
     return this;
   }
-  
+
   @override
   XmppElement? getRecalledMessage() {
     return RecalledElement.parse(this);
   }
-  
+
   @override
   bool isRecalledMessage() {
     return this.getRecalledMessage() != null;

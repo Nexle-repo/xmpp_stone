@@ -770,8 +770,34 @@ class XMPPClientManager {
     return await omemoManager.envelopeEncryptionContent(params);
   }
 
+  // Send MUC info changed, such as: subject, coverUrl
+  Future<xmpp.MessageStanza> sendMUCInfoMessage(
+    String receiver,{
+    String? subject,
+    String? coverUrl,
+    MessageParams additional = const MessageParams(
+      millisecondTs: 0,
+      customString: '',
+      messageId: '',
+      receipt: ReceiptRequestType.RECEIVED,
+      messageType: MessageStanzaType.CHAT,
+      chatStateType: ChatStateType.None,
+      ampMessageType: AmpMessageType.None,
+      options: XmppCommunicationConfig(shallWaitStanza: false),
+      hasEncryptedBody: false,
+    ),
+  }) {
+    return _messageHandler.sendMUCInfoMessage(
+      xmpp.Jid.fromFullJid(receiver),
+      subject: subject,
+      coverUrl: coverUrl,
+      additional: additional,
+    );
+  }
+
   // Pin or unpin a message
-  Future<xmpp.MessageStanza> pinMessage(String receiver, String messageId, bool isPinned,
+  Future<xmpp.MessageStanza> pinMessage(
+      String receiver, String messageId, bool isPinned,
       {MessageParams additional = const MessageParams(
           millisecondTs: 0,
           customString: '',
@@ -782,19 +808,21 @@ class XMPPClientManager {
           ampMessageType: AmpMessageType.None,
           options: XmppCommunicationConfig(shallWaitStanza: false),
           hasEncryptedBody: false)}) {
-    return _messageHandler.pinMessage(xmpp.Jid.fromFullJid(receiver), messageId, isPinned, additional: additional);
+    return _messageHandler.pinMessage(
+        xmpp.Jid.fromFullJid(receiver), messageId, isPinned,
+        additional: additional);
   }
 
   // Quote a message
   Future<xmpp.MessageStanza> quoteMessage(
-    String receiver, 
-    String messageId, 
-    String body,
-    String quoteText,
-    String userId,
-    String username,
-    String? messageType,
-    String? expts,
+      String receiver,
+      String messageId,
+      String body,
+      String quoteText,
+      String userId,
+      String username,
+      String? messageType,
+      String? expts,
       {MessageParams additional = const MessageParams(
           millisecondTs: 0,
           customString: '',
@@ -805,11 +833,14 @@ class XMPPClientManager {
           ampMessageType: AmpMessageType.None,
           options: XmppCommunicationConfig(shallWaitStanza: false),
           hasEncryptedBody: false)}) {
-    return _messageHandler.quoteMessage(xmpp.Jid.fromFullJid(receiver), messageId, body, quoteText, userId, username, messageType, expts, additional: additional);
+    return _messageHandler.quoteMessage(xmpp.Jid.fromFullJid(receiver),
+        messageId, body, quoteText, userId, username, messageType, expts,
+        additional: additional);
   }
 
   // recall a message
-  Future<xmpp.MessageStanza> recallMessage(String receiver, List<String> messageIds, String fromUserId,
+  Future<xmpp.MessageStanza> recallMessage(
+      String receiver, List<String> messageIds, String fromUserId,
       {MessageParams additional = const MessageParams(
           millisecondTs: 0,
           customString: '',
@@ -820,7 +851,9 @@ class XMPPClientManager {
           ampMessageType: AmpMessageType.None,
           options: XmppCommunicationConfig(shallWaitStanza: false),
           hasEncryptedBody: false)}) {
-    return _messageHandler.recallMessage(xmpp.Jid.fromFullJid(receiver), messageIds, fromUserId, additional: additional);
+    return _messageHandler.recallMessage(
+        xmpp.Jid.fromFullJid(receiver), messageIds, fromUserId,
+        additional: additional);
   }
 
   /// Listeners

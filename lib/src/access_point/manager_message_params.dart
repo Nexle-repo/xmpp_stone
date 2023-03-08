@@ -129,6 +129,10 @@ class XMPPMessageParams {
     return message!.isQuoteMessage();
   }
 
+  bool get isMUCInfo {
+    return message!.isMUCInfo();
+  }
+
   bool get isRecallMessage {
     return message!.isRecalledMessage();
   }

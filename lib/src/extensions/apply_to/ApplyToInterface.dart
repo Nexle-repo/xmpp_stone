@@ -4,8 +4,14 @@ import 'package:xmpp_stone/xmpp_stone.dart';
 
 abstract class ApplyToInterface {
   ApplyToInterface addPinMessage(String messageId, bool isPinned);
-  ApplyToInterface addQuoteMessage(String messageId, String userId, String username);
+  ApplyToInterface addQuoteMessage(
+      String messageId, String userId, String username);
+  ApplyToInterface addMUCInfo({
+    String? subjectChanged,
+    String? coverUrlChanged,
+  });
   XmppElement? getApplyTo();
   bool isPinMessage();
   bool isQuoteMessage();
+  bool isMUCInfo();
 }
