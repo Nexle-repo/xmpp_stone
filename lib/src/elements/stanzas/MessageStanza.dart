@@ -170,6 +170,12 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
+  ExampleCustomInterface addCustomMessage() {
+    addChild(ExampleCustomElement.addCustom());
+    return this;
+  }
+
+  @override
   ApplyToInterface addMUCInfo({
     String? subjectChanged,
     String? coverUrlChanged,
@@ -197,6 +203,11 @@ class MessageStanza extends AbstractStanza
   @override
   XmppElement? getExampleCustom() {
     return ExampleCustomElement.parse(this);
+  }
+
+  @override
+  bool isCustom() {
+    return getExampleCustom() != null;
   }
 
   @override

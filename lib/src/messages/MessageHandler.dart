@@ -46,7 +46,7 @@ class MessageHandler implements MessageApi {
   }
 
   @override
-  Future<MessageStanza> sendMessage(Jid? to, String text,
+  Future<MessageStanza> sendMessage(Jid? to, String text, bool isCustom,
       {MessageParams additional = const MessageParams(
         millisecondTs: 0,
         customString: '',
@@ -58,7 +58,7 @@ class MessageHandler implements MessageApi {
         hasEncryptedBody: false,
         options: XmppCommunicationConfig(shallWaitStanza: false),
       )}) {
-    return _sendMessageStanza(to, text, additional, null);
+    return _sendMessageStanza(to, text, isCustom, additional, null);
   }
 
   Future<MessageStanza> sendState(
@@ -69,6 +69,7 @@ class MessageHandler implements MessageApi {
     return _sendMessageStanza(
         to,
         '',
+        false,
         MessageParams(
             millisecondTs: 0,
             customString: '',
@@ -82,7 +83,7 @@ class MessageHandler implements MessageApi {
         null);
   }
 
-  Future<MessageStanza> _sendMessageStanza(Jid? jid, String text,
+  Future<MessageStanza> _sendMessageStanza(Jid? jid, String text, bool isCustom,
       MessageParams additional, EncryptElement? encryptElement) async {
     final stanza = MessageStanza(
         additional.messageId.isEmpty
@@ -113,6 +114,11 @@ class MessageHandler implements MessageApi {
       if (additional.chatStateType != ChatStateType.None) {
         ChatStateDecoration(message: stanza).setState(additional.chatStateType);
       }
+    }
+
+    // For custome message
+    if (isCustom) {
+      stanza.addCustomMessage();
     }
 
     // Add receipt delivery
@@ -165,7 +171,7 @@ class MessageHandler implements MessageApi {
           ampMessageType: AmpMessageType.None,
           options: XmppCommunicationConfig(shallWaitStanza: false),
           hasEncryptedBody: false)}) {
-    return _sendMessageStanza(to, '', additional, encryptElement);
+    return _sendMessageStanza(to, '', false, additional, encryptElement);
   }
 
   @override

@@ -655,9 +655,9 @@ class XMPPClientManager {
   }
 
   // Send 1-1 message
-  Future<xmpp.MessageStanza> sendMessage(String message, String receiver,
+  Future<xmpp.MessageStanza> sendMessage(String message, String receiver, bool isCustom,
       {MessageParams additional = MessageParams.defaultMessageParams}) {
-    return _messageHandler.sendMessage(xmpp.Jid.fromFullJid(receiver), message,
+    return _messageHandler.sendMessage(xmpp.Jid.fromFullJid(receiver), message, isCustom,
         additional: additional);
   }
 
@@ -687,7 +687,7 @@ class XMPPClientManager {
   }
 
   Future<xmpp.MessageStanza> sendDeliveryAck(xmpp.MessageStanza message) {
-    return _messageHandler.sendMessage(message.fromJid, '',
+    return _messageHandler.sendMessage(message.fromJid, '', false,
         additional: MessageParams(
             receipt: xmpp.ReceiptRequestType.RECEIVED,
             messageId: message.id!,

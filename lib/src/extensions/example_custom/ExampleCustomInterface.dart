@@ -4,5 +4,7 @@ import 'package:xmpp_stone/xmpp_stone.dart';
 
 abstract class ExampleCustomInterface {
   ExampleCustomInterface addQuoteCustom(String type, String expts, String text, String refMsgTitle);
+  ExampleCustomInterface addCustomMessage();
   XmppElement? getExampleCustom();
+  bool isCustom();
 }

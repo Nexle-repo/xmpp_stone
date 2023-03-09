@@ -129,6 +129,10 @@ class XMPPMessageParams {
     return message!.isQuoteMessage();
   }
 
+  bool get isCustomMessageBody {
+    return message!.isCustom();
+  }
+
   bool get isMUCInfo {
     return message!.isMUCInfo();
   }

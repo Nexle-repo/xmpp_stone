@@ -16,6 +16,12 @@ class ExampleCustomElement extends XmppElement {
     textValue = text;
   }
 
+  ExampleCustomElement.addCustom() {
+    name = ExampleCustomElement.elementName;
+    addAttribute(XmppAttribute('xmlns', 'rhp:urn:example:custom'));
+    addAttribute(XmppAttribute('expts', "0"));
+  }
+
   static XmppElement? parse(parent) {
     return parent.children.firstWhere(
         (child) => (child.name == ExampleCustomElement.elementName),
