@@ -11,19 +11,31 @@ abstract class MessageApi {
   Future<MessageStanza> pinMessage(Jid to, String messageId, bool isPinned,
       {MessageParams additional});
   Future<MessageStanza> quoteMessage(
-    Jid to, 
-    String messageId,
-    String body,
-    String quoteText,
-    String userId,
-    String username,
-    String? messageType,
-    String? expts,
-    {MessageParams additional}
-  );
-
-  Future<MessageStanza> recallMessage(Jid jid, 
-    List<String> messageId,
-    String userId,
+      Jid to,
+      String messageId,
+      String body,
+      String quoteText,
+      String userId,
+      String username,
+      String? messageType,
+      String? expts,
       {MessageParams additional});
+
+  Future<MessageStanza> recallMessage(
+      Jid jid, List<String> messageId, String userId,
+      {MessageParams additional});
+
+  Future<MessageStanza> sendMUCInfoMessage(
+    Jid to, {
+    String? subject,
+    String? coverUrl,
+    MessageParams additional,
+  });
+
+  Future<MessageStanza> changeMemberRole(
+    Jid to, {
+    required String userJid,
+    required String role,
+    MessageParams additional,
+  });
 }

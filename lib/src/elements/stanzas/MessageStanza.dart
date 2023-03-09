@@ -9,6 +9,7 @@ import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ApplyToElement.dart';
 import 'package:xmpp_stone/src/elements/messages/CustomElement.dart';
 import 'package:xmpp_stone/src/elements/messages/CustomSubElement.dart';
 import 'package:xmpp_stone/src/elements/messages/DelayElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ChangeMemberRoleElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ExampleCustomElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/MUCInfoElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/PinnedElement.dart';
@@ -26,6 +27,7 @@ import 'package:xmpp_stone/src/elements/messages/xmpp_0422/RecalledElement.dart'
 import 'package:xmpp_stone/src/elements/stanzas/AbstractStanza.dart';
 import 'package:xmpp_stone/src/extensions/advanced_messaging_processing/AmpInterface.dart';
 import 'package:xmpp_stone/src/extensions/apply_to/ApplyToInterface.dart';
+import 'package:xmpp_stone/src/extensions/change_member_role/ChangeMemberRoleData.dart';
 import 'package:xmpp_stone/src/extensions/example_custom/ExampleCustomInterface.dart';
 import 'package:xmpp_stone/src/extensions/mam/ArchiveResultInterface.dart';
 import 'package:xmpp_stone/src/extensions/mam/ArchiveStanzaIdInterface.dart';
@@ -137,6 +139,21 @@ class MessageStanza extends AbstractStanza
     final model = MUCInfoData(
       subject: data.getAttribute('subject')?.value ?? "",
       coverUrl: data.getAttribute('coverUrl')?.value ?? "",
+    );
+    return model;
+  }
+
+  ChangeMemberRoleData? get changeMemberRoleData {
+    final applyTo = this.children.firstWhere((element) {
+      return element?.name == 'apply-to';
+    }, orElse: () => null);
+    final data = applyTo?.children.firstWhere((element) {
+      return element?.name == ChangeMemberRoleElement.elementName;
+    }, orElse: () => null);
+    if (applyTo == null || data == null) return null;
+    final model = ChangeMemberRoleData(
+      data.getAttribute('userJid')?.value ?? "",
+      data.getAttribute('role')?.value ?? "",
     );
     return model;
   }
@@ -392,6 +409,25 @@ class MessageStanza extends AbstractStanza
   @override
   bool isRecalledMessage() {
     return this.getRecalledMessage() != null;
+  }
+
+  @override
+  ApplyToInterface changeMemberRole(String userJid, String role) {
+    addChild(ChangeMemberRoleElement.build(userJid, role));
+    return this;
+  }
+
+  @override
+  bool isChangeMemberRole() {
+    var applyTo = ApplyToElement.parse(this);
+    if (applyTo == null) {
+      return false;
+    }
+    var info = ChangeMemberRoleElement.parse(applyTo);
+    if (info != null) {
+      return true;
+    }
+    return false;
   }
 }
 

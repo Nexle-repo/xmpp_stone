@@ -1,6 +1,8 @@
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ChangeMemberRoleElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ExternalElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/PinnedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/QuoteElement.dart';
+import 'package:xmpp_stone/src/extensions/change_member_role/ChangeMemberRoleInterface.dart';
 import 'package:xmpp_stone/src/extensions/external/ExternalInterface.dart';
 import 'package:xmpp_stone/src/extensions/quote_message/QuoteMessageInterface.dart';
 
@@ -12,6 +14,7 @@ import 'MUCInfoElement.dart';
 
 class ApplyToElement extends XmppElement
     implements
+        ChangeMemberRoleInterface,
         MUCInfoDataInterface,
         PinMessageInterface,
         ExternalInterface,
@@ -31,6 +34,12 @@ class ApplyToElement extends XmppElement
       subjectChanged: subjectChanged,
       coverUrlChanged: coverUrlChanged,
     );
+  }
+
+  ApplyToElement.buildChangeMemberRole(String userJid, String role) {
+    name = ApplyToElement.elementName;
+    addAttribute(XmppAttribute('xmlns', 'urn:xmpp:fasten:0'));
+    addChangeMemberRoleData(userJid, role);
   }
 
   ApplyToElement.buildPinMessage(String id, bool isPinned) {
@@ -105,6 +114,19 @@ class ApplyToElement extends XmppElement
   @override
   XmppElement? getMUCInfo() {
     // TODO: implement getMUCInfoMessage
+    throw UnimplementedError();
+  }
+
+  @override
+  ChangeMemberRoleInterface addChangeMemberRoleData(
+      String userJid, String role) {
+    addChild(ChangeMemberRoleElement.build(userJid, role));
+    return this;
+  }
+
+  @override
+  XmppElement? getChangeMemberRoleData() {
+    // TODO: implement getChangeMemberRoleData
     throw UnimplementedError();
   }
 }
