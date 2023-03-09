@@ -141,6 +141,10 @@ class XMPPMessageParams {
     return message!.isRecalledMessage();
   }
 
+  bool get isChangeMemberRole {
+    return message!.isChangeMemberRole();
+  }
+
   xmpp.XmppElement? get archiveMessage {
     return isArchive ? message!.getArchiveMessage() : null;
   }

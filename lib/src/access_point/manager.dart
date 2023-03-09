@@ -795,6 +795,32 @@ class XMPPClientManager {
     );
   }
 
+  // Change member role
+  Future<xmpp.MessageStanza> changeMemberRole(
+    String receiver,{
+    required String userJid,
+    required String role,
+    MessageParams additional = const MessageParams(
+      millisecondTs: 0,
+      customString: '',
+      messageId: '',
+      receipt: ReceiptRequestType.RECEIVED,
+      messageType: MessageStanzaType.CHAT,
+      chatStateType: ChatStateType.None,
+      ampMessageType: AmpMessageType.None,
+      options: XmppCommunicationConfig(shallWaitStanza: false),
+      hasEncryptedBody: false,
+    ),
+  }) {
+    return _messageHandler.changeMemberRole(
+      xmpp.Jid.fromFullJid(receiver),
+      userJid: userJid,
+      role: role,
+      additional: additional,
+    );
+  }
+
+
   // Pin or unpin a message
   Future<xmpp.MessageStanza> pinMessage(
       String receiver, String messageId, bool isPinned,
