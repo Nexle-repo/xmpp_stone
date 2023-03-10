@@ -50,6 +50,9 @@ class ReconnectionManager {
   }
 
   void handleReconnection({bool reset = true}) {
+    if (_connection.isForcedClose) {
+      return _reset();
+    }
     if (reset) {
       _reset();
     }

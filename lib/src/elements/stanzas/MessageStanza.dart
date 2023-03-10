@@ -424,7 +424,7 @@ class MessageStanza extends AbstractStanza
 
   @override
   ApplyToInterface changeMemberRole(String userJid, String role) {
-    addChild(ChangeMemberRoleElement.build(userJid, role));
+    addChild(ApplyToElement.buildChangeMemberRole(userJid, role));
     return this;
   }
 

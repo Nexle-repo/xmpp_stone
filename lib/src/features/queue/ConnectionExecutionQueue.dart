@@ -53,7 +53,7 @@ class ConnectionExecutionQueue
     }
     bool shouldResume = await pop();
     // Can continue
-    if (shouldResume) {
+    if (shouldResume && _connection?.isForcedClose == false) {
       await _resume();
     } else {
       isRunning = false;
@@ -80,13 +80,13 @@ class ConnectionExecutionQueue
     if (writingQueueContent.isEmpty) {
       return false;
     }
-    final temporalContent = writingQueueContent.elementAt(0);
+    final temporalContent = writingQueueContent.removeAt(0);
     bool _isEligible = await isEligible(temporalContent);
     if (_isEligible) {
-      await execute(writingQueueContent.elementAt(0));
-      writingQueueContent.removeAt(0);
+      await execute(temporalContent);
       return true;
     } else {
+      writingQueueContent.insert(0, temporalContent);
       return false;
     }
   }

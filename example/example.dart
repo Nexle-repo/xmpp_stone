@@ -20,6 +20,7 @@ void main(List<String> arguments) {
     userAtDomain,
     password,
     port: 18899,
+    logXmpp: true,
     resource: 'xmppstone',
     wsPath: 'xmpp-websocket',
     wsProtocols: ['xmpp'],
@@ -47,6 +48,7 @@ void main(List<String> arguments) {
       // print('status of ${this.name} ' + state.toString());
     },
   );
+
   manager.createSession();
 }
 

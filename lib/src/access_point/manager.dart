@@ -166,7 +166,7 @@ class XMPPClientManager {
   }
 
   Future close() async {
-    _connection!.close();
+    _connection!.forceClose();
     _connectionStateListener.close();
     _connectionResponseListener.close();
   }
