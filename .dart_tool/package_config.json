@@ -57,7 +57,7 @@
     },
     {
       "name": "built_value",
-      "rootUri": "file:///Users/anhlt/.pub-cache/hosted/pub.dartlang.org/built_value-8.4.3",
+      "rootUri": "file:///Users/anhlt/.pub-cache/hosted/pub.dartlang.org/built_value-8.4.4",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -171,7 +171,7 @@
     },
     {
       "name": "image",
-      "rootUri": "file:///Users/anhlt/.pub-cache/hosted/pub.dartlang.org/image-3.3.0",
+      "rootUri": "file:///Users/anhlt/.pub-cache/hosted/pub.dartlang.org/image-4.0.15",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
@@ -231,7 +231,7 @@
     },
     {
       "name": "node_preamble",
-      "rootUri": "file:///Users/anhlt/.pub-cache/hosted/pub.dartlang.org/node_preamble-2.0.1",
+      "rootUri": "file:///Users/anhlt/.pub-cache/hosted/pub.dartlang.org/node_preamble-2.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -458,7 +458,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2023-02-24T08:09:30.603739Z",
+  "generated": "2023-03-10T10:11:00.515614Z",
   "generator": "pub",
   "generatorVersion": "2.17.7"
 }
