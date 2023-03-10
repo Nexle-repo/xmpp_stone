@@ -3,7 +3,7 @@ import '../../XmppElement.dart';
 
 class ChangeMemberRoleElement extends XmppElement {
   static String elementName = 'change-member-role';
-  PinnedElement() {
+  ChangeMemberRoleElement() {
     name = elementName;
   }
 
