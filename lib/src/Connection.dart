@@ -160,6 +160,8 @@ class Connection {
 
   ReconnectionManager? reconnectionManager;
 
+  bool isForcedClose = false;
+
   Connection(this.account) {
     RosterManager.getInstance(this);
     PresenceManager.getInstance(this);
@@ -229,6 +231,7 @@ xml:lang='en'
   }
 
   void connect() {
+    isForcedClose =false;
     if (_state == XmppConnectionState.Closing) {
       _state = XmppConnectionState.WouldLikeToOpen;
     }
@@ -245,6 +248,7 @@ xml:lang='en'
   }
 
   Future<void> openSocket() async {
+    if (isForcedClose) return;
     connectionNegotiationManager.init();
     if (state == XmppConnectionState.SocketOpening) {
       return;
@@ -253,11 +257,11 @@ xml:lang='en'
     try {
       // if not closed in meantime
       if (_state != XmppConnectionState.Closed) {
-        var socket = xmppSocket.createSocket();
+        _socket = xmppSocket.createSocket();
         connectionStreamErrorHandler = ConnectionStreamErrorHandler.init(this);
         setState(XmppConnectionState.SocketOpened);
-        await socket
-            .connect(
+        await _socket
+            ?.connect(
           account.host ?? account.domain ?? '',
           account.port,
           wsProtocols: account.wsProtocols,
@@ -292,6 +296,13 @@ xml:lang='en'
       handleConnectionError(e.toString());
       ;
     }
+  }
+
+  void forceClose() {
+    isForcedClose = true;
+    connExecutionQueue.clear();
+    setState(XmppConnectionState.WouldLikeToClose);
+    _close();
   }
 
   void close() async {
