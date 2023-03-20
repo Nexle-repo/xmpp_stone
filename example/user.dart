@@ -72,6 +72,7 @@ class User {
     xmppClientManager.sendMessage(
       message,
       user.jid.replaceAll("+", ""),
+      false,
       additional: MessageParams(
         receipt: ReceiptRequestType.REQUEST,
         messageId: messageId,
@@ -236,6 +237,7 @@ class User {
     xmppClientManager.sendMessage(
       message,
       '${roomName}@conference.localhost',
+      false,
       additional: MessageParams(
         receipt: ReceiptRequestType.NONE,
         messageId: messageId,
@@ -261,7 +263,7 @@ class User {
       "userJids": ["kevin"]
     };
     final success = await xmppClientManager.sendMessage(
-        '', '${roomName}@conference.localhost',
+        '', '${roomName}@conference.localhost', false,
         additional: MessageParams(
           receipt: ReceiptRequestType.NONE,
           messageId: messageId,
