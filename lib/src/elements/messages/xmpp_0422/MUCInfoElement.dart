@@ -20,7 +20,7 @@ class MUCInfoElement extends XmppElement {
       if (value.isNotEmpty) {
         value += '|';
       }
-      value += subjectChanged!;
+      value += coverUrlChanged!;
     }
   }
 
