@@ -80,6 +80,7 @@ class XMPPClientManager {
   Function(List<xmpp.Buddy>)? _onRosterList;
   Function(xmpp.BaseResponse)? _responseListener;
   xmpp.Connection? _connection;
+  xmpp.Connection? get connection => _connection;
   late MessageHandler _messageHandler;
   late PingManager _pingHandler;
   late MessageArchiveManager _messageArchiveHandler;
