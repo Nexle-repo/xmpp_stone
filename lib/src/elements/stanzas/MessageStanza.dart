@@ -380,12 +380,12 @@ class MessageStanza extends AbstractStanza
 
   @override
   XmppElement? getArchiveResult() {
-    return ResultElement.parse(this);
+    return ForwardedElement.parse(SentElement.parse(this));
   }
 
   @override
   MessageStanza? getArchiveMessage() {
-    return ForwardedElement.parseForMessage(ResultElement.parse(this));
+    return ForwardedElement.parseForMessage(SentElement.parse(this));
   }
 
   @override
