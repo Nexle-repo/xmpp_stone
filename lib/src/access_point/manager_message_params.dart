@@ -106,7 +106,11 @@ class XMPPMessageParams {
   }
 
   bool get isArchive {
-    return message!.getArchiveResult() != null;
+    try {
+      return message!.getArchiveResult() != null;
+    } catch (e) {
+      return false;
+    }
   }
 
   bool get hasStanzaArchiveId {
