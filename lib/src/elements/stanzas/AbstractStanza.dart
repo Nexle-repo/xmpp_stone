@@ -22,7 +22,7 @@ abstract class AbstractStanza extends XmppElement {
 
   set toJid(Jid? value) {
     _toJid = value;
-    addAttribute(XmppAttribute('to', _toJid!.userAtDomain));
+    addAttribute(XmppAttribute('to', _toJid!.fullJid));
   }
 
   String? get id => _id;
