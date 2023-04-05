@@ -27,12 +27,16 @@ class ApplyToElement extends XmppElement
   ApplyToElement.buildMUCInfo({
     String? subjectChanged,
     String? coverUrlChanged,
+    String? membersAddedEncoded,
+    String? membersRemovedEncoded,
   }) {
     name = ApplyToElement.elementName;
     addAttribute(XmppAttribute('xmlns', 'urn:xmpp:fasten:0'));
     addMUCInfo(
       subjectChanged: subjectChanged,
       coverUrlChanged: coverUrlChanged,
+      membersAddedEncoded: membersAddedEncoded,
+      membersRemovedEncoded: membersRemovedEncoded,
     );
   }
 
@@ -105,9 +109,15 @@ class ApplyToElement extends XmppElement
   MUCInfoDataInterface addMUCInfo({
     String? subjectChanged,
     String? coverUrlChanged,
+    String? membersAddedEncoded,
+    String? membersRemovedEncoded,
   }) {
     addChild(MUCInfoElement.build(
-        subjectChanged: subjectChanged, coverUrlChanged: coverUrlChanged));
+      subjectChanged: subjectChanged,
+      coverUrlChanged: coverUrlChanged,
+      membersAddedEncoded: membersAddedEncoded,
+      membersRemovedEncoded: membersRemovedEncoded,
+    ));
     return this;
   }
 

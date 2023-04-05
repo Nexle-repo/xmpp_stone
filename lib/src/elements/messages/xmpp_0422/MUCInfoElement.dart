@@ -7,7 +7,12 @@ class MUCInfoElement extends XmppElement {
     name = elementName;
   }
 
-  MUCInfoElement.build({String? subjectChanged, String? coverUrlChanged}) {
+  MUCInfoElement.build({
+    String? subjectChanged,
+    String? coverUrlChanged,
+    String? membersAddedEncoded,
+    String? membersRemovedEncoded,
+  }) {
     name = elementName;
     String value = '';
     addAttribute(XmppAttribute('xmlns', 'rhp:urn:xmpp:$elementName'));
@@ -21,6 +26,20 @@ class MUCInfoElement extends XmppElement {
         value += '|';
       }
       value += coverUrlChanged!;
+    }
+    if (membersAddedEncoded?.isNotEmpty ?? false) {
+      addAttribute(XmppAttribute('membersAddedEncoded', membersAddedEncoded));
+      if (value.isNotEmpty) {
+        value += '|';
+      }
+      value += membersAddedEncoded!;
+    }
+    if (membersRemovedEncoded?.isNotEmpty ?? false) {
+      addAttribute(XmppAttribute('membersRemovedEncoded', membersRemovedEncoded));
+      if (value.isNotEmpty) {
+        value += '|';
+      }
+      value += membersRemovedEncoded!;
     }
   }
 

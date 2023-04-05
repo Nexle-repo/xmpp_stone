@@ -139,6 +139,8 @@ class MessageStanza extends AbstractStanza
     final model = MUCInfoData(
       subject: data.getAttribute('subject')?.value ?? "",
       coverUrl: data.getAttribute('coverUrl')?.value ?? "",
+      membersAddedEncoded: data.getAttribute('membersAddedEncoded')?.value ?? "",
+      membersRemovedEncoded: data.getAttribute('membersRemovedEncoded')?.value ?? "",
     );
     return model;
   }
@@ -196,10 +198,14 @@ class MessageStanza extends AbstractStanza
   ApplyToInterface addMUCInfo({
     String? subjectChanged,
     String? coverUrlChanged,
+    String? membersAddedEncoded,
+    String? membersRemovedEncoded,
   }) {
     addChild(ApplyToElement.buildMUCInfo(
       subjectChanged: subjectChanged,
       coverUrlChanged: coverUrlChanged,
+      membersAddedEncoded: membersAddedEncoded,
+      membersRemovedEncoded: membersRemovedEncoded,
     ));
     return this;
   }

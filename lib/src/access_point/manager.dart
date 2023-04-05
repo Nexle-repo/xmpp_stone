@@ -776,12 +776,14 @@ class XMPPClientManager {
     String receiver,{
     String? subject,
     String? coverUrl,
+    String? membersAddedEncoded,
+    String? membersRemovedEncoded,
     MessageParams additional = const MessageParams(
       millisecondTs: 0,
       customString: '',
       messageId: '',
       receipt: ReceiptRequestType.RECEIVED,
-      messageType: MessageStanzaType.CHAT,
+      messageType: MessageStanzaType.GROUPCHAT,
       chatStateType: ChatStateType.None,
       ampMessageType: AmpMessageType.None,
       options: XmppCommunicationConfig(shallWaitStanza: false),
@@ -792,6 +794,8 @@ class XMPPClientManager {
       xmpp.Jid.fromFullJid(receiver),
       subject: subject,
       coverUrl: coverUrl,
+      membersAddedEncoded: membersAddedEncoded,
+      membersRemovedEncoded: membersRemovedEncoded,
       additional: additional,
     );
   }

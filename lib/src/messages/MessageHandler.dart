@@ -326,6 +326,8 @@ class MessageHandler implements MessageApi {
     Jid to, {
     String? subject,
     String? coverUrl,
+    String? membersAddedEncoded,
+    String? membersRemovedEncoded,
     MessageParams additional = const MessageParams(
       millisecondTs: 0,
       customString: '',
@@ -343,6 +345,8 @@ class MessageHandler implements MessageApi {
       subject: subject,
       coverUrl: coverUrl,
       additional: additional,
+      membersAddedEncoded: membersAddedEncoded,
+      membersRemovedEncoded: membersRemovedEncoded,
     );
   }
 
@@ -350,6 +354,8 @@ class MessageHandler implements MessageApi {
     Jid? jid,{
     String? subject,
     String? coverUrl,
+    String? membersAddedEncoded,
+    String? membersRemovedEncoded,
     required MessageParams additional,
   }) async {
     final stanza = MessageStanza(
@@ -367,6 +373,8 @@ class MessageHandler implements MessageApi {
     stanza.addMUCInfo(
       subjectChanged: subject,
       coverUrlChanged: coverUrl,
+      membersAddedEncoded: membersAddedEncoded,
+      membersRemovedEncoded: membersRemovedEncoded,
     );
 
     if (additional.millisecondTs != 0) {
