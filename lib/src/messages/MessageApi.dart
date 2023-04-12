@@ -6,6 +6,8 @@ import 'package:xmpp_stone/src/messages/MessageParams.dart';
 abstract class MessageApi {
   Future<MessageStanza> sendMessage(Jid to, String text, bool isCustom,
       {MessageParams additional});
+  Future<MessageStanza> sendSystemMessage(Jid to, String text,
+      {MessageParams additional});
   Future<MessageStanza> sendSecureMessage(Jid to, EncryptElement encryptElement,
       {MessageParams additional});
   Future<MessageStanza> pinMessage(Jid to, String messageId, bool isPinned,

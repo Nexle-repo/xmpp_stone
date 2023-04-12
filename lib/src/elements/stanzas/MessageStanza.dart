@@ -24,6 +24,7 @@ import 'package:xmpp_stone/src/elements/messages/mam/ResultElement.dart';
 import 'package:xmpp_stone/src/elements/messages/mam/StanzaIdElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/QuoteElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/RecalledElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/system_message_element.dart';
 import 'package:xmpp_stone/src/elements/stanzas/AbstractStanza.dart';
 import 'package:xmpp_stone/src/extensions/advanced_messaging_processing/AmpInterface.dart';
 import 'package:xmpp_stone/src/extensions/apply_to/ApplyToInterface.dart';
@@ -40,6 +41,7 @@ import 'package:xmpp_stone/src/extensions/muc_info_data/MUCInfoData.dart';
 import 'package:xmpp_stone/src/extensions/multi_user_chat/message_invitation_interface/MessageInvitationInterface.dart';
 import 'package:xmpp_stone/src/extensions/quote_message/quote_message.dart';
 import '../../extensions/recalled_message/RecalledMessageInterface.dart';
+import '../../extensions/system_message/system_message_interface.dart';
 
 class MessageStanza extends AbstractStanza
     implements
@@ -54,6 +56,7 @@ class MessageStanza extends AbstractStanza
         MessageInvitationInterface,
         ApplyToInterface,
         ExampleCustomInterface,
+        SystemMessageInterface,
         RecalledMessageInterface {
   MessageStanzaType? _type;
 
@@ -195,6 +198,12 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
+  SystemMessageInterface addSystemMessage() {
+    addChild(SystemMessageElement.addCustom());
+    return this;
+  }
+
+  @override
   ApplyToInterface addMUCInfo({
     String? subjectChanged,
     String? coverUrlChanged,
@@ -231,6 +240,16 @@ class MessageStanza extends AbstractStanza
   @override
   bool isCustom() {
     return getExampleCustom() != null;
+  }
+
+  @override
+  XmppElement? getSystemMessage() {
+    return SystemMessageElement.parse(this);
+  }
+
+  @override
+  bool isSystemMessage() {
+    return getSystemMessage() != null;
   }
 
   @override

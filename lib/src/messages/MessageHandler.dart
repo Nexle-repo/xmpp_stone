@@ -61,6 +61,25 @@ class MessageHandler implements MessageApi {
     return _sendMessageStanza(to, text, isCustom, additional, null);
   }
 
+  @override
+  Future<MessageStanza> sendSystemMessage(
+    Jid? to,
+    String text, {
+    MessageParams additional = const MessageParams(
+      millisecondTs: 0,
+      customString: '',
+      messageId: '',
+      receipt: ReceiptRequestType.NONE,
+      messageType: MessageStanzaType.CHAT,
+      chatStateType: ChatStateType.None,
+      ampMessageType: AmpMessageType.None,
+      hasEncryptedBody: false,
+      options: XmppCommunicationConfig(shallWaitStanza: false),
+    ),
+  }) {
+    return _sendSystemMessageStanza(to, text, additional, null);
+  }
+
   Future<MessageStanza> sendState(
     Jid? to,
     MessageStanzaType messageType,
@@ -120,6 +139,63 @@ class MessageHandler implements MessageApi {
     if (isCustom) {
       stanza.addCustomMessage();
     }
+
+    // Add receipt delivery
+    if (additional.receipt == ReceiptRequestType.RECEIVED) {
+      stanza.addReceivedReceipt();
+    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
+      stanza.addRequestReceipt();
+    }
+
+    if (additional.ampMessageType == AmpMessageType.Delivery) {
+      // Add request stanza from server?
+      stanza.addAmpDeliverDirect();
+    }
+
+    await _connection!.writeStanzaWithQueue(stanza);
+
+    return stanza;
+    // Could not wait for the ack, there is no ack sent (r, c type)
+    // return responseHandler.set<MessageStanza>(stanza.id!, stanza);
+  }
+
+
+
+  Future<MessageStanza> _sendSystemMessageStanza(Jid? jid, String text,
+      MessageParams additional, EncryptElement? encryptElement) async {
+    final stanza = MessageStanza(
+        additional.messageId.isEmpty
+            ? AbstractStanza.getRandomId()
+            : additional.messageId,
+        additional.messageType);
+    stanza.toJid = jid;
+    stanza.fromJid = _connection!.fullJid;
+    // Validation
+    if (stanza.toJid == null || stanza.fromJid == null) {
+      throw InvalidJidMessageStanzaException();
+    }
+
+    if (additional.hasEncryptedBody && encryptElement != null) {
+      stanza.addChild(encryptElement);
+    } else {
+      if (text.isNotEmpty) {
+        stanza.body = text;
+      }
+      if (additional.millisecondTs != 0) {
+        stanza.addTime(additional.millisecondTs);
+      }
+
+      if (additional.customString.isNotEmpty) {
+        stanza.addCustom(additional.customString);
+      }
+
+      if (additional.chatStateType != ChatStateType.None) {
+        ChatStateDecoration(message: stanza).setState(additional.chatStateType);
+      }
+    }
+
+    // For custome message
+    stanza.addSystemMessage();
 
     // Add receipt delivery
     if (additional.receipt == ReceiptRequestType.RECEIVED) {
@@ -351,7 +427,7 @@ class MessageHandler implements MessageApi {
   }
 
   Future<MessageStanza> _sendMUCInfoMessageStanza(
-    Jid? jid,{
+    Jid? jid, {
     String? subject,
     String? coverUrl,
     String? membersAddedEncoded,
@@ -408,7 +484,7 @@ class MessageHandler implements MessageApi {
     // return responseHandler.set<MessageStanza>(stanza.id!, stanza);
   }
 
-@override
+  @override
   Future<MessageStanza> changeMemberRole(
     Jid to, {
     required String userJid,
@@ -434,7 +510,7 @@ class MessageHandler implements MessageApi {
   }
 
   Future<MessageStanza> _changeMemberRoleMessageStanza(
-    Jid? jid,{
+    Jid? jid, {
     required String userJid,
     required String role,
     required MessageParams additional,

@@ -656,10 +656,25 @@ class XMPPClientManager {
   }
 
   // Send 1-1 message
-  Future<xmpp.MessageStanza> sendMessage(String message, String receiver, bool isCustom,
+  Future<xmpp.MessageStanza> sendMessage(
+      String message, String receiver, bool isCustom,
       {MessageParams additional = MessageParams.defaultMessageParams}) {
-    return _messageHandler.sendMessage(xmpp.Jid.fromFullJid(receiver), message, isCustom,
+    return _messageHandler.sendMessage(
+        xmpp.Jid.fromFullJid(receiver), message, isCustom,
         additional: additional);
+  }
+
+  // Send system message
+  Future<xmpp.MessageStanza> sendSystemMessage(
+    String message,
+    String receiver, {
+    MessageParams additional = MessageParams.defaultMessageParams,
+  }) {
+    return _messageHandler.sendSystemMessage(
+      xmpp.Jid.fromFullJid(receiver),
+      message,
+      additional: additional,
+    );
   }
 
   Future<xmpp.MessageStanza> sendSecureMessage(
@@ -773,7 +788,7 @@ class XMPPClientManager {
 
   // Send MUC info changed, such as: subject, coverUrl
   Future<xmpp.MessageStanza> sendMUCInfoMessage(
-    String receiver,{
+    String receiver, {
     String? subject,
     String? coverUrl,
     String? membersAddedEncoded,
@@ -802,7 +817,7 @@ class XMPPClientManager {
 
   // Change member role
   Future<xmpp.MessageStanza> changeMemberRole(
-    String receiver,{
+    String receiver, {
     required String userJid,
     required String role,
     MessageParams additional = const MessageParams(
@@ -824,7 +839,6 @@ class XMPPClientManager {
       additional: additional,
     );
   }
-
 
   // Pin or unpin a message
   Future<xmpp.MessageStanza> pinMessage(
