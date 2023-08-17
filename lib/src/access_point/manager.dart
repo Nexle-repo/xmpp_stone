@@ -858,6 +858,30 @@ class XMPPClientManager {
         additional: additional);
   }
 
+  // Pin or unpin a chat
+  Future<xmpp.MessageStanza> pinChat(
+    String receiver,
+    String userPinned,
+    bool isPinned, {
+    MessageParams additional = const MessageParams(
+        millisecondTs: 0,
+        customString: '',
+        messageId: '',
+        receipt: ReceiptRequestType.RECEIVED,
+        messageType: MessageStanzaType.CHAT,
+        chatStateType: ChatStateType.None,
+        ampMessageType: AmpMessageType.None,
+        options: XmppCommunicationConfig(shallWaitStanza: false),
+        hasEncryptedBody: false),
+  }) {
+    return _messageHandler.pinChat(
+      xmpp.Jid.fromFullJid(receiver),
+      userPinned,
+      isPinned,
+      additional: additional,
+    );
+  }
+
   // Quote a message
   Future<xmpp.MessageStanza> quoteMessage(
       String receiver,

@@ -1,18 +1,11 @@
-import 'dart:math';
-
 import 'package:xmpp_stone/src/elements/XmppAttribute.dart';
 import 'package:xmpp_stone/src/elements/XmppElement.dart';
 import 'package:xmpp_stone/src/elements/forms/XElement.dart';
 import 'package:xmpp_stone/src/elements/messages/Amp.dart';
 import 'package:xmpp_stone/src/elements/messages/AmpRuleElement.dart';
-import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ApplyToElement.dart';
 import 'package:xmpp_stone/src/elements/messages/CustomElement.dart';
 import 'package:xmpp_stone/src/elements/messages/CustomSubElement.dart';
 import 'package:xmpp_stone/src/elements/messages/DelayElement.dart';
-import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ChangeMemberRoleElement.dart';
-import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ExampleCustomElement.dart';
-import 'package:xmpp_stone/src/elements/messages/xmpp_0422/MUCInfoElement.dart';
-import 'package:xmpp_stone/src/elements/messages/xmpp_0422/PinnedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/ReceiptReceivedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/ReceiptRequestElement.dart';
 import 'package:xmpp_stone/src/elements/messages/TimeElement.dart';
@@ -20,10 +13,15 @@ import 'package:xmpp_stone/src/elements/messages/TimeStampElement.dart';
 import 'package:xmpp_stone/src/elements/messages/carbon/ForwardedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/carbon/SentElement.dart';
 import 'package:xmpp_stone/src/elements/messages/invitation/InviteElement.dart';
-import 'package:xmpp_stone/src/elements/messages/mam/ResultElement.dart';
 import 'package:xmpp_stone/src/elements/messages/mam/StanzaIdElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ApplyToElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ChangeMemberRoleElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ExampleCustomElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/MUCInfoElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/PinnedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/QuoteElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/RecalledElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/pin_chat_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/system_message_element.dart';
 import 'package:xmpp_stone/src/elements/stanzas/AbstractStanza.dart';
 import 'package:xmpp_stone/src/extensions/advanced_messaging_processing/AmpInterface.dart';
@@ -40,6 +38,7 @@ import 'package:xmpp_stone/src/extensions/message_delivery/TimeInterface.dart';
 import 'package:xmpp_stone/src/extensions/muc_info_data/MUCInfoData.dart';
 import 'package:xmpp_stone/src/extensions/multi_user_chat/message_invitation_interface/MessageInvitationInterface.dart';
 import 'package:xmpp_stone/src/extensions/quote_message/quote_message.dart';
+
 import '../../extensions/recalled_message/RecalledMessageInterface.dart';
 import '../../extensions/system_message/system_message_interface.dart';
 
@@ -142,8 +141,10 @@ class MessageStanza extends AbstractStanza
     final model = MUCInfoData(
       subject: data.getAttribute('subject')?.value ?? "",
       coverUrl: data.getAttribute('coverUrl')?.value ?? "",
-      membersAddedEncoded: data.getAttribute('membersAddedEncoded')?.value ?? "",
-      membersRemovedEncoded: data.getAttribute('membersRemovedEncoded')?.value ?? "",
+      membersAddedEncoded:
+          data.getAttribute('membersAddedEncoded')?.value ?? "",
+      membersRemovedEncoded:
+          data.getAttribute('membersRemovedEncoded')?.value ?? "",
     );
     return model;
   }
@@ -461,6 +462,25 @@ class MessageStanza extends AbstractStanza
     }
     var info = ChangeMemberRoleElement.parse(applyTo);
     if (info != null) {
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  ApplyToInterface addPinChat(String chatId, String userPinned, bool isPinned) {
+    addChild(ApplyToElement.buildPinChat(chatId, isPinned, userPinned));
+    return this;
+  }
+
+  @override
+  bool isPinChat() {
+    var applyTo = ApplyToElement.parse(this);
+    if (applyTo == null) {
+      return false;
+    }
+    var quote = PinChatElement.parse(applyTo);
+    if (quote != null) {
       return true;
     }
     return false;

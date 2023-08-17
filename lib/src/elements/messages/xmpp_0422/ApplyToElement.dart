@@ -2,11 +2,13 @@ import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ChangeMemberRoleEleme
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ExternalElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/PinnedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/QuoteElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/pin_chat_element.dart';
 import 'package:xmpp_stone/src/extensions/change_member_role/ChangeMemberRoleInterface.dart';
 import 'package:xmpp_stone/src/extensions/external/ExternalInterface.dart';
 import 'package:xmpp_stone/src/extensions/quote_message/QuoteMessageInterface.dart';
 
 import '../../../extensions/muc_info_data/MUCInfoDataInterface.dart';
+import '../../../extensions/pin_chat/pin_chat_interface.dart';
 import '../../../extensions/pin_message/PinMessageInterface.dart';
 import '../../XmppAttribute.dart';
 import '../../XmppElement.dart';
@@ -17,6 +19,7 @@ class ApplyToElement extends XmppElement
         ChangeMemberRoleInterface,
         MUCInfoDataInterface,
         PinMessageInterface,
+        PinChatInterface,
         ExternalInterface,
         QuoteMessageInterface {
   static String elementName = 'apply-to';
@@ -53,6 +56,13 @@ class ApplyToElement extends XmppElement
     addPinMessage(isPinned);
   }
 
+  ApplyToElement.buildPinChat(String id, bool pinned, String userPinned) {
+    name = ApplyToElement.elementName;
+    addAttribute(XmppAttribute('xmlns', 'urn:xmpp:fasten:0'));
+    addAttribute(XmppAttribute('id', id));
+    addPinChat(id, pinned, userPinned);
+  }
+
   ApplyToElement.buildQuoteMessage(String id, String userId, String username) {
     name = ApplyToElement.elementName;
     addExternalName("body");
@@ -72,6 +82,16 @@ class ApplyToElement extends XmppElement
   @override
   PinMessageInterface addPinMessage(bool isPinned) {
     addChild(PinnedElement.build(isPinned));
+    return this;
+  }
+
+  @override
+  PinChatInterface addPinChat(String chatId, bool pinned, String userPinned) {
+    addChild(PinChatElement.build(
+      chatId: chatId,
+      pinned: pinned,
+      userPinned: userPinned,
+    ));
     return this;
   }
 
@@ -137,6 +157,12 @@ class ApplyToElement extends XmppElement
   @override
   XmppElement? getChangeMemberRoleData() {
     // TODO: implement getChangeMemberRoleData
+    throw UnimplementedError();
+  }
+
+  @override
+  XmppElement? getPinChat() {
+    // TODO: implement getPinChat
     throw UnimplementedError();
   }
 }
