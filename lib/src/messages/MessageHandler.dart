@@ -314,7 +314,6 @@ class MessageHandler implements MessageApi {
   @override
   Future<MessageStanza> pinChat(
     Jid to,
-    String userPinned,
     bool isPinned, {
     MessageParams additional = const MessageParams(
       millisecondTs: 0,
@@ -328,12 +327,11 @@ class MessageHandler implements MessageApi {
       options: XmppCommunicationConfig(shallWaitStanza: false),
     ),
   }) {
-    return _pinChatStanza(to, userPinned, isPinned, additional);
+    return _pinChatStanza(to, isPinned, additional);
   }
 
   Future<MessageStanza> _pinChatStanza(
     Jid? jid,
-    String userPinned,
     bool isPinned,
     MessageParams additional,
   ) async {
@@ -349,7 +347,7 @@ class MessageHandler implements MessageApi {
       throw InvalidJidMessageStanzaException();
     }
 
-    stanza.addPinChat(jid?.fullJid ?? '', userPinned, isPinned);
+    stanza.addPinChat(jid?.fullJid ?? '', isPinned);
 
     if (additional.millisecondTs != 0) {
       stanza.addTime(additional.millisecondTs);

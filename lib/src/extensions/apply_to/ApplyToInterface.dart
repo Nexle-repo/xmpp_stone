@@ -5,7 +5,7 @@ import 'package:xmpp_stone/xmpp_stone.dart';
 abstract class ApplyToInterface {
   ApplyToInterface changeMemberRole(String userJid, String role);
   ApplyToInterface addPinMessage(String messageId, bool isPinned);
-  ApplyToInterface addPinChat(String chatId, String userPinned, bool isPinned);
+  ApplyToInterface addPinChat(String chatId, bool isPinned);
   ApplyToInterface addQuoteMessage(
       String messageId, String userId, String username);
   ApplyToInterface addMUCInfo({

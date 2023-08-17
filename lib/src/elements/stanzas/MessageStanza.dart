@@ -39,6 +39,7 @@ import 'package:xmpp_stone/src/extensions/muc_info_data/MUCInfoData.dart';
 import 'package:xmpp_stone/src/extensions/multi_user_chat/message_invitation_interface/MessageInvitationInterface.dart';
 import 'package:xmpp_stone/src/extensions/quote_message/quote_message.dart';
 
+import '../../extensions/pin_chat/pin_chat_data.dart';
 import '../../extensions/recalled_message/RecalledMessageInterface.dart';
 import '../../extensions/system_message/system_message_interface.dart';
 
@@ -145,6 +146,21 @@ class MessageStanza extends AbstractStanza
           data.getAttribute('membersAddedEncoded')?.value ?? "",
       membersRemovedEncoded:
           data.getAttribute('membersRemovedEncoded')?.value ?? "",
+    );
+    return model;
+  }
+
+  PinChatData? get pinChatData {
+    final applyTo = this.children.firstWhere((element) {
+      return element?.name == 'apply-to';
+    }, orElse: () => null);
+    final data = applyTo?.children.firstWhere((element) {
+      return element?.name == PinChatElement.elementName;
+    }, orElse: () => null);
+    if (applyTo == null || data == null) return null;
+    final model = PinChatData(
+      chatId: data.getAttribute('id')?.value ?? "",
+      pinned: data.getAttribute('pinned')?.value == "1",
     );
     return model;
   }
@@ -468,8 +484,8 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
-  ApplyToInterface addPinChat(String chatId, String userPinned, bool isPinned) {
-    addChild(ApplyToElement.buildPinChat(chatId, isPinned, userPinned));
+  ApplyToInterface addPinChat(String chatId, bool isPinned) {
+    addChild(ApplyToElement.buildPinChat(chatId, isPinned));
     return this;
   }
 
