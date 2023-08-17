@@ -14,7 +14,6 @@ abstract class MessageApi {
       {MessageParams additional});
   Future<MessageStanza> pinChat(
     Jid to,
-    String userPinned,
     bool isPinned, {
     MessageParams additional,
   });

@@ -861,7 +861,6 @@ class XMPPClientManager {
   // Pin or unpin a chat
   Future<xmpp.MessageStanza> pinChat(
     String receiver,
-    String userPinned,
     bool isPinned, {
     MessageParams additional = const MessageParams(
         millisecondTs: 0,
@@ -876,7 +875,6 @@ class XMPPClientManager {
   }) {
     return _messageHandler.pinChat(
       xmpp.Jid.fromFullJid(receiver),
-      userPinned,
       isPinned,
       additional: additional,
     );

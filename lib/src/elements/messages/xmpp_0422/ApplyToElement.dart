@@ -56,11 +56,11 @@ class ApplyToElement extends XmppElement
     addPinMessage(isPinned);
   }
 
-  ApplyToElement.buildPinChat(String id, bool pinned, String userPinned) {
+  ApplyToElement.buildPinChat(String id, bool pinned) {
     name = ApplyToElement.elementName;
     addAttribute(XmppAttribute('xmlns', 'urn:xmpp:fasten:0'));
     addAttribute(XmppAttribute('id', id));
-    addPinChat(id, pinned, userPinned);
+    addPinChat(id, pinned);
   }
 
   ApplyToElement.buildQuoteMessage(String id, String userId, String username) {
@@ -86,11 +86,10 @@ class ApplyToElement extends XmppElement
   }
 
   @override
-  PinChatInterface addPinChat(String chatId, bool pinned, String userPinned) {
+  PinChatInterface addPinChat(String chatId, bool pinned) {
     addChild(PinChatElement.build(
       chatId: chatId,
       pinned: pinned,
-      userPinned: userPinned,
     ));
     return this;
   }
