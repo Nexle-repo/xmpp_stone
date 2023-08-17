@@ -12,6 +12,12 @@ abstract class MessageApi {
       {MessageParams additional});
   Future<MessageStanza> pinMessage(Jid to, String messageId, bool isPinned,
       {MessageParams additional});
+  Future<MessageStanza> pinChat(
+    Jid to,
+    String userPinned,
+    bool isPinned, {
+    MessageParams additional,
+  });
   Future<MessageStanza> quoteMessage(
       Jid to,
       String messageId,

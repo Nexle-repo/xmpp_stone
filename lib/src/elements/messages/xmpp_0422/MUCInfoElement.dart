@@ -3,7 +3,7 @@ import '../../XmppElement.dart';
 
 class MUCInfoElement extends XmppElement {
   static String elementName = 'muc-info-changed';
-  PinnedElement() {
+  MUCInfoElement() {
     name = elementName;
   }
 
@@ -35,7 +35,9 @@ class MUCInfoElement extends XmppElement {
       value += membersAddedEncoded!;
     }
     if (membersRemovedEncoded?.isNotEmpty ?? false) {
-      addAttribute(XmppAttribute('membersRemovedEncoded', membersRemovedEncoded));
+      addAttribute(
+        XmppAttribute('membersRemovedEncoded', membersRemovedEncoded),
+      );
       if (value.isNotEmpty) {
         value += '|';
       }

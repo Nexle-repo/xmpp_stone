@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:xmpp_stone/src/extensions/chat_states/ChatStateDecoration.dart';
 import 'package:xmpp_stone/xmpp_stone.dart' as xmpp;
 
@@ -127,6 +128,10 @@ class XMPPMessageParams {
 
   bool get isPinMessage {
     return message!.isPinMessage();
+  }
+
+  bool get isPinChat {
+    return message!.isPinChat();
   }
 
   bool get isQuoteMessage {
