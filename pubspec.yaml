@@ -21,7 +21,7 @@ dependencies:
   image: ^4.0.15
   quiver: ^3.1.0 #hash code generator
   console: ^4.1.0 #for example
-  intl: ^0.17.0
+  intl: ^0.18.1
   collection: ^1.16.0
   universal_io: ^2.2.0
   web_socket_channel: ^2.2.0
