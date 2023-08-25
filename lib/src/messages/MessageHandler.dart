@@ -102,8 +102,14 @@ class MessageHandler implements MessageApi {
         null);
   }
 
-  Future<MessageStanza> _sendMessageStanza(Jid? jid, String text, bool isCustom,
-      MessageParams additional, EncryptElement? encryptElement) async {
+  Future<MessageStanza> _sendMessageStanza(
+    Jid? jid,
+    String text,
+    bool isCustom,
+    MessageParams additional,
+    EncryptElement? encryptElement, {
+    void Function(MessageStanza)? onStanzaCreated,
+  }) async {
     final stanza = MessageStanza(
         additional.messageId.isEmpty
             ? AbstractStanza.getRandomId()
@@ -156,6 +162,8 @@ class MessageHandler implements MessageApi {
       stanza.addAmpDeliverDirect();
     }
 
+    onStanzaCreated?.call(stanza);
+
     await _connection!.writeStanzaWithQueue(stanza);
 
     return stanza;
@@ -163,8 +171,13 @@ class MessageHandler implements MessageApi {
     // return responseHandler.set<MessageStanza>(stanza.id!, stanza);
   }
 
-  Future<MessageStanza> _sendSystemMessageStanza(Jid? jid, String text,
-      MessageParams additional, EncryptElement? encryptElement) async {
+  Future<MessageStanza> _sendSystemMessageStanza(
+    Jid? jid,
+    String text,
+    MessageParams additional,
+    EncryptElement? encryptElement, {
+    void Function(MessageStanza)? onStanzaCreated,
+  }) async {
     final stanza = MessageStanza(
         additional.messageId.isEmpty
             ? AbstractStanza.getRandomId()
@@ -214,6 +227,8 @@ class MessageHandler implements MessageApi {
       // Add request stanza from server?
       stanza.addAmpDeliverDirect();
     }
+
+    onStanzaCreated?.call(stanza);
 
     await _connection!.writeStanzaWithQueue(stanza);
 
@@ -429,8 +444,9 @@ class MessageHandler implements MessageApi {
     String username,
     String? messageType,
     String? expts,
-    MessageParams additional,
-  ) async {
+    MessageParams additional, {
+    void Function(MessageStanza)? onStanzaCreated,
+  }) async {
     final stanza = MessageStanza(
         additional.messageId.isEmpty
             ? AbstractStanza.getRandomId()
@@ -476,6 +492,8 @@ class MessageHandler implements MessageApi {
       // Add request stanza from server?
       stanza.addAmpDeliverDirect();
     }
+
+    onStanzaCreated?.call(stanza);
 
     await _connection!.writeStanzaWithQueue(stanza);
 
