@@ -130,6 +130,10 @@ class MessageHandler implements MessageApi {
         stanza.addCustom(additional.customString);
       }
 
+      if (additional.customId?.isNotEmpty ?? false) {
+        stanza.addCustomId(additional.customId!);
+      }
+
       if (additional.chatStateType != ChatStateType.None) {
         ChatStateDecoration(message: stanza).setState(additional.chatStateType);
       }
@@ -185,6 +189,10 @@ class MessageHandler implements MessageApi {
 
       if (additional.customString.isNotEmpty) {
         stanza.addCustom(additional.customString);
+      }
+
+      if (additional.customId?.isNotEmpty ?? false) {
+        stanza.addCustomId(additional.customId!);
       }
 
       if (additional.chatStateType != ChatStateType.None) {
@@ -288,6 +296,10 @@ class MessageHandler implements MessageApi {
       stanza.addCustom(additional.customString);
     }
 
+    if (additional.customId?.isNotEmpty ?? false) {
+      stanza.addCustomId(additional.customId!);
+    }
+
     if (additional.chatStateType != ChatStateType.None) {
       ChatStateDecoration(message: stanza).setState(additional.chatStateType);
     }
@@ -355,6 +367,10 @@ class MessageHandler implements MessageApi {
 
     if (additional.customString.isNotEmpty) {
       stanza.addCustom(additional.customString);
+    }
+
+    if (additional.customId?.isNotEmpty ?? false) {
+      stanza.addCustomId(additional.customId!);
     }
 
     if (additional.chatStateType != ChatStateType.None) {
@@ -439,6 +455,10 @@ class MessageHandler implements MessageApi {
 
     if (additional.customString.isNotEmpty) {
       stanza.addCustom(additional.customString);
+    }
+
+    if (additional.customId?.isNotEmpty ?? false) {
+      stanza.addCustomId(additional.customId!);
     }
 
     if (additional.chatStateType != ChatStateType.None) {
@@ -528,6 +548,10 @@ class MessageHandler implements MessageApi {
       stanza.addCustom(additional.customString);
     }
 
+    if (additional.customId?.isNotEmpty ?? false) {
+      stanza.addCustomId(additional.customId!);
+    }
+
     if (additional.chatStateType != ChatStateType.None) {
       ChatStateDecoration(message: stanza).setState(additional.chatStateType);
     }
@@ -604,6 +628,10 @@ class MessageHandler implements MessageApi {
       stanza.addCustom(additional.customString);
     }
 
+    if (additional.customId?.isNotEmpty ?? false) {
+      stanza.addCustomId(additional.customId!);
+    }
+
     if (additional.chatStateType != ChatStateType.None) {
       ChatStateDecoration(message: stanza).setState(additional.chatStateType);
     }
@@ -668,6 +696,10 @@ class MessageHandler implements MessageApi {
 
     if (additional.customString.isNotEmpty) {
       stanza.addCustom(additional.customString);
+    }
+
+    if (additional.customId?.isNotEmpty ?? false) {
+      stanza.addCustomId(additional.customId!);
     }
 
     if (additional.chatStateType != ChatStateType.None) {

@@ -12,6 +12,7 @@ import 'package:xmpp_stone/src/elements/messages/TimeElement.dart';
 import 'package:xmpp_stone/src/elements/messages/TimeStampElement.dart';
 import 'package:xmpp_stone/src/elements/messages/carbon/ForwardedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/carbon/SentElement.dart';
+import 'package:xmpp_stone/src/elements/messages/custom_id_element.dart';
 import 'package:xmpp_stone/src/elements/messages/invitation/InviteElement.dart';
 import 'package:xmpp_stone/src/elements/messages/mam/StanzaIdElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ApplyToElement.dart';
@@ -35,6 +36,7 @@ import 'package:xmpp_stone/src/extensions/message_delivery/CustomInterface.dart'
 import 'package:xmpp_stone/src/extensions/message_delivery/DelayInterface.dart';
 import 'package:xmpp_stone/src/extensions/message_delivery/ReceiptInterface.dart';
 import 'package:xmpp_stone/src/extensions/message_delivery/TimeInterface.dart';
+import 'package:xmpp_stone/src/extensions/message_delivery/custom_id_interface.dart';
 import 'package:xmpp_stone/src/extensions/muc_info_data/MUCInfoData.dart';
 import 'package:xmpp_stone/src/extensions/multi_user_chat/message_invitation_interface/MessageInvitationInterface.dart';
 import 'package:xmpp_stone/src/extensions/quote_message/quote_message.dart';
@@ -55,6 +57,7 @@ class MessageStanza extends AbstractStanza
         ArchiveStanzaIdInterface,
         MessageInvitationInterface,
         ApplyToInterface,
+        CustomIdInterface,
         ExampleCustomInterface,
         SystemMessageInterface,
         RecalledMessageInterface {
@@ -500,6 +503,17 @@ class MessageStanza extends AbstractStanza
       return true;
     }
     return false;
+  }
+
+  @override
+  CustomIdInterface addCustomId(String id) {
+    addChild(CustomIdElement.build(id));
+    return this;
+  }
+
+  @override
+  String getCustomId() {
+    return CustomIdElement.parse(this)?.textValue ?? '';
   }
 }
 
