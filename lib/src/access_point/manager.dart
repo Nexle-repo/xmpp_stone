@@ -80,6 +80,7 @@ class XMPPClientManager {
   Function(List<xmpp.Buddy>)? _onRosterList;
   Function(xmpp.BaseResponse)? _responseListener;
   xmpp.Connection? _connection;
+
   xmpp.Connection? get connection => _connection;
   late MessageHandler _messageHandler;
   late PingManager _pingHandler;
@@ -657,11 +658,19 @@ class XMPPClientManager {
 
   // Send 1-1 message
   Future<xmpp.MessageStanza> sendMessage(
-      String message, String receiver, bool isCustom,
-      {MessageParams additional = MessageParams.defaultMessageParams}) {
+    String message,
+    String receiver,
+    bool isCustom, {
+    MessageParams additional = MessageParams.defaultMessageParams,
+    void Function(MessageStanza)? onStanzaCreated,
+  }) {
     return _messageHandler.sendMessage(
-        xmpp.Jid.fromFullJid(receiver), message, isCustom,
-        additional: additional);
+      xmpp.Jid.fromFullJid(receiver),
+      message,
+      isCustom,
+      additional: additional,
+      onStanzaCreated: onStanzaCreated,
+    );
   }
 
   // Send system message
@@ -669,11 +678,13 @@ class XMPPClientManager {
     String message,
     String receiver, {
     MessageParams additional = MessageParams.defaultMessageParams,
+    void Function(MessageStanza)? onStanzaCreated,
   }) {
     return _messageHandler.sendSystemMessage(
       xmpp.Jid.fromFullJid(receiver),
       message,
       additional: additional,
+      onStanzaCreated: onStanzaCreated,
     );
   }
 
@@ -882,27 +893,38 @@ class XMPPClientManager {
 
   // Quote a message
   Future<xmpp.MessageStanza> quoteMessage(
-      String receiver,
-      String messageId,
-      String body,
-      String quoteText,
-      String userId,
-      String username,
-      String? messageType,
-      String? expts,
-      {MessageParams additional = const MessageParams(
-          millisecondTs: 0,
-          customString: '',
-          messageId: '',
-          receipt: ReceiptRequestType.RECEIVED,
-          messageType: MessageStanzaType.CHAT,
-          chatStateType: ChatStateType.None,
-          ampMessageType: AmpMessageType.None,
-          options: XmppCommunicationConfig(shallWaitStanza: false),
-          hasEncryptedBody: false)}) {
-    return _messageHandler.quoteMessage(xmpp.Jid.fromFullJid(receiver),
-        messageId, body, quoteText, userId, username, messageType, expts,
-        additional: additional);
+    String receiver,
+    String messageId,
+    String body,
+    String quoteText,
+    String userId,
+    String username,
+    String? messageType,
+    String? expts, {
+    MessageParams additional = const MessageParams(
+        millisecondTs: 0,
+        customString: '',
+        messageId: '',
+        receipt: ReceiptRequestType.RECEIVED,
+        messageType: MessageStanzaType.CHAT,
+        chatStateType: ChatStateType.None,
+        ampMessageType: AmpMessageType.None,
+        options: XmppCommunicationConfig(shallWaitStanza: false),
+        hasEncryptedBody: false),
+    void Function(MessageStanza)? onStanzaCreated,
+  }) {
+    return _messageHandler.quoteMessage(
+      xmpp.Jid.fromFullJid(receiver),
+      messageId,
+      body,
+      quoteText,
+      userId,
+      username,
+      messageType,
+      expts,
+      additional: additional,
+      onStanzaCreated: onStanzaCreated,
+    );
   }
 
   // recall a message

@@ -46,19 +46,31 @@ class MessageHandler implements MessageApi {
   }
 
   @override
-  Future<MessageStanza> sendMessage(Jid? to, String text, bool isCustom,
-      {MessageParams additional = const MessageParams(
-        millisecondTs: 0,
-        customString: '',
-        messageId: '',
-        receipt: ReceiptRequestType.NONE,
-        messageType: MessageStanzaType.CHAT,
-        chatStateType: ChatStateType.None,
-        ampMessageType: AmpMessageType.None,
-        hasEncryptedBody: false,
-        options: XmppCommunicationConfig(shallWaitStanza: false),
-      )}) {
-    return _sendMessageStanza(to, text, isCustom, additional, null);
+  Future<MessageStanza> sendMessage(
+    Jid? to,
+    String text,
+    bool isCustom, {
+    MessageParams additional = const MessageParams(
+      millisecondTs: 0,
+      customString: '',
+      messageId: '',
+      receipt: ReceiptRequestType.NONE,
+      messageType: MessageStanzaType.CHAT,
+      chatStateType: ChatStateType.None,
+      ampMessageType: AmpMessageType.None,
+      hasEncryptedBody: false,
+      options: XmppCommunicationConfig(shallWaitStanza: false),
+    ),
+    void Function(MessageStanza)? onStanzaCreated,
+  }) {
+    return _sendMessageStanza(
+      to,
+      text,
+      isCustom,
+      additional,
+      null,
+      onStanzaCreated: onStanzaCreated,
+    );
   }
 
   @override
@@ -76,8 +88,15 @@ class MessageHandler implements MessageApi {
       hasEncryptedBody: false,
       options: XmppCommunicationConfig(shallWaitStanza: false),
     ),
+    void Function(MessageStanza)? onStanzaCreated,
   }) {
-    return _sendSystemMessageStanza(to, text, additional, null);
+    return _sendSystemMessageStanza(
+      to,
+      text,
+      additional,
+      null,
+      onStanzaCreated: onStanzaCreated,
+    );
   }
 
   Future<MessageStanza> sendState(
@@ -413,26 +432,38 @@ class MessageHandler implements MessageApi {
 
   @override
   Future<MessageStanza> quoteMessage(
-      Jid to,
-      String messageId,
-      String body,
-      String quoteText,
-      String userId,
-      String username,
-      String? messageType,
-      String? expts,
-      {MessageParams additional = const MessageParams(
-          millisecondTs: 0,
-          customString: '',
-          messageId: '',
-          receipt: ReceiptRequestType.NONE,
-          messageType: MessageStanzaType.CHAT,
-          chatStateType: ChatStateType.None,
-          ampMessageType: AmpMessageType.None,
-          options: XmppCommunicationConfig(shallWaitStanza: false),
-          hasEncryptedBody: false)}) {
-    return _quoteMessageStanza(to, messageId, body, quoteText, userId, username,
-        messageType, expts, additional);
+    Jid to,
+    String messageId,
+    String body,
+    String quoteText,
+    String userId,
+    String username,
+    String? messageType,
+    String? expts, {
+    MessageParams additional = const MessageParams(
+        millisecondTs: 0,
+        customString: '',
+        messageId: '',
+        receipt: ReceiptRequestType.NONE,
+        messageType: MessageStanzaType.CHAT,
+        chatStateType: ChatStateType.None,
+        ampMessageType: AmpMessageType.None,
+        options: XmppCommunicationConfig(shallWaitStanza: false),
+        hasEncryptedBody: false),
+    void Function(MessageStanza)? onStanzaCreated,
+  }) {
+    return _quoteMessageStanza(
+      to,
+      messageId,
+      body,
+      quoteText,
+      userId,
+      username,
+      messageType,
+      expts,
+      additional,
+      onStanzaCreated: onStanzaCreated,
+    );
   }
 
   Future<MessageStanza> _quoteMessageStanza(
