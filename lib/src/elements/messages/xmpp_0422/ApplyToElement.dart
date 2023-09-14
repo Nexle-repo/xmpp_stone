@@ -77,10 +77,17 @@ class ApplyToElement extends XmppElement
     addAttribute(XmppAttribute('username', username));
   }
 
-  ApplyToElement.buildReactMessage(String id, String reaction) {
+  ApplyToElement.buildReactMessage(
+    String id,
+    String reaction, {
+    bool isClear = false,
+  }) {
     name = ApplyToElement.elementName;
     addAttribute(XmppAttribute('xmlns', 'urn:xmpp:fasten:0'));
     addAttribute(XmppAttribute('id', id));
+    if (isClear) {
+      addAttribute(XmppAttribute('clear', 'true'));
+    }
     addReactMessage(reaction);
   }
 

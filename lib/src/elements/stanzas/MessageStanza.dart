@@ -518,8 +518,16 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
-  ApplyToInterface addReactMessage(String messageId, String reaction) {
-    addChild(ApplyToElement.buildReactMessage(messageId, reaction));
+  ApplyToInterface addReactMessage(
+    String messageId,
+    String reaction, {
+    bool isClear = false,
+  }) {
+    addChild(ApplyToElement.buildReactMessage(
+      messageId,
+      reaction,
+      isClear: isClear,
+    ));
     return this;
   }
 

@@ -780,6 +780,7 @@ class MessageHandler implements MessageApi {
     String messageId,
     String text,
     String reaction, {
+    bool isClear = false,
     MessageParams additional = const MessageParams(
         millisecondTs: 0,
         customString: '',
@@ -798,6 +799,7 @@ class MessageHandler implements MessageApi {
       text,
       reaction,
       additional,
+      isClear: isClear,
       onStanzaCreated: onStanzaCreated,
     );
   }
@@ -808,6 +810,7 @@ class MessageHandler implements MessageApi {
     String text,
     String reaction,
     MessageParams additional, {
+    bool isClear = false,
     void Function(MessageStanza)? onStanzaCreated,
   }) async {
     final stanza = MessageStanza(
@@ -825,7 +828,7 @@ class MessageHandler implements MessageApi {
       stanza.body = text;
     }
 
-    stanza.addReactMessage(messageId, reaction);
+    stanza.addReactMessage(messageId, reaction, isClear: isClear);
 
     if (additional.millisecondTs != 0) {
       stanza.addTime(additional.millisecondTs);

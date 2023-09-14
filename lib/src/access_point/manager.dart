@@ -875,6 +875,7 @@ class XMPPClientManager {
     String messageId,
     String text,
     String reaction, {
+    bool isClear = false,
     MessageParams additional = const MessageParams(
         millisecondTs: 0,
         customString: '',
@@ -893,6 +894,7 @@ class XMPPClientManager {
       text,
       reaction,
       additional: additional,
+      isClear: isClear,
       onStanzaCreated: onStanzaCreated,
     );
   }

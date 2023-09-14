@@ -35,6 +35,7 @@ abstract class MessageApi {
     String messageId,
     String text,
     String reaction, {
+    bool isClear = false,
     MessageParams additional,
   });
 
