@@ -3,6 +3,7 @@ import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ExternalElement.dart'
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/PinnedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/QuoteElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/pin_chat_element.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/reaction_element.dart';
 import 'package:xmpp_stone/src/extensions/change_member_role/ChangeMemberRoleInterface.dart';
 import 'package:xmpp_stone/src/extensions/external/ExternalInterface.dart';
 import 'package:xmpp_stone/src/extensions/quote_message/QuoteMessageInterface.dart';
@@ -10,6 +11,7 @@ import 'package:xmpp_stone/src/extensions/quote_message/QuoteMessageInterface.da
 import '../../../extensions/muc_info_data/MUCInfoDataInterface.dart';
 import '../../../extensions/pin_chat/pin_chat_interface.dart';
 import '../../../extensions/pin_message/PinMessageInterface.dart';
+import '../../../extensions/react_message/react_message_interface.dart';
 import '../../XmppAttribute.dart';
 import '../../XmppElement.dart';
 import 'MUCInfoElement.dart';
@@ -21,8 +23,10 @@ class ApplyToElement extends XmppElement
         PinMessageInterface,
         PinChatInterface,
         ExternalInterface,
-        QuoteMessageInterface {
+        QuoteMessageInterface,
+        ReactMessageInterface {
   static String elementName = 'apply-to';
+
   ApplyToElement() {
     name = elementName;
   }
@@ -71,6 +75,13 @@ class ApplyToElement extends XmppElement
     addAttribute(XmppAttribute('id', id));
     addAttribute(XmppAttribute('userId', userId));
     addAttribute(XmppAttribute('username', username));
+  }
+
+  ApplyToElement.buildReactMessage(String id, String reaction) {
+    name = ApplyToElement.elementName;
+    addAttribute(XmppAttribute('xmlns', 'urn:xmpp:fasten:0'));
+    addAttribute(XmppAttribute('id', id));
+    addReactMessage(reaction);
   }
 
   static XmppElement? parse(parent) {
@@ -162,6 +173,18 @@ class ApplyToElement extends XmppElement
   @override
   XmppElement? getPinChat() {
     // TODO: implement getPinChat
+    throw UnimplementedError();
+  }
+
+  @override
+  ReactMessageInterface addReactMessage(String reaction) {
+    addChild(ReactionElement.build(reaction));
+    return this;
+  }
+
+  @override
+  XmppElement? getReactionMessage() {
+    // TODO: implement getReactionMessage
     throw UnimplementedError();
   }
 }

@@ -869,6 +869,30 @@ class XMPPClientManager {
         additional: additional);
   }
 
+  // Add reaction to message
+  Future<xmpp.MessageStanza> reactMessage(
+    String receiver,
+    String messageId,
+    String reaction, {
+    MessageParams additional = const MessageParams(
+        millisecondTs: 0,
+        customString: '',
+        messageId: '',
+        receipt: ReceiptRequestType.RECEIVED,
+        messageType: MessageStanzaType.CHAT,
+        chatStateType: ChatStateType.None,
+        ampMessageType: AmpMessageType.None,
+        options: XmppCommunicationConfig(shallWaitStanza: false),
+        hasEncryptedBody: false),
+  }) {
+    return _messageHandler.reactMessage(
+      xmpp.Jid.fromFullJid(receiver),
+      messageId,
+      reaction,
+      additional: additional,
+    );
+  }
+
   // Pin or unpin a chat
   Future<xmpp.MessageStanza> pinChat(
     String receiver,

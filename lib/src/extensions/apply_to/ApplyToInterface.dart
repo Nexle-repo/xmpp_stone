@@ -5,6 +5,7 @@ import 'package:xmpp_stone/xmpp_stone.dart';
 abstract class ApplyToInterface {
   ApplyToInterface changeMemberRole(String userJid, String role);
   ApplyToInterface addPinMessage(String messageId, bool isPinned);
+  ApplyToInterface addReactMessage(String messageId, String reaction);
   ApplyToInterface addPinChat(String chatId, bool isPinned);
   ApplyToInterface addQuoteMessage(
       String messageId, String userId, String username);
@@ -14,6 +15,7 @@ abstract class ApplyToInterface {
   });
   XmppElement? getApplyTo();
   bool isPinMessage();
+  bool isReactionMessage();
   bool isQuoteMessage();
   bool isMUCInfo();
   bool isChangeMemberRole();
