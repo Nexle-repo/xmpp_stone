@@ -778,6 +778,7 @@ class MessageHandler implements MessageApi {
   Future<MessageStanza> reactMessage(
     Jid to,
     String messageId,
+    String text,
     String reaction, {
     MessageParams additional = const MessageParams(
         millisecondTs: 0,
@@ -794,6 +795,7 @@ class MessageHandler implements MessageApi {
     return _reactMessageStanza(
       to,
       messageId,
+      text,
       reaction,
       additional,
       onStanzaCreated: onStanzaCreated,
@@ -803,6 +805,7 @@ class MessageHandler implements MessageApi {
   Future<MessageStanza> _reactMessageStanza(
     Jid? jid,
     String messageId,
+    String text,
     String reaction,
     MessageParams additional, {
     void Function(MessageStanza)? onStanzaCreated,
@@ -817,6 +820,9 @@ class MessageHandler implements MessageApi {
     // Validation
     if (stanza.toJid == null || stanza.fromJid == null) {
       throw InvalidJidMessageStanzaException();
+    }
+    if (text.isNotEmpty) {
+      stanza.body = text;
     }
 
     stanza.addReactMessage(messageId, reaction);

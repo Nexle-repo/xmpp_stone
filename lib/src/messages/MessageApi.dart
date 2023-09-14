@@ -33,6 +33,7 @@ abstract class MessageApi {
   Future<MessageStanza> reactMessage(
     Jid to,
     String messageId,
+    String text,
     String reaction, {
     MessageParams additional,
   });

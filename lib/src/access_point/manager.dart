@@ -873,6 +873,7 @@ class XMPPClientManager {
   Future<xmpp.MessageStanza> reactMessage(
     String receiver,
     String messageId,
+    String text,
     String reaction, {
     MessageParams additional = const MessageParams(
         millisecondTs: 0,
@@ -889,6 +890,7 @@ class XMPPClientManager {
     return _messageHandler.reactMessage(
       xmpp.Jid.fromFullJid(receiver),
       messageId,
+      text,
       reaction,
       additional: additional,
       onStanzaCreated: onStanzaCreated,
