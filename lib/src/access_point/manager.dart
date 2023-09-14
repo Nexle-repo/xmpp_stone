@@ -884,12 +884,14 @@ class XMPPClientManager {
         ampMessageType: AmpMessageType.None,
         options: XmppCommunicationConfig(shallWaitStanza: false),
         hasEncryptedBody: false),
+    void Function(MessageStanza)? onStanzaCreated,
   }) {
     return _messageHandler.reactMessage(
       xmpp.Jid.fromFullJid(receiver),
       messageId,
       reaction,
       additional: additional,
+      onStanzaCreated: onStanzaCreated,
     );
   }
 

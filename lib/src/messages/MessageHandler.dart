@@ -789,12 +789,24 @@ class MessageHandler implements MessageApi {
         ampMessageType: AmpMessageType.None,
         hasEncryptedBody: false,
         options: XmppCommunicationConfig(shallWaitStanza: false)),
+    void Function(MessageStanza)? onStanzaCreated,
   }) {
-    return _reactMessageStanza(to, messageId, reaction, additional);
+    return _reactMessageStanza(
+      to,
+      messageId,
+      reaction,
+      additional,
+      onStanzaCreated: onStanzaCreated,
+    );
   }
 
-  Future<MessageStanza> _reactMessageStanza(Jid? jid, String messageId,
-      String reaction, MessageParams additional) async {
+  Future<MessageStanza> _reactMessageStanza(
+    Jid? jid,
+    String messageId,
+    String reaction,
+    MessageParams additional, {
+    void Function(MessageStanza)? onStanzaCreated,
+  }) async {
     final stanza = MessageStanza(
         additional.messageId.isEmpty
             ? AbstractStanza.getRandomId()
@@ -836,6 +848,7 @@ class MessageHandler implements MessageApi {
       // Add request stanza from server?
       stanza.addAmpDeliverDirect();
     }
+    onStanzaCreated?.call(stanza);
 
     await _connection!.writeStanzaWithQueue(stanza);
 
