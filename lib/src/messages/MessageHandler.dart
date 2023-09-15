@@ -846,6 +846,9 @@ class MessageHandler implements MessageApi {
       ChatStateDecoration(message: stanza).setState(additional.chatStateType);
     }
 
+    // For custom message
+    stanza.addCustomMessage();
+
     // Add receipt delivery
     if (additional.receipt == ReceiptRequestType.RECEIVED) {
       stanza.addReceivedReceipt();
