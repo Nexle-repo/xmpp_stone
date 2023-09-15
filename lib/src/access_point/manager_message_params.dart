@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:xmpp_stone/src/extensions/chat_states/ChatStateDecoration.dart';
 import 'package:xmpp_stone/xmpp_stone.dart' as xmpp;
 
+import '../elements/messages/xmpp_0422/ApplyToElement.dart';
+
 class XMPPMessageParams {
   final xmpp.MessageStanza? message;
   const XMPPMessageParams({this.message});
@@ -128,6 +130,18 @@ class XMPPMessageParams {
 
   bool get isPinMessage {
     return message!.isPinMessage();
+  }
+
+  bool get isAddedReactionMessage {
+    if (!message!.isReactionMessage()) return false;
+    final applyTo = ApplyToElement.parse(message);
+    return applyTo?.getAttribute('clear') == null;
+  }
+
+  bool get isRemovedReactionMessage {
+    if (!message!.isReactionMessage()) return false;
+    final applyTo = ApplyToElement.parse(message);
+    return applyTo?.getAttribute('clear') != null;
   }
 
   bool get isPinChat {
