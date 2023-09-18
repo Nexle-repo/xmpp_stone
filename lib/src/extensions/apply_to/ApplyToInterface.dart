@@ -13,6 +13,11 @@ abstract class ApplyToInterface {
     bool isClear = false,
   });
 
+  ApplyToInterface editMessage(
+    String messageId,
+    String content,
+  );
+
   ApplyToInterface addPinChat(String chatId, bool isPinned);
 
   ApplyToInterface addQuoteMessage(
@@ -28,6 +33,8 @@ abstract class ApplyToInterface {
   bool isPinMessage();
 
   bool isReactionMessage();
+
+  bool isEditMessage();
 
   bool isQuoteMessage();
 

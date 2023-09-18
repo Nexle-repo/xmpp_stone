@@ -899,6 +899,34 @@ class XMPPClientManager {
     );
   }
 
+  // Edit a message
+  Future<xmpp.MessageStanza> editMessage(
+    String receiver,
+    String messageId,
+    String text,
+    String editContent, {
+    MessageParams additional = const MessageParams(
+        millisecondTs: 0,
+        customString: '',
+        messageId: '',
+        receipt: ReceiptRequestType.RECEIVED,
+        messageType: MessageStanzaType.CHAT,
+        chatStateType: ChatStateType.None,
+        ampMessageType: AmpMessageType.None,
+        options: XmppCommunicationConfig(shallWaitStanza: false),
+        hasEncryptedBody: false),
+    void Function(MessageStanza)? onStanzaCreated,
+  }) {
+    return _messageHandler.editMessage(
+      xmpp.Jid.fromFullJid(receiver),
+      messageId,
+      text,
+      editContent,
+      additional: additional,
+      onStanzaCreated: onStanzaCreated,
+    );
+  }
+
   // Pin or unpin a chat
   Future<xmpp.MessageStanza> pinChat(
     String receiver,

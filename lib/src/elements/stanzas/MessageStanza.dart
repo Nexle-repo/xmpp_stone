@@ -22,6 +22,7 @@ import 'package:xmpp_stone/src/elements/messages/xmpp_0422/MUCInfoElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/PinnedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/QuoteElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/RecalledElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/edit_message_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/pin_chat_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/reaction_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/system_message_element.dart';
@@ -539,6 +540,25 @@ class MessageStanza extends AbstractStanza
     }
     var reaction = ReactionElement.parse(applyTo);
     return reaction != null;
+  }
+
+  @override
+  ApplyToInterface editMessage(String messageId, String content) {
+    addChild(ApplyToElement.buildEditMessage(
+      messageId,
+      content,
+    ));
+    return this;
+  }
+
+  @override
+  bool isEditMessage() {
+    var applyTo = ApplyToElement.parse(this);
+    if (applyTo == null) {
+      return false;
+    }
+    var element = EditMessageElement.parse(applyTo);
+    return element != null;
   }
 }
 

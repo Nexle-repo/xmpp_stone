@@ -2,9 +2,11 @@ import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ChangeMemberRoleEleme
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ExternalElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/PinnedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/QuoteElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/edit_message_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/pin_chat_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/reaction_element.dart';
 import 'package:xmpp_stone/src/extensions/change_member_role/ChangeMemberRoleInterface.dart';
+import 'package:xmpp_stone/src/extensions/edit_message/edit_message_interface.dart';
 import 'package:xmpp_stone/src/extensions/external/ExternalInterface.dart';
 import 'package:xmpp_stone/src/extensions/quote_message/QuoteMessageInterface.dart';
 
@@ -24,7 +26,8 @@ class ApplyToElement extends XmppElement
         PinChatInterface,
         ExternalInterface,
         QuoteMessageInterface,
-        ReactMessageInterface {
+        ReactMessageInterface,
+        EditMessageInterface {
   static String elementName = 'apply-to';
 
   ApplyToElement() {
@@ -89,6 +92,16 @@ class ApplyToElement extends XmppElement
       addAttribute(XmppAttribute('clear', 'true'));
     }
     addReactMessage(reaction);
+  }
+
+  ApplyToElement.buildEditMessage(
+    String id,
+    String content,
+  ) {
+    name = ApplyToElement.elementName;
+    addAttribute(XmppAttribute('xmlns', 'urn:xmpp:fasten:0'));
+    addAttribute(XmppAttribute('id', id));
+    editMessage(content);
   }
 
   static XmppElement? parse(parent) {
@@ -192,6 +205,18 @@ class ApplyToElement extends XmppElement
   @override
   XmppElement? getReactionMessage() {
     // TODO: implement getReactionMessage
+    throw UnimplementedError();
+  }
+
+  @override
+  EditMessageInterface editMessage(String content) {
+    addChild(EditMessageElement.build(content));
+    return this;
+  }
+
+  @override
+  XmppElement? getEditMessage() {
+    // TODO: implement getEditMessage
     throw UnimplementedError();
   }
 }

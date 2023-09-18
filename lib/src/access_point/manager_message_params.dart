@@ -148,6 +148,10 @@ class XMPPMessageParams {
     return message!.isPinChat();
   }
 
+  bool get isEditMessage {
+    return message!.isEditMessage();
+  }
+
   bool get isQuoteMessage {
     return message!.isQuoteMessage();
   }

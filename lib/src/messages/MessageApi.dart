@@ -39,6 +39,14 @@ abstract class MessageApi {
     MessageParams additional,
   });
 
+  Future<MessageStanza> editMessage(
+    Jid to,
+    String messageId,
+    String text,
+    String editContent, {
+    MessageParams additional,
+  });
+
   Future<MessageStanza> pinChat(
     Jid to,
     bool isPinned, {

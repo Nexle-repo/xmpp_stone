@@ -1,14 +1,14 @@
 import '../../XmppAttribute.dart';
 import '../../XmppElement.dart';
 
-class ReactionElement extends XmppElement {
-  static String elementName = 'reaction';
+class EditMessageElement extends XmppElement {
+  static String elementName = 'edit';
 
-  ReactionElement() {
+  EditMessageElement() {
     name = elementName;
   }
 
-  ReactionElement.build(String reaction) {
+  EditMessageElement.build(String reaction) {
     name = elementName;
     addAttribute(XmppAttribute('xmlns', 'rhp:urn:xmpp:$elementName'));
     textValue = reaction;
@@ -16,7 +16,7 @@ class ReactionElement extends XmppElement {
 
   static XmppElement? parse(parent) {
     return parent.children.firstWhere(
-        (child) => (child.name == ReactionElement.elementName),
+        (child) => (child.name == EditMessageElement.elementName),
         orElse: () => null);
   }
 }
