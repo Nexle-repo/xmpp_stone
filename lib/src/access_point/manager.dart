@@ -65,6 +65,7 @@ class XMPPClientManager {
   int responseTimeoutMs = 30000;
   int writeQueueMs = 200;
   int port = 5222;
+  String? customScheme;
   String? wsPath;
   String? resource;
   List<String>? wsProtocols;
@@ -117,6 +118,7 @@ class XMPPClientManager {
     this.writeQueueMs = 200,
     String? resource,
     String? wsPath,
+    String? customScheme,
     bool logXmpp = false,
     List<String>? wsProtocols,
   }) {
@@ -136,6 +138,7 @@ class XMPPClientManager {
     this.host = host;
     this.port = port;
     this.wsPath = wsPath;
+    this.customScheme = customScheme;
     this.wsProtocols = wsProtocols;
     this.resource = resource;
   }
@@ -156,6 +159,7 @@ class XMPPClientManager {
       resource: resource ?? jid.resource,
       wsPath: wsPath,
       wsProtocols: wsProtocols,
+      customScheme: customScheme,
     );
 
     account.responseTimeoutMs = responseTimeoutMs;

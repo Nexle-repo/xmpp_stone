@@ -24,13 +24,17 @@ class XmppWebSocketHtml extends XmppWebSocket {
   XmppWebSocketHtml();
 
   @override
-  Future<XmppWebSocket> connect<S>(String host, int port,
-      {String Function(String event)? map,
-      List<String>? wsProtocols,
-      String? wsPath}) {
+  Future<XmppWebSocket> connect<S>(
+    String host,
+    int port, {
+    String Function(String event)? map,
+    List<String>? wsProtocols,
+    String? wsPath,
+    String? customScheme,
+  }) {
     _socket = WebSocketChannel.connect(
       Uri(
-        scheme: 'wss',
+        scheme: customScheme ?? 'wss',
         host: host,
         port: port,
         path: wsPath,

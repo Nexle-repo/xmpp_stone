@@ -22,10 +22,14 @@ class XmppWebSocketIo extends XmppWebSocket {
   XmppWebSocketIo();
 
   @override
-  Future<XmppWebSocket> connect<S>(String host, int port,
-      {String Function(String event)? map,
-      List<String>? wsProtocols,
-      String? wsPath}) async {
+  Future<XmppWebSocket> connect<S>(
+    String host,
+    int port, {
+    String Function(String event)? map,
+    List<String>? wsProtocols,
+    String? wsPath,
+    String? customScheme,
+  }) async {
     await Socket.connect(host, port).then((Socket socket) {
       _socket = socket;
 

@@ -231,7 +231,7 @@ xml:lang='en'
   }
 
   void connect() {
-    isForcedClose =false;
+    isForcedClose = false;
     if (_state == XmppConnectionState.Closing) {
       _state = XmppConnectionState.WouldLikeToOpen;
     }
@@ -267,6 +267,7 @@ xml:lang='en'
           wsProtocols: account.wsProtocols,
           wsPath: account.wsPath,
           map: prepareStreamResponse,
+          customScheme: account.customScheme,
         )
             .then(
           (socket) {
@@ -387,7 +388,9 @@ xml:lang='en'
       xml.XmlNode? xmlResponse;
       Log.d(this.toString(), 'Receiving full response:\n: ${fullResponse}');
       try {
-        xmlResponse = xml.XmlDocument.parse(fullResponse.replaceAll(RegExp(r'<\?(xml.+?)\>'), '')).firstChild;
+        xmlResponse = xml.XmlDocument.parse(
+                fullResponse.replaceAll(RegExp(r'<\?(xml.+?)\>'), ''))
+            .firstChild;
       } catch (e) {
         _unparsedXmlResponse += fullResponse.substring(
             0, fullResponse.length - 13); //remove  xmpp_stone end tag
