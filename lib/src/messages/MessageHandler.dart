@@ -540,6 +540,9 @@ class MessageHandler implements MessageApi {
     String? coverUrl,
     String? membersAddedEncoded,
     String? membersRemovedEncoded,
+    bool? isMuted,
+    bool? isMarkRead,
+    bool? isMarkUnRead,
     MessageParams additional = const MessageParams(
       millisecondTs: 0,
       customString: '',
@@ -559,6 +562,9 @@ class MessageHandler implements MessageApi {
       additional: additional,
       membersAddedEncoded: membersAddedEncoded,
       membersRemovedEncoded: membersRemovedEncoded,
+      isMuted: isMuted,
+      isMarkRead: isMarkRead,
+      isMarkUnRead: isMarkUnRead,
     );
   }
 
@@ -568,6 +574,9 @@ class MessageHandler implements MessageApi {
     String? coverUrl,
     String? membersAddedEncoded,
     String? membersRemovedEncoded,
+    bool? isMuted,
+    bool? isMarkRead,
+    bool? isMarkUnRead,
     required MessageParams additional,
   }) async {
     final stanza = MessageStanza(
@@ -587,6 +596,9 @@ class MessageHandler implements MessageApi {
       coverUrlChanged: coverUrl,
       membersAddedEncoded: membersAddedEncoded,
       membersRemovedEncoded: membersRemovedEncoded,
+      isMarkUnRead: isMarkUnRead,
+      isMarkRead: isMarkRead,
+      isMuted: isMuted,
     );
 
     if (additional.millisecondTs != 0) {

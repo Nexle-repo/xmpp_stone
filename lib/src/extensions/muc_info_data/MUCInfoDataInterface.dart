@@ -8,6 +8,10 @@ abstract class MUCInfoDataInterface {
     String? coverUrlChanged,
     String? membersAddedEncoded,
     String? membersRemovedEncoded,
+    bool? isMuted,
+    bool? isMarkRead,
+    bool? isMarkUnRead,
   });
+
   XmppElement? getMUCInfo();
 }

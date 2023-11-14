@@ -808,6 +808,9 @@ class XMPPClientManager {
     String? coverUrl,
     String? membersAddedEncoded,
     String? membersRemovedEncoded,
+    bool? isMuted,
+    bool? isMarkRead,
+    bool? isMarkUnRead,
     MessageParams additional = const MessageParams(
       millisecondTs: 0,
       customString: '',
@@ -826,6 +829,9 @@ class XMPPClientManager {
       coverUrl: coverUrl,
       membersAddedEncoded: membersAddedEncoded,
       membersRemovedEncoded: membersRemovedEncoded,
+      isMarkRead: isMarkRead,
+      isMarkUnRead: isMarkUnRead,
+      isMuted: isMuted,
       additional: additional,
     );
   }

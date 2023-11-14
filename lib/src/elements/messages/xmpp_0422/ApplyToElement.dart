@@ -8,6 +8,7 @@ import 'package:xmpp_stone/src/elements/messages/xmpp_0422/reaction_element.dart
 import 'package:xmpp_stone/src/extensions/change_member_role/ChangeMemberRoleInterface.dart';
 import 'package:xmpp_stone/src/extensions/edit_message/edit_message_interface.dart';
 import 'package:xmpp_stone/src/extensions/external/ExternalInterface.dart';
+import 'package:xmpp_stone/src/extensions/mark_read/mark_read_data_interface.dart';
 import 'package:xmpp_stone/src/extensions/quote_message/QuoteMessageInterface.dart';
 
 import '../../../extensions/muc_info_data/MUCInfoDataInterface.dart';
@@ -22,6 +23,7 @@ class ApplyToElement extends XmppElement
     implements
         ChangeMemberRoleInterface,
         MUCInfoDataInterface,
+        MarkReadInterface,
         PinMessageInterface,
         PinChatInterface,
         ExternalInterface,
@@ -39,6 +41,9 @@ class ApplyToElement extends XmppElement
     String? coverUrlChanged,
     String? membersAddedEncoded,
     String? membersRemovedEncoded,
+    bool? isMuted,
+    bool? isMarkRead,
+    bool? isMarkUnRead,
   }) {
     name = ApplyToElement.elementName;
     addAttribute(XmppAttribute('xmlns', 'urn:xmpp:fasten:0'));
@@ -47,6 +52,9 @@ class ApplyToElement extends XmppElement
       coverUrlChanged: coverUrlChanged,
       membersAddedEncoded: membersAddedEncoded,
       membersRemovedEncoded: membersRemovedEncoded,
+      isMuted: isMuted,
+      isMarkUnRead: isMarkUnRead,
+      isMarkRead: isMarkRead,
     );
   }
 
@@ -161,12 +169,18 @@ class ApplyToElement extends XmppElement
     String? coverUrlChanged,
     String? membersAddedEncoded,
     String? membersRemovedEncoded,
+    bool? isMuted,
+    bool? isMarkRead,
+    bool? isMarkUnRead,
   }) {
     addChild(MUCInfoElement.build(
       subjectChanged: subjectChanged,
       coverUrlChanged: coverUrlChanged,
       membersAddedEncoded: membersAddedEncoded,
       membersRemovedEncoded: membersRemovedEncoded,
+      isMarkRead: isMarkRead,
+      isMarkUnRead: isMarkUnRead,
+      isMuted: isMuted,
     ));
     return this;
   }
@@ -217,6 +231,18 @@ class ApplyToElement extends XmppElement
   @override
   XmppElement? getEditMessage() {
     // TODO: implement getEditMessage
+    throw UnimplementedError();
+  }
+
+  @override
+  MarkReadInterface addMarkRead(bool isRead) {
+    // TODO: implement addMarkRead
+    throw UnimplementedError();
+  }
+
+  @override
+  XmppElement? getMarkRead() {
+    // TODO: implement getMarkRead
     throw UnimplementedError();
   }
 }

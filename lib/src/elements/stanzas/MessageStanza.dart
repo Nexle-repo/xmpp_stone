@@ -145,6 +145,9 @@ class MessageStanza extends AbstractStanza
     }, orElse: () => null);
     if (applyTo == null || data == null) return null;
     final model = MUCInfoData(
+      isMarkUnRead: data.getAttribute('isMarkUnRead')?.value == "1",
+      isMarkRead: data.getAttribute('isMarkRead')?.value == "1",
+      isMuted: data.getAttribute('isMuted')?.value == "1",
       subject: data.getAttribute('subject')?.value ?? "",
       coverUrl: data.getAttribute('coverUrl')?.value ?? "",
       membersAddedEncoded:
@@ -231,12 +234,18 @@ class MessageStanza extends AbstractStanza
     String? coverUrlChanged,
     String? membersAddedEncoded,
     String? membersRemovedEncoded,
+    bool? isMuted,
+    bool? isMarkRead,
+    bool? isMarkUnRead,
   }) {
     addChild(ApplyToElement.buildMUCInfo(
       subjectChanged: subjectChanged,
       coverUrlChanged: coverUrlChanged,
       membersAddedEncoded: membersAddedEncoded,
       membersRemovedEncoded: membersRemovedEncoded,
+      isMuted: isMuted,
+      isMarkRead: isMarkRead,
+      isMarkUnRead: isMarkUnRead,
     ));
     return this;
   }

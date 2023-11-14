@@ -12,6 +12,9 @@ class MUCInfoElement extends XmppElement {
     String? coverUrlChanged,
     String? membersAddedEncoded,
     String? membersRemovedEncoded,
+    bool? isMuted,
+    bool? isMarkRead,
+    bool? isMarkUnRead,
   }) {
     name = elementName;
     String value = '';
@@ -42,6 +45,36 @@ class MUCInfoElement extends XmppElement {
         value += '|';
       }
       value += membersRemovedEncoded!;
+    }
+    if (isMuted != null) {
+      final muted = isMuted ? '1' : '0';
+      addAttribute(
+        XmppAttribute('isMuted', muted),
+      );
+      if (value.isNotEmpty) {
+        value += '|';
+      }
+      value += muted;
+    }
+    if (isMarkRead != null) {
+      final markRead = isMarkRead ? '1' : '0';
+      addAttribute(
+        XmppAttribute('isMarkRead', markRead),
+      );
+      if (value.isNotEmpty) {
+        value += '|';
+      }
+      value += markRead;
+    }
+    if (isMarkUnRead != null) {
+      final markUnRead = isMarkUnRead ? '1' : '0';
+      addAttribute(
+        XmppAttribute('isMarkUnRead', markUnRead),
+      );
+      if (value.isNotEmpty) {
+        value += '|';
+      }
+      value += markUnRead;
     }
   }
 
