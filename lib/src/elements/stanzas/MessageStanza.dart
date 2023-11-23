@@ -128,7 +128,7 @@ class MessageStanza extends AbstractStanza
     ;
     final model = QuoteMessage(
         refMsgId: applyTo?.getAttribute("id")?.value ?? "",
-        refMsgShortDesc: custom?.textValue ?? "",
+        refMsgShortDesc: custom?.getAttribute('refMsgBody')?.value ?? "",
         refMsgType: custom?.getAttribute('type')?.value ?? "",
         refUserId: int.parse(applyTo?.getAttribute("userId")?.value ?? ""),
         refUsername: applyTo?.getAttribute("username")?.value ?? "",
