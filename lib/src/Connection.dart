@@ -26,7 +26,7 @@ import 'package:xmpp_stone/src/response/Response.dart';
 import 'package:xmpp_stone/src/roster/RosterManager.dart';
 import 'package:xmpp_stone/src/utils/Random.dart';
 
-import 'connection/XmppWebsocketHtml.dart' as xmppSocket;
+import 'connection/XmppWebSocketIo.dart' as xmppSocket;
 
 enum XmppConnectionState {
   Idle,
