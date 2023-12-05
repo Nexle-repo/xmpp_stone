@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import '../../XmppAttribute.dart';
 import '../../XmppElement.dart';

@@ -235,20 +235,16 @@ class XMPPClientManager {
   Future<VCard> vCardRead() async {
     var vCardManager = xmpp.VCardManager(_connection!);
     final vCard = await vCardManager.getSelfVCard();
-    if (vCard != null) {
-      personel.profile = vCard;
-      onLog('Your info' + vCard.buildXmlString());
-    }
-    return vCard;
+    personel.profile = vCard;
+    onLog('Your info' + vCard.buildXmlString());
+      return vCard;
   }
 
   void vCardUpdate(xmpp.VCard Function(xmpp.VCard vCardToUpdate) _onUpdate) {
     var vCardManager = xmpp.VCardManager(_connection!);
     vCardManager.getSelfVCard().then((vCard) {
-      if (vCard != null) {
-        onLog('manager.vCardUpdate::my info ${vCard.buildXmlString()}');
-      }
-      // Update vcard information
+      onLog('manager.vCardUpdate::my info ${vCard.buildXmlString()}');
+          // Update vcard information
       var _vCardUpdated = _onUpdate(vCard);
 
       onLog(

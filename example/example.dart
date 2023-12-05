@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:console/console.dart';
-import 'package:universal_io/io.dart';
-import 'package:xmpp_stone/src/logger/Log.dart';
 import 'package:xmpp_stone/xmpp_stone.dart';
 
 final String TAG = 'example';

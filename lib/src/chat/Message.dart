@@ -2,7 +2,6 @@ import 'package:xmpp_stone/src/chat/Chat.dart';
 import 'package:xmpp_stone/src/data/Jid.dart';
 import 'package:xmpp_stone/src/elements/stanzas/MessageStanza.dart';
 import '../elements/XmppElement.dart';
-import '../elements/stanzas/MessageStanza.dart';
 import '../logger/Log.dart';
 
 class Message {

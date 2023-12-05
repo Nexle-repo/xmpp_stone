@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:xmpp_stone/src/data/Jid.dart';
 import 'package:xmpp_stone/src/elements/XmppAttribute.dart';

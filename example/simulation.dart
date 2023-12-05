@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:xmpp_stone/src/Connection.dart';
-import 'package:xmpp_stone/src/access_point/manager_message_params.dart';
 
 import 'models/TestUser.dart';
 import 'models/xmpp_communication_callback.dart';

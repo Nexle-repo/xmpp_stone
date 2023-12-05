@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:xmpp_stone/src/Connection.dart';
 

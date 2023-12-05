@@ -1,4 +1,3 @@
-import 'package:xmpp_stone/src/elements/messages/xmpp_0422/RecalledElement.dart';
 
 import '../../../xmpp_stone.dart';
 

@@ -2,7 +2,6 @@ import 'package:xmpp_stone/src/Connection.dart';
 import 'package:xmpp_stone/src/access_point/manager_message_params.dart';
 
 import '../models/xmpp_communication_callback.dart';
-import '../simulation.dart';
 import '../user.dart';
 import '../users_connection.dart';
 import 'scenario.dart';

@@ -3,9 +3,6 @@ import 'dart:async';
 import 'package:xmpp_stone/src/elements/nonzas/Nonza.dart';
 
 import '../../../xmpp_stone.dart';
-import '../../elements/XmppAttribute.dart';
-import '../../elements/nonzas/Nonza.dart';
-import '../../elements/stanzas/IqStanza.dart';
 import '../Negotiator.dart';
 import 'Feature.dart';
 
@@ -38,7 +35,6 @@ class CarbonsNegotiator extends Negotiator {
   @override
   List<Nonza> match(List<Nonza> requests) {
     return (requests.where((element) =>
-        element != null &&
         element is Feature &&
         ((element).xmppVar == 'urn:xmpp:carbons:2' ||
             (element).xmppVar == 'urn:xmpp:carbons:rules:0'))).toList();

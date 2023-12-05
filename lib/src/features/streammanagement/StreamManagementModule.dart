@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart' show IterableExtension;
 import 'package:xmpp_stone/src/elements/nonzas/ANonza.dart';
 import 'package:xmpp_stone/src/elements/nonzas/EnableNonza.dart';
 import 'package:xmpp_stone/src/elements/nonzas/EnabledNonza.dart';
@@ -121,7 +120,7 @@ class StreamManagementModule extends Negotiator {
   //TODO: Improve
   @override
   void negotiate(List<Nonza> nonzas) {
-    if (nonzas != null && nonzas.isNotEmpty && _connection.authenticated) {
+    if (nonzas.isNotEmpty && _connection.authenticated) {
       bool matchSm2 = _matchSMV2(nonzas);
       // Somehow, it listens too many times, if we don't clear or check.
       // TOOD: see when to send from here and when not to....

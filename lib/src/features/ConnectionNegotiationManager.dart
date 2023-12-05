@@ -17,10 +17,7 @@ import 'package:xmpp_stone/src/features/servicediscovery/ServiceDiscoveryNegotia
 import 'package:xml/xml.dart' as xml;
 import 'package:xmpp_stone/src/features/streammanagement/StreamManagementModule.dart';
 
-import '../elements/nonzas/Nonza.dart';
 import '../logger/Log.dart';
-import 'Negotiator.dart';
-import 'servicediscovery/ServiceDiscoveryNegotiator.dart';
 
 class ConnectionNegotiationManager {
   static const String TAG = 'ConnectionNegotiatorManager';
@@ -52,7 +49,7 @@ class ConnectionNegotiationManager {
         element.childElements.map((element) => Nonza.parse(element)).toList();
     supportedNegotiatorList.forEach((negotiator) {
       var matchingNonzas = negotiator.match(nonzas);
-      if (matchingNonzas != null && matchingNonzas.isNotEmpty) {
+      if (matchingNonzas.isNotEmpty) {
         waitingNegotiators
             .add(NegotiatorWithSupportedNonzas(negotiator, matchingNonzas));
       }
@@ -165,7 +162,7 @@ class ConnectionNegotiationManager {
         'ADDING FEATURES count: ${supportedFeatures.length} $supportedFeatures ');
     supportedNegotiatorList.forEach((negotiator) {
       var matchingNonzas = negotiator.match(supportedFeatures);
-      if (matchingNonzas != null && matchingNonzas.isNotEmpty) {
+      if (matchingNonzas.isNotEmpty) {
         Log.d(TAG, 'Adding negotiator: $negotiator $matchingNonzas');
         waitingNegotiators
             .add(NegotiatorWithSupportedNonzas(negotiator, matchingNonzas));

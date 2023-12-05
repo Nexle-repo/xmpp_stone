@@ -1,20 +1,14 @@
-import 'package:xmpp_stone/src/elements/XmppAttribute.dart';
 import 'package:xmpp_stone/src/elements/bundles/BundleElement.dart';
 import 'package:xmpp_stone/src/elements/bundles/IKElement.dart';
 import 'package:xmpp_stone/src/elements/bundles/PKElement.dart';
 import 'package:xmpp_stone/src/elements/bundles/PreKeysElement.dart';
 import 'package:xmpp_stone/src/elements/bundles/SPKElement.dart';
 import 'package:xmpp_stone/src/elements/bundles/SPKSElement.dart';
-import 'package:xmpp_stone/src/elements/encryption/EncryptElement.dart';
 import 'package:xmpp_stone/src/elements/encryption/EncryptHeaderElement.dart';
 import 'package:xmpp_stone/src/elements/encryption/EncryptKeyElement.dart';
 import 'package:xmpp_stone/src/elements/encryption/EncryptKeysElement.dart';
 import 'package:xmpp_stone/src/elements/encryption/EncryptPayloadElement.dart';
 import 'package:xmpp_stone/src/elements/encryption/PlainEnvelope.dart';
-import 'package:xmpp_stone/src/elements/messages/CustomElement.dart';
-import 'package:xmpp_stone/src/elements/messages/CustomSubElement.dart';
-import 'package:xmpp_stone/src/elements/messages/TimeElement.dart';
-import 'package:xmpp_stone/src/elements/messages/TimeStampElement.dart';
 import 'package:xmpp_stone/src/elements/pubsub/ItemElement.dart';
 import 'package:xmpp_stone/src/elements/pubsub/ItemsElement.dart';
 import 'package:xmpp_stone/src/elements/pubsub/PubSubElement.dart';
@@ -22,7 +16,6 @@ import 'package:xmpp_stone/src/elements/pubsub/PublishElement.dart';
 import 'package:xmpp_stone/src/elements/pubsub/PublishOptionsElement.dart';
 import 'package:xmpp_stone/src/elements/pubsub/devices/DeviceElement.dart';
 import 'package:xmpp_stone/src/elements/pubsub/devices/DevicesElement.dart';
-import 'package:xmpp_stone/src/elements/stanzas/IqStanza.dart';
 import 'package:xmpp_stone/xmpp_stone.dart';
 
 abstract class OMEMOParams {

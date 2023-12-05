@@ -1,7 +1,5 @@
 import 'package:xmpp_stone/xmpp_stone.dart';
 
-import '../../XmppAttribute.dart';
-import '../../XmppElement.dart';
 
 class ForwardedElement extends XmppElement {
   static String elementName = 'forwarded';
@@ -22,11 +20,7 @@ class ForwardedElement extends XmppElement {
 
   static MessageStanza? parseForMessage(parent) {
     XmppElement? parentXmpp = parse(parent)!;
-    if (parentXmpp != null) {
-      return parentXmpp.children.firstWhere((child) => (child is MessageStanza),
-          orElse: () => null) as MessageStanza;
-    } else {
-      return null;
+    return parentXmpp.children.firstWhere((child) => (child is MessageStanza),
+        orElse: () => null) as MessageStanza;
     }
-  }
 }
