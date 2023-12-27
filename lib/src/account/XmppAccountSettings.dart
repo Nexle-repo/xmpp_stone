@@ -9,6 +9,8 @@ class XmppAccountSettings {
   String? host;
   String? mucDomain = '';
   String? customScheme;
+  String? publicKey;
+  String? privateKey;
   int port;
   int totalReconnections = 3;
   int reconnectionTimeout = 1000;
@@ -30,6 +32,8 @@ class XmppAccountSettings {
     this.wsPath,
     this.wsProtocols,
     this.customScheme,
+    this.publicKey,
+    this.privateKey
   });
 
   Jid get fullJid => Jid(username, domain, resource);

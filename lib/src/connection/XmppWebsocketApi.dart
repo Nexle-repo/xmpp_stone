@@ -6,10 +6,6 @@ XmppWebSocket createSocket() {
   throw UnsupportedError('No implementation of the connect api provided');
 }
 
-bool isTlsRequired() {
-  throw UnsupportedError('No implementation of the connect api provided');
-}
-
 abstract class XmppWebSocket extends Stream<String> {
   Future<XmppWebSocket> connect<S>(
     String host,

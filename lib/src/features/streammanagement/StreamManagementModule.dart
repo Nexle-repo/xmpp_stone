@@ -151,9 +151,6 @@ class StreamManagementModule extends Negotiator {
   void parseNonza(Nonza nonza) {
     if (state == NegotiatorState.NEGOTIATING) {
       if (EnabledNonza.match(nonza)) {
-        print('<enable state done?  ${state}');
-        Log.d(tag, 'Handle <enable> stream done');
-
         enablingStream = false;
         handleEnabled(nonza);
       } else if (ResumedNonza.match(nonza)) {

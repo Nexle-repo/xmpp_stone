@@ -175,19 +175,26 @@ class Message {
 
   static ChatState _stateFromString(String? chatStateString) {
     switch (chatStateString) {
-      case 'inactive':
-        return ChatState.INACTIVE;
-      case 'active':
-        return ChatState.ACTIVE;
+      case 'presence':
+        return ChatState.PRESENCE;
       case 'gone':
         return ChatState.GONE;
       case 'composing':
         return ChatState.COMPOSING;
-      case 'paused':
-        return ChatState.PAUSED;
+      case 'gif':
+        return ChatState.GIF;
+      case 'sticker':
+        return ChatState.STICKER;
+      case 'emoji':
+        return ChatState.EMOJI;
+      case 'speaking':
+        return ChatState.SPEAKING;
+      case 'none':
+        return ChatState.NONE;
     }
-    return ChatState.INACTIVE;
+    return ChatState.NONE;
   }
+
 
   static Message _parseRegularMessage(MessageStanza stanza) {
     return Message(

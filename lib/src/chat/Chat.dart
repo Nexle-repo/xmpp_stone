@@ -93,4 +93,24 @@ abstract class Chat {
   set myState(ChatState? state);
 }
 
-enum ChatState { INACTIVE, ACTIVE, GONE, COMPOSING, PAUSED }
+enum ChatState {
+  NONE(-1,''),
+  GONE(0,'离开'),
+  PRESENCE(1,'出席'),
+  COMPOSING(2,'正在输入...'),
+  GIF(3,'正在选择gif...'),
+  STICKER(4,'正在选择贴纸...'),//选择贴纸
+  EMOJI(5,'正在选择表情...'),//选择表情
+  SPEAKING(6,'正在讲话...');//正在讲话
+  final int code;
+  final String desc;
+  const ChatState(this.code,this.desc);
+  static ChatState getByCode(int code){
+    for(var i=0;i<ChatState.values.length;i++){
+      if(ChatState.values[i].code==code){
+        return ChatState.values[i];
+      }
+    }
+    return ChatState.NONE;
+  }
+}

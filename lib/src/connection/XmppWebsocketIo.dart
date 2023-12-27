@@ -10,13 +10,10 @@ XmppWebSocket createSocket() {
   return XmppWebSocketIo();
 }
 
-bool isTlsRequired() {
-  return false;
-}
-
 class XmppWebSocketIo extends XmppWebSocket {
   static String TAG = 'XmppWebSocketIo';
   Socket? _socket;
+  SecureSocket? _secureSocket;
   late String Function(String event) _map;
 
   XmppWebSocketIo();
@@ -46,17 +43,31 @@ class XmppWebSocketIo extends XmppWebSocket {
   @override
   void close() {
     _socket!.close();
+    if (_secureSocket != null) {
+      // 如果已升级为安全套接字，使用_secureSocket
+      _secureSocket!.close();
+    } else if (_socket != null) {
+      // 否则使用原始套接字_socket
+      _socket!.close();
+    }
   }
 
   @override
-  void write(Object? message) {
-    _socket!.write(message);
+  void write(Object? message) async{
+    if (_secureSocket != null) {
+      _secureSocket!.write(message);
+    } else if (_socket != null) {
+      _socket!.write(message);
+    }
   }
 
   @override
   StreamSubscription<String> listen(void Function(String event)? onData,
       {Function? onError, void Function()? onDone, bool? cancelOnError}) {
-    return _socket!.cast<List<int>>().transform(utf8.decoder).map(_map).listen(
+    var stream = (_secureSocket ?? _socket)!.cast<List<int>>().transform(utf8.decoder);
+    stream = stream.map(_map);
+
+    return stream.listen(
         onData,
         onError: onError,
         onDone: onDone,
@@ -68,8 +79,13 @@ class XmppWebSocketIo extends XmppWebSocket {
       {host,
       SecurityContext? context,
       bool Function(X509Certificate certificate)? onBadCertificate,
-      List<String>? supportedProtocols}) {
-    return SecureSocket.secure(_socket!, onBadCertificate: onBadCertificate);
+      List<String>? supportedProtocols}) async {
+    _secureSocket = await SecureSocket.secure(
+        _socket!,
+        context: context,
+        onBadCertificate: onBadCertificate
+    );
+    return _secureSocket;
   }
 
   @override

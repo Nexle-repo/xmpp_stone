@@ -68,6 +68,8 @@ class XMPPClientManager {
   String? customScheme;
   String? wsPath;
   String? resource;
+  String? publicKey;
+  String? privateKey;
   List<String>? wsProtocols;
   late XMPPClientPersonel personel;
   Function(XMPPClientManager _context)? _onReady;
@@ -119,6 +121,8 @@ class XMPPClientManager {
     String? resource,
     String? wsPath,
     String? customScheme,
+    String? publicKey,
+    String? privateKey,
     bool logXmpp = false,
     List<String>? wsProtocols,
   }) {
@@ -141,6 +145,8 @@ class XMPPClientManager {
     this.customScheme = customScheme;
     this.wsProtocols = wsProtocols;
     this.resource = resource;
+    this.publicKey = publicKey;
+    this.privateKey = privateKey;
   }
 
   XMPPClientManager createSession() {
@@ -160,6 +166,8 @@ class XMPPClientManager {
       wsPath: wsPath,
       wsProtocols: wsProtocols,
       customScheme: customScheme,
+      publicKey:publicKey,
+      privateKey: privateKey
     );
 
     account.responseTimeoutMs = responseTimeoutMs;

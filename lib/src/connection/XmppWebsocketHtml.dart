@@ -10,11 +10,6 @@ XmppWebSocket createSocket() {
   return XmppWebSocketHtml();
 }
 
-bool isTlsRequired() {
-  // return the `false`, cause for the 'html' socket initially creates as secured
-  return false;
-}
-
 class XmppWebSocketHtml extends XmppWebSocket {
   static String TAG = 'XmppWebSocketIo';
 
