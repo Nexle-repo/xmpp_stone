@@ -338,6 +338,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "sprintf",
+      "rootUri": "file:///Users/chenjungao/.pub-cache/hosted/pub.flutter-io.cn/sprintf-7.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "stack_trace",
       "rootUri": "file:///Users/chenjungao/.pub-cache/hosted/pub.flutter-io.cn/stack_trace-1.11.1",
       "packageUri": "lib/",
@@ -411,9 +417,9 @@
     },
     {
       "name": "uuid",
-      "rootUri": "file:///Users/chenjungao/.pub-cache/hosted/pub.flutter-io.cn/uuid-3.0.7",
+      "rootUri": "file:///Users/chenjungao/.pub-cache/hosted/pub.flutter-io.cn/uuid-4.3.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.0"
     },
     {
       "name": "vector_math",
@@ -476,7 +482,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-12-26T08:39:57.425575Z",
+  "generated": "2023-12-27T13:38:00.715350Z",
   "generator": "pub",
   "generatorVersion": "3.2.3"
 }

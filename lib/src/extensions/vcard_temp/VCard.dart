@@ -28,12 +28,14 @@ class VCard extends XmppElement {
   String? title;
   String? role;
   String? jabberId;
+  String? body;
 
   img.Image? _image;
 
   VCard(XmppElement? element) {
     if (element != null) {
       element.children.forEach((child) => addChild(child));
+      body = element.textValue;
     }
     name = 'vCard';
     addAttribute(XmppAttribute('xmlns', 'vcard-temp'));
@@ -144,6 +146,8 @@ class VCard extends XmppElement {
     var vCardElement = XmppElement();
     vCardElement.name = 'vCard';
     vCardElement.addAttribute(XmppAttribute('xmlns', 'vcard-temp'));
+
+    vCardElement.textValue = body;
 
     var attrFN = XmppElement();
     attrFN.name = 'FN';

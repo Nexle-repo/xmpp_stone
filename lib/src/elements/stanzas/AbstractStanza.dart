@@ -1,4 +1,5 @@
 
+import 'package:uuid/uuid.dart';
 import 'package:xmpp_stone/src/data/Jid.dart';
 import 'package:xmpp_stone/src/elements/XmppAttribute.dart';
 import 'package:xmpp_stone/src/elements/XmppElement.dart';
@@ -38,6 +39,7 @@ abstract class AbstractStanza extends XmppElement {
   String? get status => _status;
 
   static String getRandomId() {
-    return generateId();
+    // return generateId();
+    return const Uuid().v4().replaceAll("-", "").toUpperCase();
   }
 }
