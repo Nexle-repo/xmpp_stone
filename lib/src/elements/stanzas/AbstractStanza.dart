@@ -3,7 +3,6 @@ import 'package:uuid/uuid.dart';
 import 'package:xmpp_stone/src/data/Jid.dart';
 import 'package:xmpp_stone/src/elements/XmppAttribute.dart';
 import 'package:xmpp_stone/src/elements/XmppElement.dart';
-import 'package:xmpp_stone/src/utils/Random.dart';
 
 abstract class AbstractStanza extends XmppElement {
   String? _id;
