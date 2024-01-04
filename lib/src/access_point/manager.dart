@@ -33,7 +33,7 @@ import 'package:xmpp_stone/src/response/ResponseListener.dart';
 import 'package:xmpp_stone/src/roster/RosterManager.dart';
 import 'package:xmpp_stone/xmpp_stone.dart' as xmpp;
 
-import 'personel.dart';
+import 'personal.dart';
 
 final String TAG = 'manager::general';
 
@@ -71,7 +71,7 @@ class XMPPClientManager {
   String? publicKey;
   String? privateKey;
   List<String>? wsProtocols;
-  late XMPPClientPersonel personel;
+  late XMPPClientPersonal personel;
   Function(XMPPClientManager _context)? _onReady;
   Function(String timestamp, String logMessage)? _onLog;
   Function(XMPPMessageParams message, ListenerType listenerType)? _onMessage;
@@ -126,7 +126,7 @@ class XMPPClientManager {
     bool logXmpp = false,
     List<String>? wsProtocols,
   }) {
-    personel = XMPPClientPersonel(jid, password);
+    personel = XMPPClientPersonal(jid, password);
     LOG_TAG = '$LOG_TAG/$jid';
     _onReady = onReady;
     _onLog = onLog;
@@ -669,7 +669,7 @@ class XMPPClientManager {
     String message,
     String receiver,
     bool isCustom, {
-    MessageParams additional = MessageParams.defaultMessageParams,
+    required MessageParams additional,
     void Function(MessageStanza)? onStanzaCreated,
   }) {
     return _messageHandler.sendMessage(
@@ -685,7 +685,7 @@ class XMPPClientManager {
   Future<xmpp.MessageStanza> sendSystemMessage(
     String message,
     String receiver, {
-    MessageParams additional = MessageParams.defaultMessageParams,
+    required MessageParams additional,
     void Function(MessageStanza)? onStanzaCreated,
   }) {
     return _messageHandler.sendSystemMessage(

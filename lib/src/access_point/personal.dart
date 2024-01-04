@@ -1,10 +1,10 @@
 import 'package:xmpp_stone/xmpp_stone.dart';
 
-class XMPPClientPersonel {
+class XMPPClientPersonal {
   String jid;
   String password;
   VCard? profile;
   List<Buddy>? buddies;
   List<GroupChatroom>? groups;
-  XMPPClientPersonel(this.jid, this.password);
+  XMPPClientPersonal(this.jid, this.password);
 }

@@ -120,7 +120,7 @@ class Connection {
   }
 
   Stream<Nonza> get outNonzasStream {
-    return _inNonzaStreamController.stream;
+    return _outNonzaStreamController.stream;
   }
 
   Stream<AbstractStanza> get outStanzasStream {
@@ -271,12 +271,14 @@ xml:lang='en'
             if (_state != XmppConnectionState.Closed) {
               setState(XmppConnectionState.SocketOpened);
               _socket = socket;
-              socket.listen(
+              _socketSubscription = socket.listen(
                   handleResponse,
                   onError: (e,stackTrace){
                     Log.d(TAG, 'error : $e,$stackTrace');
                   },
-                  onDone: handleConnectionDone
+                  onDone: (){
+                    handleConnectionDone();
+                  }
               );
               _openStream();
             } else {
@@ -311,7 +313,8 @@ xml:lang='en'
     ).then((secureSocket) {
       if (secureSocket == null) return;
 
-      secureSocket.cast<List<int>>().transform(utf8.decoder).map(prepareStreamResponse).listen(
+      _socketSubscription?.cancel();
+      _secureSocketSubscription = secureSocket.cast<List<int>>().transform(utf8.decoder).map(prepareStreamResponse).listen(
         handleResponse,
         onError: (error) => {
           handleSecuredConnectionError(error.toString()),

@@ -39,6 +39,6 @@ abstract class AbstractStanza extends XmppElement {
 
   static String getRandomId() {
     // return generateId();
-    return const Uuid().v4().replaceAll("-", "").toUpperCase();
+    return Uuid().v4().replaceAll("-", "").toUpperCase();
   }
 }

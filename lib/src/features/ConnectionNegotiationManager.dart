@@ -159,7 +159,7 @@ class ConnectionNegotiationManager {
 
   void addFeatures(List<Feature> supportedFeatures) {
     Log.e(TAG,
-        'ADDING FEATURES count: ${supportedFeatures.length} $supportedFeatures ');
+        'ADDING FEATURES count: ${supportedFeatures.length}');
     supportedNegotiatorList.forEach((negotiator) {
       var matchingNonzas = negotiator.match(supportedFeatures);
       if (matchingNonzas.isNotEmpty) {

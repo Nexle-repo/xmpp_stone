@@ -42,22 +42,25 @@ class XmppWebSocketIo extends XmppWebSocket {
 
   @override
   void close() {
-    _socket!.close();
     if (_secureSocket != null) {
-      // 如果已升级为安全套接字，使用_secureSocket
       _secureSocket!.close();
     } else if (_socket != null) {
-      // 否则使用原始套接字_socket
       _socket!.close();
     }
   }
 
   @override
-  void write(Object? message) async{
-    if (_secureSocket != null) {
-      _secureSocket!.write(message);
-    } else if (_socket != null) {
-      _socket!.write(message);
+  void write(Object? message){
+    try{
+      if (_secureSocket != null) {
+        // 如果已升级为安全套接字，使用_secureSocket
+        _secureSocket!.write(message);
+      } else if (_socket != null) {
+        // 否则使用原始套接字_socket
+        _socket!.write(message);
+      }
+    }catch(e,st){
+      print("出错了：$e,$st");
     }
   }
 

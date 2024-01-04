@@ -29,17 +29,6 @@ class MessageParams {
     this.customId,
   });
 
-  static const MessageParams defaultMessageParams = MessageParams(
-      millisecondTs: 0,
-      customString: '',
-      messageId: '',
-      customId: '',
-      receipt: ReceiptRequestType.RECEIVED,
-      messageType: MessageStanzaType.CHAT,
-      chatStateType: ChatStateType.None,
-      ampMessageType: AmpMessageType.None,
-      options: XmppCommunicationConfig(shallWaitStanza: false),
-      hasEncryptedBody: false);
 
   static MessageParams build({
     ReceiptRequestType receipt = ReceiptRequestType.NONE,
