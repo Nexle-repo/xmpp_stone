@@ -24,7 +24,6 @@ void main(List<String> arguments) {
     wsProtocols: ['xmpp'],
     onReady: (XMPPClientManager context) {
       context.listens();
-      // context.presenceSend(PresenceShowElement.CHAT, description: 'Working');
     },
     onLog: (String time, String message) {
     },

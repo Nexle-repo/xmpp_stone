@@ -31,7 +31,7 @@ class User {
       this.password,
       onReady: (XMPPClientManager context) {
         context.listens();
-        context.presenceSend(PresenceShowElement.CHAT, description: 'Working');
+        context.presenceSend(PresenceShowElement.CHAT);
         onReady();
       },
       onLog: (String time, String message) {},

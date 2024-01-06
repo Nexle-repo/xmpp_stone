@@ -182,7 +182,7 @@ class PresenceManager implements PresenceApi {
     if (state == XmppConnectionState.Ready) {
       // _sendInitialPresence();
       sendPresence(PresenceData(
-          PresenceShowElement.CHAT, 'Working', _connection.fullJid));
+          PresenceShowElement.CHAT, null, _connection.fullJid));
     }
   }
 

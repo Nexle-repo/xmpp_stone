@@ -46,7 +46,7 @@ class ChatImpl implements Chat {
         _newMessageController.add(message);
       }
 
-      if (message.chatState != null && !message.isDelayed!) {
+      if (message.chatState != null && !(message.isDelayed??false)) {
         _remoteState = message.chatState;
         _remoteStateController.add(message.chatState);
       }

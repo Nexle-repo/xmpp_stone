@@ -266,7 +266,7 @@ class XMPPClientManager {
 
   // Update presence and status
   void presenceSend(PresenceShowElement presenceShowElement,
-      {String description = 'Working'}) {
+      {String? description}) {
     var presenceData = xmpp.PresenceData(
         presenceShowElement, description, xmpp.Jid.fromFullJid(personel.jid),
         priority: presenceShowElement == PresenceShowElement.CHAT ? 1 : 0);

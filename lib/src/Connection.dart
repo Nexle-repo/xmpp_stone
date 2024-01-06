@@ -313,7 +313,7 @@ xml:lang='en'
     ).then((secureSocket) {
       if (secureSocket == null) return;
 
-      _socketSubscription?.cancel();
+      // _socketSubscription?.cancel();
       _secureSocketSubscription = secureSocket.cast<List<int>>().transform(utf8.decoder).map(prepareStreamResponse).listen(
         handleResponse,
         onError: (error) => {
