@@ -18,7 +18,7 @@ dependencies:
   synchronized: ^3.0.0+3
   tuple: ^2.0.0
   unorm_dart: ^0.2.0
-  image: ^4.0.15
+  image: any
   quiver: ^3.1.0 #hash code generator
   console: ^4.1.0 #for example
   intl: any
