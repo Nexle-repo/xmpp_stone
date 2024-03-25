@@ -46,6 +46,7 @@ import 'package:xmpp_stone/src/extensions/quote_message/quote_message.dart';
 import '../../extensions/pin_chat/pin_chat_data.dart';
 import '../../extensions/recalled_message/RecalledMessageInterface.dart';
 import '../../extensions/system_message/system_message_interface.dart';
+import '../messages/xmpp_0422/read_message_element.dart';
 
 class MessageStanza extends AbstractStanza
     implements
@@ -568,6 +569,24 @@ class MessageStanza extends AbstractStanza
     }
     var element = EditMessageElement.parse(applyTo);
     return element != null;
+  }
+
+  @override
+  ApplyToInterface addReadMessage({
+    required String userId,
+  }) {
+    addChild(ApplyToElement.buildReadMessage(userId));
+    return this;
+  }
+
+  @override
+  bool isReadMessage() {
+    var applyTo = ApplyToElement.parse(this);
+    if (applyTo == null) {
+      return false;
+    }
+    var reaction = ReadMessageElement.parse(applyTo);
+    return reaction != null;
   }
 }
 

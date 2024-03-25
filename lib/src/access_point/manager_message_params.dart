@@ -152,6 +152,10 @@ class XMPPMessageParams {
     return message!.isEditMessage();
   }
 
+  bool get isReadMessage {
+    return message!.isReadMessage();
+  }
+
   bool get isQuoteMessage {
     return message!.isQuoteMessage();
   }
