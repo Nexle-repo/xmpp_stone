@@ -28,6 +28,8 @@ abstract class ApplyToInterface {
     String? coverUrlChanged,
   });
 
+  ApplyToInterface addReadMessage({required String userId});
+
   XmppElement? getApplyTo();
 
   bool isPinMessage();
@@ -43,4 +45,6 @@ abstract class ApplyToInterface {
   bool isChangeMemberRole();
 
   bool isPinChat();
+
+  bool isReadMessage();
 }

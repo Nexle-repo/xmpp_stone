@@ -832,6 +832,7 @@ class MessageHandler implements MessageApi {
         additional.messageType);
     stanza.toJid = jid;
     stanza.fromJid = _connection!.fullJid;
+
     // Validation
     if (stanza.toJid == null || stanza.fromJid == null) {
       throw InvalidJidMessageStanzaException();
@@ -933,6 +934,96 @@ class MessageHandler implements MessageApi {
     }
 
     stanza.editMessage(messageId, editContent);
+
+    if (additional.millisecondTs != 0) {
+      stanza.addTime(additional.millisecondTs);
+    }
+
+    if (additional.customString.isNotEmpty) {
+      stanza.addCustom(additional.customString);
+    }
+
+    if (additional.customId?.isNotEmpty ?? false) {
+      stanza.addCustomId(additional.customId!);
+    }
+
+    if (additional.chatStateType != ChatStateType.None) {
+      ChatStateDecoration(message: stanza).setState(additional.chatStateType);
+    }
+
+    // For custom message
+    stanza.addCustomMessage();
+
+    // Add receipt delivery
+    if (additional.receipt == ReceiptRequestType.RECEIVED) {
+      stanza.addReceivedReceipt();
+    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
+      stanza.addRequestReceipt();
+    }
+
+    if (additional.ampMessageType == AmpMessageType.Delivery) {
+      // Add request stanza from server?
+      stanza.addAmpDeliverDirect();
+    }
+    onStanzaCreated?.call(stanza);
+
+    await _connection!.writeStanzaWithQueue(stanza);
+
+    return stanza;
+    // Could not wait for the ack, there is no ack sent (r, c type)
+    // return responseHandler.set<MessageStanza>(stanza.id!, stanza);
+  }
+
+  @override
+  Future<MessageStanza> readMessage({
+    required Jid to,
+    required String userId,
+    String text = '',
+    MessageParams additional = const MessageParams(
+        millisecondTs: 0,
+        customString: '',
+        messageId: '',
+        receipt: ReceiptRequestType.NONE,
+        messageType: MessageStanzaType.CHAT,
+        chatStateType: ChatStateType.None,
+        ampMessageType: AmpMessageType.None,
+        hasEncryptedBody: false,
+        options: XmppCommunicationConfig(shallWaitStanza: false)),
+    void Function(MessageStanza)? onStanzaCreated,
+  }) {
+    return _readMessageStanza(
+      jid: to,
+      userId: userId,
+      text: text,
+      additional: additional,
+      onStanzaCreated: onStanzaCreated,
+    );
+  }
+
+  Future<MessageStanza> _readMessageStanza({
+    required Jid jid,
+    required String userId,
+    String text = '',
+    required MessageParams additional,
+    void Function(MessageStanza)? onStanzaCreated,
+  }) async {
+    final stanza = MessageStanza(
+        additional.messageId.isEmpty
+            ? AbstractStanza.getRandomId()
+            : additional.messageId,
+        additional.messageType);
+    stanza.toJid = jid;
+    stanza.fromJid = _connection!.fullJid;
+
+    // Validation
+    if (stanza.toJid == null || stanza.fromJid == null) {
+      throw InvalidJidMessageStanzaException();
+    }
+    if (text.isNotEmpty) {
+      stanza.body = text;
+    }
+
+    stanza.addReadMessage(userId: userId);
 
     if (additional.millisecondTs != 0) {
       stanza.addTime(additional.millisecondTs);
