@@ -15,9 +15,11 @@ import '../../../extensions/muc_info_data/MUCInfoDataInterface.dart';
 import '../../../extensions/pin_chat/pin_chat_interface.dart';
 import '../../../extensions/pin_message/PinMessageInterface.dart';
 import '../../../extensions/react_message/react_message_interface.dart';
+import '../../../extensions/read_message/read_message_interface.dart';
 import '../../XmppAttribute.dart';
 import '../../XmppElement.dart';
 import 'MUCInfoElement.dart';
+import 'read_message_element.dart';
 
 class ApplyToElement extends XmppElement
     implements
@@ -29,7 +31,8 @@ class ApplyToElement extends XmppElement
         ExternalInterface,
         QuoteMessageInterface,
         ReactMessageInterface,
-        EditMessageInterface {
+        EditMessageInterface,
+        ReadMessageInterface {
   static String elementName = 'apply-to';
 
   ApplyToElement() {
@@ -110,6 +113,13 @@ class ApplyToElement extends XmppElement
     addAttribute(XmppAttribute('xmlns', 'urn:xmpp:fasten:0'));
     addAttribute(XmppAttribute('id', id));
     editMessage(content);
+  }
+
+  ApplyToElement.buildReadMessage(String userId) {
+    name = ApplyToElement.elementName;
+    addAttribute(XmppAttribute('xmlns', 'urn:xmpp:fasten:0'));
+    addAttribute(XmppAttribute('id', 'any'));
+    addReadMessage(userId);
   }
 
   static XmppElement? parse(parent) {
@@ -243,6 +253,17 @@ class ApplyToElement extends XmppElement
   @override
   XmppElement? getMarkRead() {
     // TODO: implement getMarkRead
+    throw UnimplementedError();
+  }
+
+  @override
+  ReadMessageInterface addReadMessage(String userId) {
+    addChild(ReadMessageElement.build(userId));
+    return this;
+  }
+
+  @override
+  XmppElement? getReadMessage() {
     throw UnimplementedError();
   }
 }
