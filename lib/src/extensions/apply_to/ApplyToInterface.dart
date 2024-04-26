@@ -28,7 +28,7 @@ abstract class ApplyToInterface {
     String? coverUrlChanged,
   });
 
-  ApplyToInterface addReadMessage({required String userId});
+  ApplyToInterface addReadMessage({required String userId, required String messageId});
 
   XmppElement? getApplyTo();
 

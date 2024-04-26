@@ -940,7 +940,7 @@ class XMPPClientManager {
   Future<xmpp.MessageStanza> readMessage(
     String receiver, {
     String text = '',
-    required String userId,
+    required String userId, required String messageId,
     MessageParams additional = const MessageParams(
         millisecondTs: 0,
         customString: '',
@@ -956,6 +956,7 @@ class XMPPClientManager {
     return _messageHandler.readMessage(
       to: xmpp.Jid.fromFullJid(receiver),
       userId: userId,
+      messageId: messageId,
       text: text,
       additional: additional,
       onStanzaCreated: onStanzaCreated,
