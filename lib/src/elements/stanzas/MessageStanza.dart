@@ -574,8 +574,9 @@ class MessageStanza extends AbstractStanza
   @override
   ApplyToInterface addReadMessage({
     required String userId,
+    required String messageId,
   }) {
-    addChild(ApplyToElement.buildReadMessage(userId));
+    addChild(ApplyToElement.buildReadMessage(userId, messageId));
     return this;
   }
 

@@ -115,10 +115,10 @@ class ApplyToElement extends XmppElement
     editMessage(content);
   }
 
-  ApplyToElement.buildReadMessage(String userId) {
+  ApplyToElement.buildReadMessage(String userId, String messageId) {
     name = ApplyToElement.elementName;
     addAttribute(XmppAttribute('xmlns', 'urn:xmpp:fasten:0'));
-    addAttribute(XmppAttribute('id', 'any'));
+    addAttribute(XmppAttribute('id', messageId));
     addReadMessage(userId);
   }
 

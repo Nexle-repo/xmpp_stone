@@ -50,6 +50,7 @@ abstract class MessageApi {
   Future<MessageStanza> readMessage({
     required Jid to,
     required String userId,
+    required String messageId,
     String text = '',
     MessageParams additional,
   });

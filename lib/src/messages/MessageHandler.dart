@@ -978,6 +978,7 @@ class MessageHandler implements MessageApi {
   Future<MessageStanza> readMessage({
     required Jid to,
     required String userId,
+    required String messageId,
     String text = '',
     MessageParams additional = const MessageParams(
         millisecondTs: 0,
@@ -994,6 +995,7 @@ class MessageHandler implements MessageApi {
     return _readMessageStanza(
       jid: to,
       userId: userId,
+      messageId: messageId,
       text: text,
       additional: additional,
       onStanzaCreated: onStanzaCreated,
@@ -1003,6 +1005,7 @@ class MessageHandler implements MessageApi {
   Future<MessageStanza> _readMessageStanza({
     required Jid jid,
     required String userId,
+    required String messageId,
     String text = '',
     required MessageParams additional,
     void Function(MessageStanza)? onStanzaCreated,
@@ -1023,7 +1026,7 @@ class MessageHandler implements MessageApi {
       stanza.body = text;
     }
 
-    stanza.addReadMessage(userId: userId);
+    stanza.addReadMessage(userId: userId, messageId: messageId);
 
     if (additional.millisecondTs != 0) {
       stanza.addTime(additional.millisecondTs);
