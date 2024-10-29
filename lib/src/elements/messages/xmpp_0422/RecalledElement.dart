@@ -2,14 +2,14 @@ import '../../XmppAttribute.dart';
 import '../../XmppElement.dart';
 
 class RecalledElement extends XmppElement {
-  static String elementName = 'recalled';
+  static String elementName = 'retract';
   RecalledElement() {
     name = elementName;
   }
 
   RecalledElement.build(String fromUserId, String listId) {
     name = RecalledElement.elementName;
-    addAttribute(XmppAttribute('xmlns', 'urn:xmpp:receipts'));
+    addAttribute(XmppAttribute('xmlns', 'urn:xmpp:message-retract:0'));
     addAttribute(XmppAttribute('from', fromUserId));
     textValue = listId;
   }
