@@ -77,14 +77,12 @@ class MessageStanza extends AbstractStanza
     this.id = id;
     if (type != MessageStanzaType.NONE) {
       _type = type;
-      addAttribute(XmppAttribute(
-          'type', _type.toString().split('.').last.toLowerCase()));
+      addAttribute(XmppAttribute('type', _type.toString().split('.').last.toLowerCase()));
     }
   }
 
   String? get body => children
-      .firstWhere(
-          (child) => (child!.name == 'body' && child.attributes.isEmpty),
+      .firstWhere((child) => (child!.name == 'body' && child.attributes.isEmpty),
           orElse: () => null)
       ?.textValue;
 
@@ -151,10 +149,8 @@ class MessageStanza extends AbstractStanza
       isMuted: data.getAttribute('isMuted')?.value == "1",
       subject: data.getAttribute('subject')?.value ?? "",
       coverUrl: data.getAttribute('coverUrl')?.value ?? "",
-      membersAddedEncoded:
-          data.getAttribute('membersAddedEncoded')?.value ?? "",
-      membersRemovedEncoded:
-          data.getAttribute('membersRemovedEncoded')?.value ?? "",
+      membersAddedEncoded: data.getAttribute('membersAddedEncoded')?.value ?? "",
+      membersRemovedEncoded: data.getAttribute('membersRemovedEncoded')?.value ?? "",
     );
     return model;
   }
@@ -204,9 +200,14 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
-  ApplyToInterface addQuoteMessage(
-      String messageId, String userId, String username) {
+  ApplyToInterface addQuoteMessage(String messageId, String userId, String username) {
     addChild(ApplyToElement.buildQuoteMessage(messageId, userId, username));
+    return this;
+  }
+
+  @override
+  ApplyToInterface addDeleteMessage(String messageId, String userId, String username) {
+    addChild(ApplyToElement.buildDeleteMessage(messageId, userId, username));
     return this;
   }
 
@@ -214,6 +215,13 @@ class MessageStanza extends AbstractStanza
   ExampleCustomInterface addQuoteCustom(
       String type, String expts, String text, String refMsgTitle) {
     addChild(ExampleCustomElement.buildQuote(type, expts, text, refMsgTitle));
+    return this;
+  }
+
+  @override
+  ExampleCustomInterface addDeleteCustom(
+      String type, String expts, String text, String refMsgTitle) {
+    addChild(ExampleCustomElement.buildDelete(type, expts, text, refMsgTitle));
     return this;
   }
 
@@ -315,9 +323,8 @@ class MessageStanza extends AbstractStanza
     return false;
   }
 
-  String? get subject => children
-      .firstWhere((child) => (child!.name == 'subject'), orElse: () => null)
-      ?.textValue;
+  String? get subject =>
+      children.firstWhere((child) => (child!.name == 'subject'), orElse: () => null)?.textValue;
 
   set subject(String? value) {
     var element = XmppElement();
@@ -326,9 +333,8 @@ class MessageStanza extends AbstractStanza
     addChild(element);
   }
 
-  String? get thread => children
-      .firstWhere((child) => (child!.name == 'thread'), orElse: () => null)
-      ?.textValue;
+  String? get thread =>
+      children.firstWhere((child) => (child!.name == 'thread'), orElse: () => null)?.textValue;
 
   set thread(String? value) {
     var element = XmppElement();
@@ -454,8 +460,7 @@ class MessageStanza extends AbstractStanza
   XmppElement? getInvitation() {
     final xElement = XElement.parse(this);
     if (xElement != null &&
-        xElement.getAttribute('xmlns')!.value ==
-            'http://jabber.org/protocol/muc#user') {
+        xElement.getAttribute('xmlns')!.value == 'http://jabber.org/protocol/muc#user') {
       return InviteElement.parse(xElement);
     } else {
       return null;
@@ -463,8 +468,7 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
-  RecalledMessageInterface addRecallMessage(
-      String fromUserId, String listMessageId) {
+  RecalledMessageInterface addRecallMessage(String fromUserId, String listMessageId) {
     addChild(RecalledElement.build(fromUserId, listMessageId));
     return this;
   }
@@ -591,12 +595,4 @@ class MessageStanza extends AbstractStanza
   }
 }
 
-enum MessageStanzaType {
-  CHAT,
-  ERROR,
-  GROUPCHAT,
-  HEADLINE,
-  NORMAL,
-  UNKOWN,
-  NONE
-}
+enum MessageStanzaType { CHAT, ERROR, GROUPCHAT, HEADLINE, NORMAL, UNKOWN, NONE }

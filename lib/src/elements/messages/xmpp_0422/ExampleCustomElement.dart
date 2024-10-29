@@ -3,11 +3,21 @@ import '../../XmppElement.dart';
 
 class ExampleCustomElement extends XmppElement {
   static String elementName = 'custom';
+
   ExampleCustomElement() {
     name = elementName;
   }
 
   ExampleCustomElement.buildQuote(String type, String expts, String text, String refMsgTitle) {
+    name = ExampleCustomElement.elementName;
+    addAttribute(XmppAttribute('xmlns', 'rhp:urn:example:custom'));
+    addAttribute(XmppAttribute('type', type));
+    addAttribute(XmppAttribute('refMsgTitle', refMsgTitle));
+    addAttribute(XmppAttribute('expts', expts));
+    textValue = text;
+  }
+
+  ExampleCustomElement.buildDelete(String type, String expts, String text, String refMsgTitle) {
     name = ExampleCustomElement.elementName;
     addAttribute(XmppAttribute('xmlns', 'rhp:urn:example:custom'));
     addAttribute(XmppAttribute('type', type));
@@ -23,8 +33,7 @@ class ExampleCustomElement extends XmppElement {
   }
 
   static XmppElement? parse(parent) {
-    return parent.children.firstWhere(
-        (child) => (child.name == ExampleCustomElement.elementName),
+    return parent.children.firstWhere((child) => (child.name == ExampleCustomElement.elementName),
         orElse: () => null);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ChangeMemberRoleElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/DeleteElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ExternalElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/PinnedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/QuoteElement.dart';
@@ -6,6 +7,7 @@ import 'package:xmpp_stone/src/elements/messages/xmpp_0422/edit_message_element.
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/pin_chat_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/reaction_element.dart';
 import 'package:xmpp_stone/src/extensions/change_member_role/ChangeMemberRoleInterface.dart';
+import 'package:xmpp_stone/src/extensions/delete_message/DeleteMessageInterface.dart';
 import 'package:xmpp_stone/src/extensions/edit_message/edit_message_interface.dart';
 import 'package:xmpp_stone/src/extensions/external/ExternalInterface.dart';
 import 'package:xmpp_stone/src/extensions/mark_read/mark_read_data_interface.dart';
@@ -32,6 +34,7 @@ class ApplyToElement extends XmppElement
         QuoteMessageInterface,
         ReactMessageInterface,
         EditMessageInterface,
+        DeleteMessageInterFace,
         ReadMessageInterface {
   static String elementName = 'apply-to';
 
@@ -91,6 +94,16 @@ class ApplyToElement extends XmppElement
     addAttribute(XmppAttribute('username', username));
   }
 
+  ApplyToElement.buildDeleteMessage(String id, String userId, String username) {
+    name = ApplyToElement.elementName;
+    addExternalName("body");
+    addDeleteMessage();
+    addAttribute(XmppAttribute('xmlns', 'urn:xmpp:fasten:0'));
+    addAttribute(XmppAttribute('id', id));
+    addAttribute(XmppAttribute('userId', userId));
+    addAttribute(XmppAttribute('username', username));
+  }
+
   ApplyToElement.buildReactMessage(
     String id,
     String reaction, {
@@ -123,9 +136,8 @@ class ApplyToElement extends XmppElement
   }
 
   static XmppElement? parse(parent) {
-    return parent.children.firstWhere(
-        (child) => (child.name == ApplyToElement.elementName),
-        orElse: () => null);
+    return parent.children
+        .firstWhere((child) => (child.name == ApplyToElement.elementName), orElse: () => null);
   }
 
   @override
@@ -152,6 +164,12 @@ class ApplyToElement extends XmppElement
   @override
   QuoteMessageInterface addQuoteMessage() {
     addChild(QuoteElement.build());
+    return this;
+  }
+
+  @override
+  DeleteMessageInterFace addDeleteMessage() {
+    addChild(DeleteElement.build());
     return this;
   }
 
@@ -202,8 +220,7 @@ class ApplyToElement extends XmppElement
   }
 
   @override
-  ChangeMemberRoleInterface addChangeMemberRoleData(
-      String userJid, String role) {
+  ChangeMemberRoleInterface addChangeMemberRoleData(String userJid, String role) {
     addChild(ChangeMemberRoleElement.build(userJid, role));
     return this;
   }
@@ -264,6 +281,12 @@ class ApplyToElement extends XmppElement
 
   @override
   XmppElement? getReadMessage() {
+    throw UnimplementedError();
+  }
+
+  @override
+  XmppElement? getDeleteMessage() {
+    // TODO: implement getDeleteMessage
     throw UnimplementedError();
   }
 }

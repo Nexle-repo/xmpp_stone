@@ -20,8 +20,9 @@ abstract class ApplyToInterface {
 
   ApplyToInterface addPinChat(String chatId, bool isPinned);
 
-  ApplyToInterface addQuoteMessage(
-      String messageId, String userId, String username);
+  ApplyToInterface addQuoteMessage(String messageId, String userId, String username);
+
+  ApplyToInterface addDeleteMessage(String messageId, String userId, String username);
 
   ApplyToInterface addMUCInfo({
     String? subjectChanged,
