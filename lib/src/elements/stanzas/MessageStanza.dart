@@ -44,7 +44,6 @@ import 'package:xmpp_stone/src/extensions/muc_info_data/MUCInfoData.dart';
 import 'package:xmpp_stone/src/extensions/multi_user_chat/message_invitation_interface/MessageInvitationInterface.dart';
 import 'package:xmpp_stone/src/extensions/quote_message/quote_message.dart';
 
-import '../../extensions/delete_message/DeletedMessageInterface.dart';
 import '../../extensions/pin_chat/pin_chat_data.dart';
 import '../../extensions/recalled_message/RecalledMessageInterface.dart';
 import '../../extensions/system_message/system_message_interface.dart';
@@ -65,7 +64,6 @@ class MessageStanza extends AbstractStanza
         CustomIdInterface,
         ExampleCustomInterface,
         SystemMessageInterface,
-        DeletedMessageInterface,
         RecalledMessageInterface {
   MessageStanzaType? _type;
 
@@ -464,8 +462,8 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
-  DeletedMessageInterface addDeleteMessage(String fromUserId, String listMessageId) {
-    addChild(DeleteElement.build(fromUserId, listMessageId));
+  ApplyToInterface addDeleteMessage(String fromUserId, String listMessageId) {
+    addChild(ApplyToElement.buildDeleteMessage(fromUserId, listMessageId));
     return this;
   }
 
@@ -591,13 +589,22 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
-  XmppElement? getDeletedMessage() {
-    return DeleteElement.parse(this);
+  bool isDeletedMessage() {
+    var applyTo = ApplyToElement.parse(this);
+    if (applyTo == null) {
+      return false;
+    }
+    var delete = DeleteElement.parse(applyTo);
+    if (delete != null) {
+      return true;
+    }
+    return false;
   }
 
   @override
-  bool isDeletedMessage() {
-    return this.getDeletedMessage() != null;
+  XmppElement? getDeletedMessage() {
+    return DeleteElement.parse(this);
+
   }
 }
 

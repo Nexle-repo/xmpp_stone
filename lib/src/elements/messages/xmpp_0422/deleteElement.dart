@@ -7,13 +7,10 @@ class DeleteElement extends XmppElement {
     name = elementName;
   }
 
-  DeleteElement.build(String fromUserId, String listId) {
+  DeleteElement.build() {
     name = DeleteElement.elementName;
     addAttribute(XmppAttribute('xmlns', 'urn:xmpp:message-retract:0'));
-    addAttribute(XmppAttribute('from', fromUserId));
-    textValue = listId;
   }
-
   static XmppElement? parse(parent) {
     return parent.children.firstWhere(
         (child) => (child.name == DeleteElement.elementName),
