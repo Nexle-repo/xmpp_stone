@@ -592,7 +592,7 @@ class MessageStanza extends AbstractStanza
 
   @override
   XmppElement? getDeletedMessage() {
-    return DelayElement.parse(this);
+    return DeleteElement.parse(this);
   }
 
   @override
