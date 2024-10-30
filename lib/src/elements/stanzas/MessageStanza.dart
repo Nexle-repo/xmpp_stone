@@ -597,7 +597,7 @@ class MessageStanza extends AbstractStanza
 
   @override
   bool isDeletedMessage() {
-    return this.getRecalledMessage() != null;
+    return this.getDeletedMessage() != null;
   }
 }
 
