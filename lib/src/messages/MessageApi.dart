@@ -61,20 +61,19 @@ abstract class MessageApi {
     MessageParams additional,
   });
 
-  Future<MessageStanza> quoteMessage(
-      Jid to,
-      String messageId,
-      String body,
-      String quoteText,
-      String userId,
-      String username,
-      String? messageType,
-      String? expts,
+  Future<MessageStanza> quoteMessage(Jid to, String messageId, String body, String quoteText,
+      String userId, String username, String? messageType, String? expts,
       {MessageParams additional});
 
   Future<MessageStanza> recallMessage(
     Jid jid,
     List<String> messageId,
+    String userId, {
+    MessageParams additional,
+  });
+  Future<MessageStanza> deleteMessage(
+    Jid jid,
+    String messageId,
     String userId, {
     MessageParams additional,
   });

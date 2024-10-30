@@ -22,6 +22,7 @@ import 'package:xmpp_stone/src/elements/messages/xmpp_0422/MUCInfoElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/PinnedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/QuoteElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/RecalledElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/deleteElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/edit_message_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/pin_chat_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/reaction_element.dart';
@@ -43,6 +44,7 @@ import 'package:xmpp_stone/src/extensions/muc_info_data/MUCInfoData.dart';
 import 'package:xmpp_stone/src/extensions/multi_user_chat/message_invitation_interface/MessageInvitationInterface.dart';
 import 'package:xmpp_stone/src/extensions/quote_message/quote_message.dart';
 
+import '../../extensions/delete_message/DeletedMessageInterface.dart';
 import '../../extensions/pin_chat/pin_chat_data.dart';
 import '../../extensions/recalled_message/RecalledMessageInterface.dart';
 import '../../extensions/system_message/system_message_interface.dart';
@@ -63,6 +65,7 @@ class MessageStanza extends AbstractStanza
         CustomIdInterface,
         ExampleCustomInterface,
         SystemMessageInterface,
+        DeletedMessageInterface,
         RecalledMessageInterface {
   MessageStanzaType? _type;
 
@@ -77,14 +80,12 @@ class MessageStanza extends AbstractStanza
     this.id = id;
     if (type != MessageStanzaType.NONE) {
       _type = type;
-      addAttribute(XmppAttribute(
-          'type', _type.toString().split('.').last.toLowerCase()));
+      addAttribute(XmppAttribute('type', _type.toString().split('.').last.toLowerCase()));
     }
   }
 
   String? get body => children
-      .firstWhere(
-          (child) => (child!.name == 'body' && child.attributes.isEmpty),
+      .firstWhere((child) => (child!.name == 'body' && child.attributes.isEmpty),
           orElse: () => null)
       ?.textValue;
 
@@ -151,10 +152,8 @@ class MessageStanza extends AbstractStanza
       isMuted: data.getAttribute('isMuted')?.value == "1",
       subject: data.getAttribute('subject')?.value ?? "",
       coverUrl: data.getAttribute('coverUrl')?.value ?? "",
-      membersAddedEncoded:
-          data.getAttribute('membersAddedEncoded')?.value ?? "",
-      membersRemovedEncoded:
-          data.getAttribute('membersRemovedEncoded')?.value ?? "",
+      membersAddedEncoded: data.getAttribute('membersAddedEncoded')?.value ?? "",
+      membersRemovedEncoded: data.getAttribute('membersRemovedEncoded')?.value ?? "",
     );
     return model;
   }
@@ -204,8 +203,7 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
-  ApplyToInterface addQuoteMessage(
-      String messageId, String userId, String username) {
+  ApplyToInterface addQuoteMessage(String messageId, String userId, String username) {
     addChild(ApplyToElement.buildQuoteMessage(messageId, userId, username));
     return this;
   }
@@ -315,9 +313,8 @@ class MessageStanza extends AbstractStanza
     return false;
   }
 
-  String? get subject => children
-      .firstWhere((child) => (child!.name == 'subject'), orElse: () => null)
-      ?.textValue;
+  String? get subject =>
+      children.firstWhere((child) => (child!.name == 'subject'), orElse: () => null)?.textValue;
 
   set subject(String? value) {
     var element = XmppElement();
@@ -326,9 +323,8 @@ class MessageStanza extends AbstractStanza
     addChild(element);
   }
 
-  String? get thread => children
-      .firstWhere((child) => (child!.name == 'thread'), orElse: () => null)
-      ?.textValue;
+  String? get thread =>
+      children.firstWhere((child) => (child!.name == 'thread'), orElse: () => null)?.textValue;
 
   set thread(String? value) {
     var element = XmppElement();
@@ -454,8 +450,7 @@ class MessageStanza extends AbstractStanza
   XmppElement? getInvitation() {
     final xElement = XElement.parse(this);
     if (xElement != null &&
-        xElement.getAttribute('xmlns')!.value ==
-            'http://jabber.org/protocol/muc#user') {
+        xElement.getAttribute('xmlns')!.value == 'http://jabber.org/protocol/muc#user') {
       return InviteElement.parse(xElement);
     } else {
       return null;
@@ -463,9 +458,14 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
-  RecalledMessageInterface addRecallMessage(
-      String fromUserId, String listMessageId) {
+  RecalledMessageInterface addRecallMessage(String fromUserId, String listMessageId) {
     addChild(RecalledElement.build(fromUserId, listMessageId));
+    return this;
+  }
+
+  @override
+  DeletedMessageInterface addDeleteMessage(String fromUserId, String listMessageId) {
+    addChild(DeleteElement.build(fromUserId, listMessageId));
     return this;
   }
 
@@ -589,14 +589,16 @@ class MessageStanza extends AbstractStanza
     var reaction = ReadMessageElement.parse(applyTo);
     return reaction != null;
   }
+
+  @override
+  XmppElement? getDeletedMessage() {
+    return DelayElement.parse(this);
+  }
+
+  @override
+  bool isDeletedMessage() {
+    return this.getRecalledMessage() != null;
+  }
 }
 
-enum MessageStanzaType {
-  CHAT,
-  ERROR,
-  GROUPCHAT,
-  HEADLINE,
-  NORMAL,
-  UNKOWN,
-  NONE
-}
+enum MessageStanzaType { CHAT, ERROR, GROUPCHAT, HEADLINE, NORMAL, UNKOWN, NONE }

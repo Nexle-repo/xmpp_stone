@@ -7,6 +7,7 @@ import '../elements/messages/xmpp_0422/ApplyToElement.dart';
 
 class XMPPMessageParams {
   final xmpp.MessageStanza? message;
+
   const XMPPMessageParams({this.message});
 
   bool get isEncrypted {
@@ -20,8 +21,7 @@ class XMPPMessageParams {
 
   bool _isCustomDelivery() {
     if (_isCustomAck()) {
-      return ['Delivery-Ack-Group', 'Delivery-Ack']
-          .contains(getCustomData!['iqType']);
+      return ['Delivery-Ack-Group', 'Delivery-Ack'].contains(getCustomData!['iqType']);
     } else if (isReceiptDelivered) {
       return true;
     } else {
@@ -49,8 +49,7 @@ class XMPPMessageParams {
   }
 
   bool _isCustomMessage() {
-    return message!.getCustom() != null &&
-        !getCustomData!.containsKey('iqType');
+    return message!.getCustom() != null && !getCustomData!.containsKey('iqType');
   }
 
   bool get isMessageCustom {
@@ -172,6 +171,10 @@ class XMPPMessageParams {
     return message!.isRecalledMessage();
   }
 
+  bool get isDeleteMessage {
+    return message!.isDeletedMessage();
+  }
+
   bool get isChangeMemberRole {
     return message!.isChangeMemberRole();
   }
@@ -182,15 +185,13 @@ class XMPPMessageParams {
 
   bool get isChatState {
     return ChatStateDecoration(
-            message:
-                message ?? xmpp.MessageStanza('', xmpp.MessageStanzaType.NONE))
+            message: message ?? xmpp.MessageStanza('', xmpp.MessageStanzaType.NONE))
         .hasState;
   }
 
   ChatStateDecoration get getChatStateDecoration {
     return ChatStateDecoration(
-        message:
-            message ?? xmpp.MessageStanza('', xmpp.MessageStanzaType.NONE));
+        message: message ?? xmpp.MessageStanza('', xmpp.MessageStanzaType.NONE));
   }
 
   Map<String, dynamic>? get getCustomData {

@@ -15,11 +15,9 @@ import 'package:xmpp_stone/src/messages/MessageParams.dart';
 import 'package:xmpp_stone/src/response/Response.dart';
 
 class MessageHandler implements MessageApi {
-  static Map<Connection?, MessageHandler> instances =
-      <Connection?, MessageHandler>{};
+  static Map<Connection?, MessageHandler> instances = <Connection?, MessageHandler>{};
 
-  final ResponseHandler<MessageStanza> responseHandler =
-      ResponseHandler<MessageStanza>();
+  final ResponseHandler<MessageStanza> responseHandler = ResponseHandler<MessageStanza>();
 
   Stream<MessageStanza?> get messagesStream {
     return _connection!.inStanzasStream.where((abstractStanza) {
@@ -130,9 +128,7 @@ class MessageHandler implements MessageApi {
     void Function(MessageStanza)? onStanzaCreated,
   }) async {
     final stanza = MessageStanza(
-        additional.messageId.isEmpty
-            ? AbstractStanza.getRandomId()
-            : additional.messageId,
+        additional.messageId.isEmpty ? AbstractStanza.getRandomId() : additional.messageId,
         additional.messageType);
     stanza.toJid = jid;
     stanza.fromJid = _connection!.fullJid;
@@ -198,9 +194,7 @@ class MessageHandler implements MessageApi {
     void Function(MessageStanza)? onStanzaCreated,
   }) async {
     final stanza = MessageStanza(
-        additional.messageId.isEmpty
-            ? AbstractStanza.getRandomId()
-            : additional.messageId,
+        additional.messageId.isEmpty ? AbstractStanza.getRandomId() : additional.messageId,
         additional.messageType);
     stanza.toJid = jid;
     stanza.fromJid = _connection!.fullJid;
@@ -306,12 +300,10 @@ class MessageHandler implements MessageApi {
     return _pinMessageStanza(to, messageId, isPinned, additional);
   }
 
-  Future<MessageStanza> _pinMessageStanza(Jid? jid, String messageId,
-      bool isPinned, MessageParams additional) async {
+  Future<MessageStanza> _pinMessageStanza(
+      Jid? jid, String messageId, bool isPinned, MessageParams additional) async {
     final stanza = MessageStanza(
-        additional.messageId.isEmpty
-            ? AbstractStanza.getRandomId()
-            : additional.messageId,
+        additional.messageId.isEmpty ? AbstractStanza.getRandomId() : additional.messageId,
         additional.messageType);
     stanza.toJid = jid;
     stanza.fromJid = _connection!.fullJid;
@@ -382,9 +374,7 @@ class MessageHandler implements MessageApi {
     MessageParams additional,
   ) async {
     final stanza = MessageStanza(
-        additional.messageId.isEmpty
-            ? AbstractStanza.getRandomId()
-            : additional.messageId,
+        additional.messageId.isEmpty ? AbstractStanza.getRandomId() : additional.messageId,
         additional.messageType);
     stanza.toJid = jid;
     stanza.fromJid = _connection!.fullJid;
@@ -479,9 +469,7 @@ class MessageHandler implements MessageApi {
     void Function(MessageStanza)? onStanzaCreated,
   }) async {
     final stanza = MessageStanza(
-        additional.messageId.isEmpty
-            ? AbstractStanza.getRandomId()
-            : additional.messageId,
+        additional.messageId.isEmpty ? AbstractStanza.getRandomId() : additional.messageId,
         additional.messageType);
     stanza.toJid = jid;
     stanza.fromJid = _connection!.fullJid;
@@ -493,8 +481,7 @@ class MessageHandler implements MessageApi {
     stanza.body = body;
 
     stanza.addQuoteMessage(messageId, userId, username);
-    stanza.addQuoteCustom(
-        messageType ?? 'txt', expts ?? '0', quoteText, username);
+    stanza.addQuoteCustom(messageType ?? 'txt', expts ?? '0', quoteText, username);
 
     if (additional.millisecondTs != 0) {
       stanza.addTime(additional.millisecondTs);
@@ -580,9 +567,7 @@ class MessageHandler implements MessageApi {
     required MessageParams additional,
   }) async {
     final stanza = MessageStanza(
-        additional.messageId.isEmpty
-            ? AbstractStanza.getRandomId()
-            : additional.messageId,
+        additional.messageId.isEmpty ? AbstractStanza.getRandomId() : additional.messageId,
         additional.messageType);
     stanza.toJid = jid;
     stanza.fromJid = _connection!.fullJid;
@@ -668,9 +653,7 @@ class MessageHandler implements MessageApi {
     required MessageParams additional,
   }) async {
     final stanza = MessageStanza(
-        additional.messageId.isEmpty
-            ? AbstractStanza.getRandomId()
-            : additional.messageId,
+        additional.messageId.isEmpty ? AbstractStanza.getRandomId() : additional.messageId,
         additional.messageType);
     stanza.toJid = jid;
     stanza.fromJid = _connection!.fullJid;
@@ -717,8 +700,7 @@ class MessageHandler implements MessageApi {
   }
 
   @override
-  Future<MessageStanza> recallMessage(
-      Jid jid, List<String> messageId, String userId,
+  Future<MessageStanza> recallMessage(Jid jid, List<String> messageId, String userId,
       {MessageParams additional = const MessageParams(
           millisecondTs: 0,
           customString: '',
@@ -732,6 +714,73 @@ class MessageHandler implements MessageApi {
     return _recallMessageStanza(jid, messageId, userId, additional);
   }
 
+  @override
+  Future<MessageStanza> deleteMessage(Jid jid, String messageId, String userId,
+      {MessageParams additional = const MessageParams(
+          millisecondTs: 0,
+          customString: '',
+          messageId: '',
+          receipt: ReceiptRequestType.NONE,
+          messageType: MessageStanzaType.CHAT,
+          chatStateType: ChatStateType.None,
+          ampMessageType: AmpMessageType.None,
+          options: XmppCommunicationConfig(shallWaitStanza: false),
+          hasEncryptedBody: false)}) {
+    return _deleteMessageStanza(jid, messageId, userId, additional);
+  }
+
+  Future<MessageStanza> _deleteMessageStanza(
+    Jid? jid,
+    String messageId,
+    String userId,
+    MessageParams additional,
+  ) async {
+    final stanza = MessageStanza(
+        additional.messageId.isEmpty ? AbstractStanza.getRandomId() : additional.messageId,
+        additional.messageType);
+    stanza.toJid = jid;
+    stanza.fromJid = _connection!.fullJid;
+    // Validation
+    if (stanza.toJid == null || stanza.fromJid == null) {
+      throw InvalidJidMessageStanzaException();
+    }
+    stanza.addDeleteMessage(userId, messageId);
+
+    if (additional.millisecondTs != 0) {
+      stanza.addTime(additional.millisecondTs);
+    }
+
+    if (additional.customString.isNotEmpty) {
+      stanza.addCustom(additional.customString);
+    }
+
+    if (additional.customId?.isNotEmpty ?? false) {
+      stanza.addCustomId(additional.customId!);
+    }
+
+    if (additional.chatStateType != ChatStateType.None) {
+      ChatStateDecoration(message: stanza).setState(additional.chatStateType);
+    }
+
+    // Add receipt delivery
+    if (additional.receipt == ReceiptRequestType.RECEIVED) {
+      stanza.addReceivedReceipt();
+    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
+      stanza.addRequestReceipt();
+    }
+
+    if (additional.ampMessageType == AmpMessageType.Delivery) {
+      // Add request stanza from server?
+      stanza.addAmpDeliverDirect();
+    }
+
+    await _connection!.writeStanzaWithQueue(stanza);
+
+    return stanza;
+    // Could not wait for the ack, there is no ack sent (r, c type)
+    // return responseHandler.set<MessageStanza>(stanza.id!, stanza);
+  }
+
   Future<MessageStanza> _recallMessageStanza(
     Jid? jid,
     List<String> messageId,
@@ -739,9 +788,7 @@ class MessageHandler implements MessageApi {
     MessageParams additional,
   ) async {
     final stanza = MessageStanza(
-        additional.messageId.isEmpty
-            ? AbstractStanza.getRandomId()
-            : additional.messageId,
+        additional.messageId.isEmpty ? AbstractStanza.getRandomId() : additional.messageId,
         additional.messageType);
     stanza.toJid = jid;
     stanza.fromJid = _connection!.fullJid;
@@ -826,9 +873,7 @@ class MessageHandler implements MessageApi {
     void Function(MessageStanza)? onStanzaCreated,
   }) async {
     final stanza = MessageStanza(
-        additional.messageId.isEmpty
-            ? AbstractStanza.getRandomId()
-            : additional.messageId,
+        additional.messageId.isEmpty ? AbstractStanza.getRandomId() : additional.messageId,
         additional.messageType);
     stanza.toJid = jid;
     stanza.fromJid = _connection!.fullJid;
@@ -919,9 +964,7 @@ class MessageHandler implements MessageApi {
     void Function(MessageStanza)? onStanzaCreated,
   }) async {
     final stanza = MessageStanza(
-        additional.messageId.isEmpty
-            ? AbstractStanza.getRandomId()
-            : additional.messageId,
+        additional.messageId.isEmpty ? AbstractStanza.getRandomId() : additional.messageId,
         additional.messageType);
     stanza.toJid = jid;
     stanza.fromJid = _connection!.fullJid;
@@ -1011,9 +1054,7 @@ class MessageHandler implements MessageApi {
     void Function(MessageStanza)? onStanzaCreated,
   }) async {
     final stanza = MessageStanza(
-        additional.messageId.isEmpty
-            ? AbstractStanza.getRandomId()
-            : additional.messageId,
+        additional.messageId.isEmpty ? AbstractStanza.getRandomId() : additional.messageId,
         additional.messageType);
     stanza.toJid = jid;
     stanza.fromJid = _connection!.fullJid;
