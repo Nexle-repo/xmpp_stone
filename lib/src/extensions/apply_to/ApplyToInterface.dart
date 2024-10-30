@@ -22,7 +22,7 @@ abstract class ApplyToInterface {
 
   ApplyToInterface addQuoteMessage(String messageId, String userId, String username);
 
-  ApplyToInterface addDeleteMessage(String fromID, String messageID);
+  ApplyToInterface addDeleteMessage(String messageID);
 
   ApplyToInterface addMUCInfo({
     String? subjectChanged,
@@ -50,6 +50,6 @@ abstract class ApplyToInterface {
   bool isPinChat();
 
   bool isReadMessage();
-  XmppElement? getDeletedMessage();
 
+  XmppElement? getDeletedMessage();
 }

@@ -462,8 +462,8 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
-  ApplyToInterface addDeleteMessage(String fromUserId, String listMessageId) {
-    addChild(ApplyToElement.buildDeleteMessage(fromUserId, listMessageId));
+  ApplyToInterface addDeleteMessage(String messageID) {
+    addChild(ApplyToElement.buildDeleteMessage(messageID));
     return this;
   }
 

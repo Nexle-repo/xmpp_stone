@@ -94,11 +94,11 @@ class ApplyToElement extends XmppElement
     addAttribute(XmppAttribute('username', username));
   }
 
-  ApplyToElement.buildDeleteMessage(String fromID, String messageID) {
+  ApplyToElement.buildDeleteMessage(String messageID) {
     name = ApplyToElement.elementName;
     addDeleteMessage();
-    addAttribute(XmppAttribute('id', fromID));
-    addAttribute(XmppAttribute('userId', messageID));
+    addAttribute(XmppAttribute('xmlns', 'urn:xmpp:fasten:0'));
+    addAttribute(XmppAttribute('messageID', messageID));
   }
 
   ApplyToElement.buildReactMessage(

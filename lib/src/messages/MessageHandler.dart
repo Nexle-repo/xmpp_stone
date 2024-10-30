@@ -726,13 +726,12 @@ class MessageHandler implements MessageApi {
           ampMessageType: AmpMessageType.None,
           options: XmppCommunicationConfig(shallWaitStanza: false),
           hasEncryptedBody: false)}) {
-    return _deleteMessageStanza(jid, messageId, userId, additional);
+    return _deleteMessageStanza(jid, messageId, additional);
   }
 
   Future<MessageStanza> _deleteMessageStanza(
     Jid? jid,
     String messageId,
-    String userId,
     MessageParams additional,
   ) async {
     final stanza = MessageStanza(
@@ -744,7 +743,7 @@ class MessageHandler implements MessageApi {
     if (stanza.toJid == null || stanza.fromJid == null) {
       throw InvalidJidMessageStanzaException();
     }
-    stanza.addDeleteMessage(userId, messageId);
+    stanza.addDeleteMessage(messageId);
 
     if (additional.millisecondTs != 0) {
       stanza.addTime(additional.millisecondTs);
