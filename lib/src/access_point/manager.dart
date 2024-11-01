@@ -1019,6 +1019,23 @@ class XMPPClientManager {
         additional: additional);
   }
 
+  Future<xmpp.MessageStanza> typingMessage(
+    String receiver,
+      {
+    MessageParams additional = const MessageParams(
+        millisecondTs: 0,
+        customString: '',
+        messageId: '',
+        receipt: ReceiptRequestType.RECEIVED,
+        messageType: MessageStanzaType.CHAT,
+        chatStateType: ChatStateType.None,
+        ampMessageType: AmpMessageType.None,
+        options: XmppCommunicationConfig(shallWaitStanza: false),
+        hasEncryptedBody: false),
+  }) {
+    return _messageHandler.typingMessage(xmpp.Jid.fromFullJid(receiver), additional: additional);
+  }
+
   Future<xmpp.MessageStanza> deleteMessage(
     String receiver,
     String messageIds,
