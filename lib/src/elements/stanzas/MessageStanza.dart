@@ -203,11 +203,6 @@ class MessageStanza extends AbstractStanza
     return this;
   }
 
-  @override
-  ApplyToInterface addTyping() {
-    addChild(ApplyToElement.buildTyping());
-    return this;
-  }
 
   @override
   ApplyToInterface addQuoteMessage(String messageId, String userId, String username) {
