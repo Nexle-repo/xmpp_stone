@@ -204,8 +204,8 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
-  ApplyToInterface addTyping(ChatStateType chatStateType) {
-    addChild(ApplyToElement.buildTyping(chatStateType));
+  ApplyToInterface addTyping() {
+    addChild(ApplyToElement.buildTyping());
     return this;
   }
 
@@ -617,12 +617,8 @@ class MessageStanza extends AbstractStanza
 
   @override
   bool isTyping() {
-    var applyTo = ApplyToElement.parse(this);
-    if (applyTo == null) {
-      return false;
-    }
-    var pause = ChatStatePausedElement.parse(applyTo);
-    var active = ChatStateActiveElement.parse(applyTo);
+    var pause = ChatStatePausedElement.parse(this);
+    var active = ChatStateActiveElement.parse(this);
     if (pause != null || active != null) {
       return true;
     }

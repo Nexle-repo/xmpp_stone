@@ -20,7 +20,7 @@ abstract class ApplyToInterface {
 
   ApplyToInterface addPinChat(String chatId, bool isPinned);
 
-  ApplyToInterface addTyping(ChatStateType chatStateType);
+  ApplyToInterface addTyping();
 
   ApplyToInterface addQuoteMessage(String messageId, String userId, String username);
 

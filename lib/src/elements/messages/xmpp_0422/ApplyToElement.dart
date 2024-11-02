@@ -71,7 +71,7 @@ class ApplyToElement extends XmppElement
     addChangeMemberRoleData(userJid, role);
   }
 
-  ApplyToElement.buildTyping(ChatStateType chatStateType) {}
+  ApplyToElement.buildTyping() {}
 
   ApplyToElement.buildPinMessage(String id, bool isPinned) {
     name = ApplyToElement.elementName;

@@ -808,7 +808,7 @@ class MessageHandler implements MessageApi {
     if (stanza.toJid == null || stanza.fromJid == null) {
       throw InvalidJidMessageStanzaException();
     }
-    stanza.addTyping(additional.chatStateType);
+    stanza.addTyping();
     if (additional.millisecondTs != 0) {
       stanza.addTime(additional.millisecondTs);
     }
