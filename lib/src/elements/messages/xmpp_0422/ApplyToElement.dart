@@ -7,6 +7,7 @@ import 'package:xmpp_stone/src/elements/messages/xmpp_0422/edit_message_element.
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/pin_chat_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/reaction_element.dart';
 import 'package:xmpp_stone/src/extensions/change_member_role/ChangeMemberRoleInterface.dart';
+import 'package:xmpp_stone/src/extensions/chat_states/ChatStateDecoration.dart';
 import 'package:xmpp_stone/src/extensions/delete_message/DeletedMessageInterface.dart';
 import 'package:xmpp_stone/src/extensions/edit_message/edit_message_interface.dart';
 import 'package:xmpp_stone/src/extensions/external/ExternalInterface.dart';
@@ -70,8 +71,7 @@ class ApplyToElement extends XmppElement
     addChangeMemberRoleData(userJid, role);
   }
 
-  ApplyToElement.buildTyping() {
-  }
+  ApplyToElement.buildTyping(ChatStateType chatStateType) {}
 
   ApplyToElement.buildPinMessage(String id, bool isPinned) {
     name = ApplyToElement.elementName;

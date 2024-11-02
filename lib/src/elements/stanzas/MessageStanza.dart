@@ -12,6 +12,8 @@ import 'package:xmpp_stone/src/elements/messages/TimeElement.dart';
 import 'package:xmpp_stone/src/elements/messages/TimeStampElement.dart';
 import 'package:xmpp_stone/src/elements/messages/carbon/ForwardedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/carbon/SentElement.dart';
+import 'package:xmpp_stone/src/elements/messages/chat_states/ChatStateActiveElement.dart';
+import 'package:xmpp_stone/src/elements/messages/chat_states/ChatStatePausedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/custom_id_element.dart';
 import 'package:xmpp_stone/src/elements/messages/invitation/InviteElement.dart';
 import 'package:xmpp_stone/src/elements/messages/mam/StanzaIdElement.dart';
@@ -31,6 +33,7 @@ import 'package:xmpp_stone/src/elements/stanzas/AbstractStanza.dart';
 import 'package:xmpp_stone/src/extensions/advanced_messaging_processing/AmpInterface.dart';
 import 'package:xmpp_stone/src/extensions/apply_to/ApplyToInterface.dart';
 import 'package:xmpp_stone/src/extensions/change_member_role/ChangeMemberRoleData.dart';
+import 'package:xmpp_stone/src/extensions/chat_states/ChatStateDecoration.dart';
 import 'package:xmpp_stone/src/extensions/example_custom/ExampleCustomInterface.dart';
 import 'package:xmpp_stone/src/extensions/mam/ArchiveResultInterface.dart';
 import 'package:xmpp_stone/src/extensions/mam/ArchiveStanzaIdInterface.dart';
@@ -201,8 +204,8 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
-  ApplyToInterface addTyping() {
-    addChild(ApplyToElement.buildTyping());
+  ApplyToInterface addTyping(ChatStateType chatStateType) {
+    addChild(ApplyToElement.buildTyping(chatStateType));
     return this;
   }
 
@@ -614,8 +617,16 @@ class MessageStanza extends AbstractStanza
 
   @override
   bool isTyping() {
-    // TODO: implement isTyping
-    throw UnimplementedError();
+    var applyTo = ApplyToElement.parse(this);
+    if (applyTo == null) {
+      return false;
+    }
+    var pause = ChatStatePausedElement.parse(applyTo);
+    var active = ChatStateActiveElement.parse(applyTo);
+    if (pause != null || active != null) {
+      return true;
+    }
+    return false;
   }
 }
 

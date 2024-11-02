@@ -175,6 +175,10 @@ class XMPPMessageParams {
     return message!.isDeletedMessage();
   }
 
+  bool get isTypingMessage {
+    return message!.isTyping();
+  }
+
   bool get isChangeMemberRole {
     return message!.isChangeMemberRole();
   }
