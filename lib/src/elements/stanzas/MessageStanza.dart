@@ -201,6 +201,12 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
+  ApplyToInterface addTyping() {
+    addChild(ApplyToElement.buildTyping());
+    return this;
+  }
+
+  @override
   ApplyToInterface addQuoteMessage(String messageId, String userId, String username) {
     addChild(ApplyToElement.buildQuoteMessage(messageId, userId, username));
     return this;
@@ -604,7 +610,12 @@ class MessageStanza extends AbstractStanza
   @override
   XmppElement? getDeletedMessage() {
     return DeleteElement.parse(this);
+  }
 
+  @override
+  bool isTyping() {
+    // TODO: implement isTyping
+    throw UnimplementedError();
   }
 }
 
