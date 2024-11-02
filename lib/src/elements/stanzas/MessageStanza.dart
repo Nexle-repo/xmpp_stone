@@ -46,6 +46,7 @@ import 'package:xmpp_stone/src/extensions/message_delivery/custom_id_interface.d
 import 'package:xmpp_stone/src/extensions/muc_info_data/MUCInfoData.dart';
 import 'package:xmpp_stone/src/extensions/multi_user_chat/message_invitation_interface/MessageInvitationInterface.dart';
 import 'package:xmpp_stone/src/extensions/quote_message/quote_message.dart';
+import 'package:xmpp_stone/xmpp_stone.dart';
 
 import '../../extensions/pin_chat/pin_chat_data.dart';
 import '../../extensions/recalled_message/RecalledMessageInterface.dart';
@@ -119,6 +120,16 @@ class MessageStanza extends AbstractStanza
       return element?.name == 'pin-action';
     }, orElse: () => null);
     return pinAction?.textValue;
+  }
+
+  ChatStateType get typeState {
+    var modelType = ChatStateType.None;
+    if (this.children.first?.name == 'active') {
+      modelType = ChatStateType.Active;
+    } else if (this.children.first?.name == 'paused') {
+      modelType = ChatStateType.Paused;
+    }
+    return modelType;
   }
 
   QuoteMessage get quoteData {
@@ -202,7 +213,6 @@ class MessageStanza extends AbstractStanza
     addChild(ApplyToElement.buildPinMessage(messageId, isPinned));
     return this;
   }
-
 
   @override
   ApplyToInterface addQuoteMessage(String messageId, String userId, String username) {
