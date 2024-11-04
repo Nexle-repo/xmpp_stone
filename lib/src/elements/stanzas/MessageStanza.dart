@@ -125,10 +125,8 @@ class MessageStanza extends AbstractStanza
 
   ChatStateType get typeState {
     var modelType = ChatStateType.None;
-    if (this.children.first?.name == 'typing') {
+    if (isTyping()) {
       modelType = ChatStateType.Typing;
-    } else if (this.children.first?.name == 'paused') {
-      modelType = ChatStateType.Paused;
     }
     return modelType;
   }
@@ -623,9 +621,8 @@ class MessageStanza extends AbstractStanza
 
   @override
   bool isTyping() {
-    var pause = ChatStatePausedElement.parse(this);
     var typing = ChatStateTypingElement.parse(this);
-    if (pause != null || typing != null) {
+    if (typing != null) {
       return true;
     }
     return false;
