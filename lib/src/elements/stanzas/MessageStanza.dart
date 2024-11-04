@@ -14,6 +14,7 @@ import 'package:xmpp_stone/src/elements/messages/carbon/ForwardedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/carbon/SentElement.dart';
 import 'package:xmpp_stone/src/elements/messages/chat_states/ChatStateActiveElement.dart';
 import 'package:xmpp_stone/src/elements/messages/chat_states/ChatStatePausedElement.dart';
+import 'package:xmpp_stone/src/elements/messages/chat_states/ChatStateTypingElement.dart';
 import 'package:xmpp_stone/src/elements/messages/custom_id_element.dart';
 import 'package:xmpp_stone/src/elements/messages/invitation/InviteElement.dart';
 import 'package:xmpp_stone/src/elements/messages/mam/StanzaIdElement.dart';
@@ -623,8 +624,8 @@ class MessageStanza extends AbstractStanza
   @override
   bool isTyping() {
     var pause = ChatStatePausedElement.parse(this);
-    var active = ChatStateActiveElement.parse(this);
-    if (pause != null || active != null) {
+    var typing = ChatStateTypingElement.parse(this);
+    if (pause != null || typing != null) {
       return true;
     }
     return false;
