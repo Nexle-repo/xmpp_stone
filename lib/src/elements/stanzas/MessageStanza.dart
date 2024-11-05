@@ -1,5 +1,4 @@
 import 'package:xmpp_stone/src/elements/XmppAttribute.dart';
-import 'package:xmpp_stone/src/elements/XmppElement.dart';
 import 'package:xmpp_stone/src/elements/forms/XElement.dart';
 import 'package:xmpp_stone/src/elements/messages/Amp.dart';
 import 'package:xmpp_stone/src/elements/messages/AmpRuleElement.dart';
@@ -12,9 +11,8 @@ import 'package:xmpp_stone/src/elements/messages/TimeElement.dart';
 import 'package:xmpp_stone/src/elements/messages/TimeStampElement.dart';
 import 'package:xmpp_stone/src/elements/messages/carbon/ForwardedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/carbon/SentElement.dart';
-import 'package:xmpp_stone/src/elements/messages/chat_states/ChatStateActiveElement.dart';
+import 'package:xmpp_stone/src/elements/messages/chat_states/ChatStateComposingElement.dart';
 import 'package:xmpp_stone/src/elements/messages/chat_states/ChatStatePausedElement.dart';
-import 'package:xmpp_stone/src/elements/messages/chat_states/ChatStateTypingElement.dart';
 import 'package:xmpp_stone/src/elements/messages/custom_id_element.dart';
 import 'package:xmpp_stone/src/elements/messages/invitation/InviteElement.dart';
 import 'package:xmpp_stone/src/elements/messages/mam/StanzaIdElement.dart';
@@ -30,21 +28,16 @@ import 'package:xmpp_stone/src/elements/messages/xmpp_0422/edit_message_element.
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/pin_chat_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/reaction_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/system_message_element.dart';
-import 'package:xmpp_stone/src/elements/stanzas/AbstractStanza.dart';
 import 'package:xmpp_stone/src/extensions/advanced_messaging_processing/AmpInterface.dart';
 import 'package:xmpp_stone/src/extensions/apply_to/ApplyToInterface.dart';
-import 'package:xmpp_stone/src/extensions/change_member_role/ChangeMemberRoleData.dart';
-import 'package:xmpp_stone/src/extensions/chat_states/ChatStateDecoration.dart';
 import 'package:xmpp_stone/src/extensions/example_custom/ExampleCustomInterface.dart';
 import 'package:xmpp_stone/src/extensions/mam/ArchiveResultInterface.dart';
 import 'package:xmpp_stone/src/extensions/mam/ArchiveStanzaIdInterface.dart';
 import 'package:xmpp_stone/src/extensions/message_carbon/SentInterface.dart';
 import 'package:xmpp_stone/src/extensions/message_delivery/CustomInterface.dart';
 import 'package:xmpp_stone/src/extensions/message_delivery/DelayInterface.dart';
-import 'package:xmpp_stone/src/extensions/message_delivery/ReceiptInterface.dart';
 import 'package:xmpp_stone/src/extensions/message_delivery/TimeInterface.dart';
 import 'package:xmpp_stone/src/extensions/message_delivery/custom_id_interface.dart';
-import 'package:xmpp_stone/src/extensions/muc_info_data/MUCInfoData.dart';
 import 'package:xmpp_stone/src/extensions/multi_user_chat/message_invitation_interface/MessageInvitationInterface.dart';
 import 'package:xmpp_stone/src/extensions/quote_message/quote_message.dart';
 import 'package:xmpp_stone/xmpp_stone.dart';
@@ -125,8 +118,8 @@ class MessageStanza extends AbstractStanza
 
   ChatStateType get typeState {
     var modelType = ChatStateType.None;
-    if (this.children.first?.name == 'typing') {
-      modelType = ChatStateType.Typing;
+    if (this.children.first?.name == 'composing') {
+      modelType = ChatStateType.Composing;
     } else if (this.children.first?.name == 'paused') {
       modelType = ChatStateType.Paused;
     }
@@ -624,8 +617,8 @@ class MessageStanza extends AbstractStanza
   @override
   bool isTyping() {
     var pause = ChatStatePausedElement.parse(this);
-    var typing = ChatStateTypingElement.parse(this);
-    if (pause != null || typing != null) {
+    var composing = ChatStateComposingElement.parse(this);
+    if (pause != null || composing != null) {
       return true;
     }
     return false;

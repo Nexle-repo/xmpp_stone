@@ -5,7 +5,6 @@ import 'package:xmpp_stone/src/elements/messages/chat_states/ChatStateInactiveEl
 import 'package:xmpp_stone/src/elements/messages/chat_states/ChatStatePausedElement.dart';
 import 'package:xmpp_stone/xmpp_stone.dart';
 
-import '../../elements/messages/chat_states/ChatStateTypingElement.dart';
 
 /// Inspired by this https://xmpp.org/extensions/xep-0085.html
 ///
@@ -18,7 +17,6 @@ enum ChatStateType {
   Paused,
   Inactive,
   Gone,
-  Typing,
 }
 
 class ChatStateDecoration {
@@ -37,8 +35,6 @@ class ChatStateDecoration {
       setInactive();
     } else if (chatStateType == ChatStateType.Gone) {
       setGone();
-    } else if (chatStateType == ChatStateType.Typing) {
-      setTyping();
     }
     return message;
   }
@@ -83,13 +79,6 @@ class ChatStateDecoration {
     }
   }
 
-  setTyping() {
-    final existing = getTyping();
-    if (existing == null) {
-      final active = ChatStateTypingElement.build();
-      message.addChild(active);
-    }
-  }
 
   XmppElement? getActive() {
     final existing = ChatStateActiveElement.parse(message);
@@ -116,18 +105,13 @@ class ChatStateDecoration {
     return existing;
   }
 
-  XmppElement? getTyping() {
-    final existing = ChatStateTypingElement.parse(message);
-    return existing;
-  }
 
   bool get hasState {
     return getActive() != null ||
         getComposing() != null ||
         getPaused() != null ||
         getInactive() != null ||
-        getGone() != null ||
-        getTyping() != null;
+        getGone() != null ;
   }
 
   String get getState {
@@ -146,7 +130,6 @@ class ChatStateDecoration {
           'paused',
           'inactive',
           'gone',
-          'typing',
         ].contains(element!.name));
     if (state.isNotEmpty) {
       return state.last!.name!;
