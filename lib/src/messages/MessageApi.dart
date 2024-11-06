@@ -71,6 +71,12 @@ abstract class MessageApi {
     String userId, {
     MessageParams additional,
   });
+
+  Future<MessageStanza> typingMessage(
+    Jid jid, {
+    MessageParams additional,
+  });
+
   Future<MessageStanza> deleteMessage(
     Jid jid,
     String messageId,

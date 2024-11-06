@@ -5,6 +5,7 @@ import 'package:xmpp_stone/src/elements/messages/chat_states/ChatStateInactiveEl
 import 'package:xmpp_stone/src/elements/messages/chat_states/ChatStatePausedElement.dart';
 import 'package:xmpp_stone/xmpp_stone.dart';
 
+
 /// Inspired by this https://xmpp.org/extensions/xep-0085.html
 ///
 ///
@@ -20,6 +21,7 @@ enum ChatStateType {
 
 class ChatStateDecoration {
   final MessageStanza message;
+
   const ChatStateDecoration({required this.message});
 
   MessageStanza setState(ChatStateType chatStateType) {
@@ -77,6 +79,7 @@ class ChatStateDecoration {
     }
   }
 
+
   XmppElement? getActive() {
     final existing = ChatStateActiveElement.parse(message);
     return existing;
@@ -102,12 +105,13 @@ class ChatStateDecoration {
     return existing;
   }
 
+
   bool get hasState {
     return getActive() != null ||
         getComposing() != null ||
         getPaused() != null ||
         getInactive() != null ||
-        getGone() != null;
+        getGone() != null ;
   }
 
   String get getState {
@@ -125,7 +129,7 @@ class ChatStateDecoration {
           'composing',
           'paused',
           'inactive',
-          'gone'
+          'gone',
         ].contains(element!.name));
     if (state.isNotEmpty) {
       return state.last!.name!;
