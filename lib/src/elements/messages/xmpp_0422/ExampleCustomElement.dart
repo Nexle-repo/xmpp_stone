@@ -9,7 +9,7 @@ class ExampleCustomElement extends XmppElement {
 
   ExampleCustomElement.buildQuote(String type, String expts, String text, String refMsgTitle) {
     name = ExampleCustomElement.elementName;
-    addAttribute(XmppAttribute('xmlns', 'rhp:urn:example:custom'));
+    addAttribute(XmppAttribute('xmlns', 'urn:example:custom'));
     addAttribute(XmppAttribute('type', type));
     addAttribute(XmppAttribute('refMsgTitle', refMsgTitle));
     addAttribute(XmppAttribute('expts', expts));
@@ -18,7 +18,7 @@ class ExampleCustomElement extends XmppElement {
 
   ExampleCustomElement.addCustom() {
     name = ExampleCustomElement.elementName;
-    addAttribute(XmppAttribute('xmlns', 'rhp:urn:example:custom'));
+    addAttribute(XmppAttribute('xmlns', 'urn:example:custom'));
     addAttribute(XmppAttribute('expts', "0"));
   }
 
