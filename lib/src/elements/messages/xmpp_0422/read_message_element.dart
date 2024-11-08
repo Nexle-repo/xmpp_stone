@@ -10,7 +10,7 @@ class ReadMessageElement extends XmppElement {
 
   ReadMessageElement.build(String userId) {
     name = elementName;
-    addAttribute(XmppAttribute('xmlns', 'rhp:urn:xmpp:$elementName'));
+    addAttribute(XmppAttribute('xmlns', 'urn:xmpp:$elementName'));
     textValue = userId;
   }
 
