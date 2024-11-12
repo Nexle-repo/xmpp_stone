@@ -589,6 +589,32 @@ class MessageStanza extends AbstractStanza
     var reaction = ReadMessageElement.parse(applyTo);
     return reaction != null;
   }
+
+
+  @override
+  ReadMessageData? getReadData() {
+    var applyTo = ApplyToElement.parse(this);
+    if (applyTo == null) {
+      return null;
+    }
+    var readId = applyTo.getAttribute("id")?.value;
+    var userId = ReadMessageElement.parse(applyTo)?.textValue;
+
+    if (userId != null && readId != null) {
+      return ReadMessageData(userId, readId);
+    } else {
+      return null;
+    }
+
+
+  }
+}
+
+class ReadMessageData {
+  String userId;
+  String messageId;
+
+  ReadMessageData(this.userId, this.messageId);
 }
 
 enum MessageStanzaType {
@@ -600,3 +626,4 @@ enum MessageStanzaType {
   UNKOWN,
   NONE
 }
+

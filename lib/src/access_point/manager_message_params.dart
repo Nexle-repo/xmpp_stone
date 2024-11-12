@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:xmpp_stone/src/extensions/chat_states/ChatStateDecoration.dart';
 import 'package:xmpp_stone/xmpp_stone.dart' as xmpp;
 
+import '../../xmpp_stone.dart';
 import '../elements/messages/xmpp_0422/ApplyToElement.dart';
 
 class XMPPMessageParams {
@@ -174,6 +175,10 @@ class XMPPMessageParams {
 
   bool get isChangeMemberRole {
     return message!.isChangeMemberRole();
+  }
+
+  ReadMessageData? get getReadData {
+    return message!.getReadData();
   }
 
   xmpp.XmppElement? get archiveMessage {
