@@ -166,9 +166,7 @@ class MessageHandler implements MessageApi {
     }
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
+    if (additional.receipt == ReceiptRequestType.REQUEST) {
       stanza.addRequestReceipt();
     }
 
@@ -230,9 +228,7 @@ class MessageHandler implements MessageApi {
     stanza.addSystemMessage();
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
+    if (additional.receipt == ReceiptRequestType.REQUEST) {
       stanza.addRequestReceipt();
     }
 
@@ -331,9 +327,7 @@ class MessageHandler implements MessageApi {
     }
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
+    if (additional.receipt == ReceiptRequestType.REQUEST) {
       stanza.addRequestReceipt();
     }
 
@@ -402,9 +396,7 @@ class MessageHandler implements MessageApi {
     }
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
+    if (additional.receipt == ReceiptRequestType.REQUEST) {
       stanza.addRequestReceipt();
     }
 
@@ -500,9 +492,7 @@ class MessageHandler implements MessageApi {
     }
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
+    if (additional.receipt == ReceiptRequestType.REQUEST) {
       stanza.addRequestReceipt();
     }
 
@@ -603,9 +593,7 @@ class MessageHandler implements MessageApi {
     }
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
+    if (additional.receipt == ReceiptRequestType.REQUEST) {
       stanza.addRequestReceipt();
     }
 
@@ -681,9 +669,7 @@ class MessageHandler implements MessageApi {
     }
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
+    if (additional.receipt == ReceiptRequestType.REQUEST) {
       stanza.addRequestReceipt();
     }
 
@@ -777,9 +763,7 @@ class MessageHandler implements MessageApi {
     }
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
+    if (additional.receipt == ReceiptRequestType.REQUEST) {
       stanza.addRequestReceipt();
     }
 
@@ -825,9 +809,7 @@ class MessageHandler implements MessageApi {
     }
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
+    if (additional.receipt == ReceiptRequestType.REQUEST) {
       stanza.addRequestReceipt();
     }
 
@@ -877,9 +859,7 @@ class MessageHandler implements MessageApi {
     }
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
+    if (additional.receipt == ReceiptRequestType.REQUEST) {
       stanza.addRequestReceipt();
     }
 
@@ -970,9 +950,7 @@ class MessageHandler implements MessageApi {
     stanza.addCustomMessage();
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
+    if (additional.receipt == ReceiptRequestType.REQUEST) {
       stanza.addRequestReceipt();
     }
 
@@ -1060,9 +1038,7 @@ class MessageHandler implements MessageApi {
     stanza.addCustomMessage();
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
+    if (additional.receipt == ReceiptRequestType.REQUEST) {
       stanza.addRequestReceipt();
     }
 
@@ -1151,9 +1127,7 @@ class MessageHandler implements MessageApi {
     stanza.addCustomMessage();
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
+    if (additional.receipt == ReceiptRequestType.REQUEST) {
       stanza.addRequestReceipt();
     }
 
