@@ -23,7 +23,7 @@ class XMPPMessageParams {
     if (_isCustomAck()) {
       return ['Delivery-Ack-Group', 'Delivery-Ack'].contains(getCustomData!['iqType']);
     }  else {
-      return false;
+      return true;
     }
   }
 
