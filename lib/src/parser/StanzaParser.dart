@@ -2,7 +2,6 @@ import 'package:xml/xml.dart' as xml;
 import 'package:xmpp_stone/src/data/Jid.dart';
 import 'package:xmpp_stone/src/elements/XmppElement.dart';
 import 'package:xmpp_stone/src/elements/XmppAttribute.dart';
-import 'package:xmpp_stone/src/elements/encryption/EncryptElement.dart';
 import 'package:xmpp_stone/src/elements/encryption/PlainEnvelope.dart';
 import 'package:xmpp_stone/src/elements/forms/FieldElement.dart';
 import 'package:xmpp_stone/src/elements/forms/XElement.dart';
@@ -11,7 +10,6 @@ import 'package:xmpp_stone/src/elements/messages/AmpRuleElement.dart';
 import 'package:xmpp_stone/src/elements/messages/CustomElement.dart';
 import 'package:xmpp_stone/src/elements/messages/CustomSubElement.dart';
 import 'package:xmpp_stone/src/elements/messages/DelayElement.dart';
-import 'package:xmpp_stone/src/elements/messages/ReceiptReceivedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/ReceiptRequestElement.dart';
 import 'package:xmpp_stone/src/elements/messages/TimeElement.dart';
 import 'package:xmpp_stone/src/elements/messages/TimeStampElement.dart';
@@ -40,7 +38,6 @@ class StanzaParser {
     'message#time': () => TimeElement(),
     'time#ts': () => TimeStampElement(),
     'message#request': () => ReceiptRequestElement(),
-    'message#received': () => ReceiptReceivedElement(),
     'message#amp': () => AmpElement(),
     'amp#rule': () => AmpRuleElement(),
     'message#custom': () => CustomElement(),

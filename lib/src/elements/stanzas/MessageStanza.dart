@@ -5,7 +5,6 @@ import 'package:xmpp_stone/src/elements/messages/AmpRuleElement.dart';
 import 'package:xmpp_stone/src/elements/messages/CustomElement.dart';
 import 'package:xmpp_stone/src/elements/messages/CustomSubElement.dart';
 import 'package:xmpp_stone/src/elements/messages/DelayElement.dart';
-import 'package:xmpp_stone/src/elements/messages/ReceiptReceivedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/ReceiptRequestElement.dart';
 import 'package:xmpp_stone/src/elements/messages/TimeElement.dart';
 import 'package:xmpp_stone/src/elements/messages/TimeStampElement.dart';
@@ -340,12 +339,6 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
-  ReceiptInterface addReceivedReceipt() {
-    addChild(ReceiptReceivedElement.build());
-    return this;
-  }
-
-  @override
   ReceiptInterface addRequestReceipt() {
     addChild(ReceiptRequestElement.build());
     return this;
@@ -354,11 +347,6 @@ class MessageStanza extends AbstractStanza
   @override
   XmppElement? getRequestReceipt() {
     return ReceiptRequestElement.parse(this);
-  }
-
-  @override
-  XmppElement? getReceivedReceipt() {
-    return ReceiptReceivedElement.parse(this);
   }
 
   @override
