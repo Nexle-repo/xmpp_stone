@@ -44,6 +44,7 @@ import 'package:xmpp_stone/xmpp_stone.dart';
 import '../../extensions/pin_chat/pin_chat_data.dart';
 import '../../extensions/recalled_message/RecalledMessageInterface.dart';
 import '../../extensions/system_message/system_message_interface.dart';
+import '../messages/ReceiptReceivedElement.dart';
 import '../messages/xmpp_0422/read_message_element.dart';
 
 class MessageStanza extends AbstractStanza
@@ -339,6 +340,12 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
+  ReceiptInterface addReceivedReceipt() {
+    addChild(ReceiptReceivedElement.build());
+    return this;
+  }
+
+  @override
   ReceiptInterface addRequestReceipt() {
     addChild(ReceiptRequestElement.build());
     return this;
@@ -347,6 +354,11 @@ class MessageStanza extends AbstractStanza
   @override
   XmppElement? getRequestReceipt() {
     return ReceiptRequestElement.parse(this);
+  }
+
+  @override
+  XmppElement? getReceivedReceipt() {
+    return ReceiptReceivedElement.parse(this);
   }
 
   @override
