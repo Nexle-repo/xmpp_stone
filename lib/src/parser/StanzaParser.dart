@@ -24,6 +24,7 @@ import 'package:xmpp_stone/src/features/servicediscovery/Feature.dart';
 import 'package:xmpp_stone/src/features/servicediscovery/Identity.dart';
 import 'package:xmpp_stone/src/parser/IqParser.dart';
 
+import '../elements/messages/ReceiptReceivedElement.dart';
 import '../elements/stanzas/MessageStanza.dart';
 import '../logger/Log.dart';
 
@@ -38,6 +39,7 @@ class StanzaParser {
     'message#time': () => TimeElement(),
     'time#ts': () => TimeStampElement(),
     'message#request': () => ReceiptRequestElement(),
+    'message#received': () => ReceiptReceivedElement(),
     'message#amp': () => AmpElement(),
     'amp#rule': () => AmpRuleElement(),
     'message#custom': () => CustomElement(),
