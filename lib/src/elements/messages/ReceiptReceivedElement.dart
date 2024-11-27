@@ -14,7 +14,7 @@ class ReceiptReceivedElement extends XmppElement {
 
   static XmppElement? parse(parent) {
     return parent.children.firstWhere(
-        (child) => (child.name == ReceiptReceivedElement.elementName),
+            (child) => (child.name == ReceiptReceivedElement.elementName),
         orElse: () => null);
   }
 }

@@ -166,11 +166,7 @@ class MessageHandler implements MessageApi {
     }
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
-      stanza.addRequestReceipt();
-    }
+    
 
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?
@@ -230,11 +226,7 @@ class MessageHandler implements MessageApi {
     stanza.addSystemMessage();
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
-      stanza.addRequestReceipt();
-    }
+    
 
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?
@@ -331,11 +323,7 @@ class MessageHandler implements MessageApi {
     }
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
-      stanza.addRequestReceipt();
-    }
+    
 
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?
@@ -402,11 +390,7 @@ class MessageHandler implements MessageApi {
     }
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
-      stanza.addRequestReceipt();
-    }
+    
 
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?
@@ -500,11 +484,7 @@ class MessageHandler implements MessageApi {
     }
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
-      stanza.addRequestReceipt();
-    }
+    
 
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?
@@ -603,11 +583,7 @@ class MessageHandler implements MessageApi {
     }
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
-      stanza.addRequestReceipt();
-    }
+    
 
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?
@@ -681,11 +657,7 @@ class MessageHandler implements MessageApi {
     }
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
-      stanza.addRequestReceipt();
-    }
+    
 
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?
@@ -777,11 +749,7 @@ class MessageHandler implements MessageApi {
     }
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
-      stanza.addRequestReceipt();
-    }
+    
 
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?
@@ -825,11 +793,7 @@ class MessageHandler implements MessageApi {
     }
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
-      stanza.addRequestReceipt();
-    }
+    
 
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?
@@ -877,11 +841,7 @@ class MessageHandler implements MessageApi {
     }
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
-      stanza.addRequestReceipt();
-    }
+    
 
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?
@@ -970,11 +930,7 @@ class MessageHandler implements MessageApi {
     stanza.addCustomMessage();
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
-      stanza.addRequestReceipt();
-    }
+    
 
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?
@@ -1060,11 +1016,7 @@ class MessageHandler implements MessageApi {
     stanza.addCustomMessage();
 
     // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
-      stanza.addRequestReceipt();
-    }
+    
 
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?

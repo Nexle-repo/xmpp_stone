@@ -22,10 +22,8 @@ class XMPPMessageParams {
   bool _isCustomDelivery() {
     if (_isCustomAck()) {
       return ['Delivery-Ack-Group', 'Delivery-Ack'].contains(getCustomData!['iqType']);
-    } else if (isReceiptDelivered) {
-      return true;
     } else {
-      return false;
+      return true;
     }
   }
 
@@ -75,12 +73,12 @@ class XMPPMessageParams {
     return message!.getRequestReceipt() != null;
   }
 
-  bool get isReceiptDelivered {
-    return message!.getReceivedReceipt() != null;
-  }
-
   bool get isAckDeliveryDirect {
     return message!.body == null && message!.isAmpDeliverDirect();
+  }
+
+  bool get isReceiptDelivered {
+    return message!.getReceivedReceipt() != null;
   }
 
   bool get isAckDeliveryStored {
