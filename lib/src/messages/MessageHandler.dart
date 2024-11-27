@@ -147,10 +147,6 @@ class MessageHandler implements MessageApi {
         stanza.addTime(additional.millisecondTs);
       }
 
-      if (additional.customString.isNotEmpty) {
-        stanza.addCustom(additional.customString);
-      }
-
       if (additional.customId?.isNotEmpty ?? false) {
         stanza.addCustomId(additional.customId!);
       }
