@@ -147,6 +147,10 @@ class MessageHandler implements MessageApi {
         stanza.addTime(additional.millisecondTs);
       }
 
+      if (additional.customString.isNotEmpty) {
+        stanza.addCustom(additional.customString);
+      }
+
       if (additional.customId?.isNotEmpty ?? false) {
         stanza.addCustomId(additional.customId!);
       }
@@ -155,14 +159,6 @@ class MessageHandler implements MessageApi {
         ChatStateDecoration(message: stanza).setState(additional.chatStateType);
       }
     }
-
-    // For custome message
-    if (isCustom) {
-      stanza.addCustomMessage();
-    }
-
-    // Add receipt delivery
-    
 
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?
