@@ -3,7 +3,6 @@ import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ExternalElement.dart'
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/PinnedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/QuoteElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/deleteElement.dart';
-import 'package:xmpp_stone/src/elements/messages/xmpp_0422/edit_message_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/pin_chat_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/reaction_element.dart';
 import 'package:xmpp_stone/src/extensions/change_member_role/ChangeMemberRoleInterface.dart';
@@ -115,14 +114,10 @@ class ApplyToElement extends XmppElement
     addReactMessage(reaction);
   }
 
-  ApplyToElement.buildEditMessage(
-    String id,
-    String content,
-  ) {
+  ApplyToElement.buildEditMessage(String id) {
     name = ApplyToElement.elementName;
     addAttribute(XmppAttribute('xmlns', 'urn:xmpp:fasten:0'));
     addAttribute(XmppAttribute('id', id));
-    editMessage(content);
   }
 
   ApplyToElement.buildReadMessage(String userId, String messageId) {
@@ -244,12 +239,6 @@ class ApplyToElement extends XmppElement
   XmppElement? getReactionMessage() {
     // TODO: implement getReactionMessage
     throw UnimplementedError();
-  }
-
-  @override
-  EditMessageInterface editMessage(String content) {
-    addChild(EditMessageElement.build(content));
-    return this;
   }
 
   @override

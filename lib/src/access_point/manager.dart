@@ -894,7 +894,8 @@ class XMPPClientManager {
     String receiver,
     String messageId,
     String text,
-    String editContent, {
+    String editContent,
+    String? expts, {
     MessageParams additional = const MessageParams(
         millisecondTs: 0,
         customString: '',
@@ -912,6 +913,7 @@ class XMPPClientManager {
       messageId,
       text,
       editContent,
+      expts,
       additional: additional,
       onStanzaCreated: onStanzaCreated,
     );

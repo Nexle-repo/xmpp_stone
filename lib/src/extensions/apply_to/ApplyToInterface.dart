@@ -13,10 +13,7 @@ abstract class ApplyToInterface {
     bool isClear = false,
   });
 
-  ApplyToInterface editMessage(
-    String messageId,
-    String content,
-  );
+  ApplyToInterface editMessage(String messageId);
 
   ApplyToInterface addPinChat(String chatId, bool isPinned);
 

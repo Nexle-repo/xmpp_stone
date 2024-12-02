@@ -942,7 +942,8 @@ class MessageHandler implements MessageApi {
     Jid to,
     String messageId,
     String text,
-    String editContent, {
+    String editContent,
+    String? expts, {
     MessageParams additional = const MessageParams(
         millisecondTs: 0,
         customString: '',
@@ -961,6 +962,7 @@ class MessageHandler implements MessageApi {
       text,
       editContent,
       additional,
+      expts,
       onStanzaCreated: onStanzaCreated,
     );
   }
@@ -970,7 +972,8 @@ class MessageHandler implements MessageApi {
     String messageId,
     String text,
     String editContent,
-    MessageParams additional, {
+    MessageParams additional,
+    String? expts ,{
     void Function(MessageStanza)? onStanzaCreated,
   }) async {
     final stanza = MessageStanza(
@@ -986,14 +989,14 @@ class MessageHandler implements MessageApi {
       stanza.body = text;
     }
 
-    stanza.editMessage(messageId, editContent);
+    stanza.editMessage(messageId);
 
     if (additional.millisecondTs != 0) {
       stanza.addTime(additional.millisecondTs);
     }
 
     if (additional.customString.isNotEmpty) {
-      stanza.addCustom(additional.customString);
+      stanza.addEditCustom(expts ?? '0', text);
     }
 
     if (additional.customId?.isNotEmpty ?? false) {

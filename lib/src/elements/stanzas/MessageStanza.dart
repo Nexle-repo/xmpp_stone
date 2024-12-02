@@ -222,6 +222,15 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
+  ExampleCustomInterface addEditCustom(
+    String expts,
+    String text,
+  ) {
+    addChild(ExampleCustomElement.buildEdit(expts, text));
+    return this;
+  }
+
+  @override
   ExampleCustomInterface addCustomMessage() {
     addChild(ExampleCustomElement.addCustom());
     return this;
@@ -559,11 +568,8 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
-  ApplyToInterface editMessage(String messageId, String content) {
-    addChild(ApplyToElement.buildEditMessage(
-      messageId,
-      content,
-    ));
+  ApplyToInterface editMessage(String messageId) {
+    addChild(ApplyToElement.buildEditMessage(messageId));
     return this;
   }
 

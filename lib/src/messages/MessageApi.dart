@@ -43,7 +43,8 @@ abstract class MessageApi {
     Jid to,
     String messageId,
     String text,
-    String editContent, {
+    String editContent,
+    String? expts, {
     MessageParams additional,
   });
 
