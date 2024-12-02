@@ -29,6 +29,7 @@ import 'package:xmpp_stone/src/elements/messages/xmpp_0422/reaction_element.dart
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/system_message_element.dart';
 import 'package:xmpp_stone/src/extensions/advanced_messaging_processing/AmpInterface.dart';
 import 'package:xmpp_stone/src/extensions/apply_to/ApplyToInterface.dart';
+import 'package:xmpp_stone/src/extensions/edit_message/edit_message_interface.dart';
 import 'package:xmpp_stone/src/extensions/example_custom/ExampleCustomInterface.dart';
 import 'package:xmpp_stone/src/extensions/mam/ArchiveResultInterface.dart';
 import 'package:xmpp_stone/src/extensions/mam/ArchiveStanzaIdInterface.dart';
@@ -162,6 +163,18 @@ class MessageStanza extends AbstractStanza
       membersRemovedEncoded: data.getAttribute('membersRemovedEncoded')?.value ?? "",
     );
     return model;
+  }
+
+  String? get editedData {
+    final applyTo = this.children.firstWhere((element) {
+      return element?.name == 'apply-to';
+    }, orElse: () => null);
+    final custom = this.children.firstWhere((element) {
+      return element?.name == 'custom';
+    }, orElse: () => null);
+    if (applyTo == null || custom == null) return null;
+    final data = custom.textValue;
+    return data;
   }
 
   PinChatData? get pinChatData {
