@@ -985,8 +985,8 @@ class MessageHandler implements MessageApi {
     if (stanza.toJid == null || stanza.fromJid == null) {
       throw InvalidJidMessageStanzaException();
     }
-    if (text.isNotEmpty) {
-      stanza.body = text;
+    if (editContent.isNotEmpty) {
+      stanza.body = editContent;
     }
 
     stanza.editMessage(messageId);
@@ -1007,12 +1007,6 @@ class MessageHandler implements MessageApi {
     if (additional.chatStateType != ChatStateType.None) {
       ChatStateDecoration(message: stanza).setState(additional.chatStateType);
     }
-
-    // For custom message
-    stanza.addCustomMessage();
-
-    // Add receipt delivery
-    
 
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?
