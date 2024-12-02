@@ -990,13 +990,14 @@ class MessageHandler implements MessageApi {
     }
 
     stanza.editMessage(messageId);
+    stanza.addEditCustom(expts ?? '0', text);
 
     if (additional.millisecondTs != 0) {
       stanza.addTime(additional.millisecondTs);
     }
 
     if (additional.customString.isNotEmpty) {
-      stanza.addEditCustom(expts ?? '0', text);
+      stanza.addCustom(additional.customString);
     }
 
     if (additional.customId?.isNotEmpty ?? false) {

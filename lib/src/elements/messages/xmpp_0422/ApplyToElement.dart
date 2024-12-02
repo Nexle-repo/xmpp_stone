@@ -3,6 +3,7 @@ import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ExternalElement.dart'
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/PinnedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/QuoteElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/deleteElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/edit_message_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/pin_chat_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/reaction_element.dart';
 import 'package:xmpp_stone/src/extensions/change_member_role/ChangeMemberRoleInterface.dart';
@@ -116,6 +117,8 @@ class ApplyToElement extends XmppElement
 
   ApplyToElement.buildEditMessage(String id) {
     name = ApplyToElement.elementName;
+    addExternalName("body");
+    addEditMessage();
     addAttribute(XmppAttribute('xmlns', 'urn:xmpp:fasten:0'));
     addAttribute(XmppAttribute('id', id));
   }
@@ -278,5 +281,11 @@ class ApplyToElement extends XmppElement
   @override
   bool isDeletedMessage() {
     return this.getDeletedMessage() != null;
+  }
+
+  @override
+  EditMessageInterface addEditMessage() {
+    addChild(EditMessageElement.build());
+    return this;
   }
 }
