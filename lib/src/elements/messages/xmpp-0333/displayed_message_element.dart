@@ -11,7 +11,7 @@ class DisplayedMessageElement extends XmppElement {
   DisplayedMessageElement.build(String id) {
     name = elementName;
     addAttribute(XmppAttribute('xmlns', 'urn:xmpp:chat-markers:0'));
-    addAttribute(XmppAttribute('id', 'id'));
+    addAttribute(XmppAttribute('id', id));
   }
 
   static XmppElement? parse(parent) {

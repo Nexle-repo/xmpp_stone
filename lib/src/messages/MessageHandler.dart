@@ -143,7 +143,7 @@ class MessageHandler implements MessageApi {
       if (text.isNotEmpty) {
         stanza.body = text;
       }
-      
+
       stanza.addRequestReceipt();
       stanza.addRequestMarkable();
 
@@ -1091,16 +1091,6 @@ class MessageHandler implements MessageApi {
 
     if (additional.chatStateType != ChatStateType.None) {
       ChatStateDecoration(message: stanza).setState(additional.chatStateType);
-    }
-
-    // For custom message
-    stanza.addCustomMessage();
-
-    // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
-      stanza.addRequestReceipt();
     }
 
     if (additional.ampMessageType == AmpMessageType.Delivery) {
