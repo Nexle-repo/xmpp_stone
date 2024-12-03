@@ -1075,7 +1075,7 @@ class MessageHandler implements MessageApi {
       stanza.body = text;
     }
 
-    stanza.addReadMessage(userId: userId, messageId: messageId);
+    stanza.addDisplayMarker(messageId);
 
     if (additional.millisecondTs != 0) {
       stanza.addTime(additional.millisecondTs);

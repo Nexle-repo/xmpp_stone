@@ -672,6 +672,15 @@ class MessageStanza extends AbstractStanza
     // TODO: implement getRequestMarkable
     throw UnimplementedError();
   }
+
+  @override
+  bool isDisplayedMarkerMessage() {
+    var displayed = DisplayedMessageElement.parse(this);
+    if (displayed != null) {
+      return true;
+    }
+    return false;
+  }
 }
 
 enum MessageStanzaType { CHAT, ERROR, GROUPCHAT, HEADLINE, NORMAL, UNKOWN, NONE }

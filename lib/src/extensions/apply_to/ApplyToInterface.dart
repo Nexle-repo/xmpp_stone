@@ -50,5 +50,7 @@ abstract class ApplyToInterface {
 
   bool isTyping();
 
+  bool isDisplayedMarkerMessage();
+
   XmppElement? getDeletedMessage();
 }

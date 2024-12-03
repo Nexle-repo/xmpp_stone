@@ -5,4 +5,5 @@ import 'package:xmpp_stone/xmpp_stone.dart';
 abstract class DisplayedMarkerInterface {
   DisplayedMarkerInterface addDisplayMarker(String id);
   XmppElement? getDisplayMarker();
+  bool isDisplayedMarkerMessage();
 }
