@@ -143,6 +143,10 @@ class MessageHandler implements MessageApi {
       if (text.isNotEmpty) {
         stanza.body = text;
       }
+      
+      stanza.addRequestReceipt();
+      stanza.addRequestMarkable();
+
       if (additional.millisecondTs != 0) {
         stanza.addTime(additional.millisecondTs);
       }

@@ -15,6 +15,8 @@ import 'package:xmpp_stone/src/elements/messages/chat_states/ChatStatePausedElem
 import 'package:xmpp_stone/src/elements/messages/custom_id_element.dart';
 import 'package:xmpp_stone/src/elements/messages/invitation/InviteElement.dart';
 import 'package:xmpp_stone/src/elements/messages/mam/StanzaIdElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp-0333/displayed_message_element.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp-0333/markable_message_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ApplyToElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ChangeMemberRoleElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/ExampleCustomElement.dart';
@@ -29,6 +31,7 @@ import 'package:xmpp_stone/src/elements/messages/xmpp_0422/reaction_element.dart
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/system_message_element.dart';
 import 'package:xmpp_stone/src/extensions/advanced_messaging_processing/AmpInterface.dart';
 import 'package:xmpp_stone/src/extensions/apply_to/ApplyToInterface.dart';
+import 'package:xmpp_stone/src/extensions/displayed_marker/displayed_marker_interface.dart';
 import 'package:xmpp_stone/src/extensions/edit_message/edit_message_interface.dart';
 import 'package:xmpp_stone/src/extensions/example_custom/ExampleCustomInterface.dart';
 import 'package:xmpp_stone/src/extensions/mam/ArchiveResultInterface.dart';
@@ -40,6 +43,7 @@ import 'package:xmpp_stone/src/extensions/message_delivery/TimeInterface.dart';
 import 'package:xmpp_stone/src/extensions/message_delivery/custom_id_interface.dart';
 import 'package:xmpp_stone/src/extensions/multi_user_chat/message_invitation_interface/MessageInvitationInterface.dart';
 import 'package:xmpp_stone/src/extensions/quote_message/quote_message.dart';
+import 'package:xmpp_stone/src/extensions/request_markable/request_markable_interface.dart';
 import 'package:xmpp_stone/xmpp_stone.dart';
 
 import '../../extensions/pin_chat/pin_chat_data.dart';
@@ -50,6 +54,8 @@ import '../messages/xmpp_0422/read_message_element.dart';
 
 class MessageStanza extends AbstractStanza
     implements
+        DisplayedMarkerInterface,
+        RequestMarkableInterface,
         ReceiptInterface,
         TimeInterface,
         AmpInterface,
@@ -641,6 +647,30 @@ class MessageStanza extends AbstractStanza
       return true;
     }
     return false;
+  }
+
+  @override
+  DisplayedMarkerInterface addDisplayMarker(String id) {
+    addChild(DisplayedMessageElement.build(id));
+    return this;
+  }
+
+  @override
+  RequestMarkableInterface addRequestMarkable() {
+    addChild(MarkableMessageElement.build());
+    return this;
+  }
+
+  @override
+  XmppElement? getDisplayMarker() {
+    // TODO: implement getDisplayMarker
+    throw UnimplementedError();
+  }
+
+  @override
+  XmppElement? getRequestMarkable() {
+    // TODO: implement getRequestMarkable
+    throw UnimplementedError();
   }
 }
 
