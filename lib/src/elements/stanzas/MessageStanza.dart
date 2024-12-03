@@ -663,8 +663,7 @@ class MessageStanza extends AbstractStanza
 
   @override
   XmppElement? getDisplayMarker() {
-    // TODO: implement getDisplayMarker
-    throw UnimplementedError();
+    return DisplayedMessageElement.parse(this);
   }
 
   @override
