@@ -59,7 +59,6 @@ class CarbonsNegotiator extends Negotiator {
     var element = XmppElement();
     element.name = 'enable';
     element.addAttribute(XmppAttribute('xmlns', 'urn:xmpp:carbons:2'));
-    element.addAttribute(XmppAttribute('xmlns', 'urn:xmpp:chat-markers:0'));
     iqStanza.addChild(element);
     _myUnrespondedIqStanza = iqStanza;
     _connection!.writeStanza(iqStanza);
