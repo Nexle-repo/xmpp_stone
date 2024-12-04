@@ -922,12 +922,6 @@ class MessageHandler implements MessageApi {
       ChatStateDecoration(message: stanza).setState(additional.chatStateType);
     }
 
-    // For custom message
-    stanza.addCustomMessage();
-
-    // Add receipt delivery
-    
-
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?
       stanza.addAmpDeliverDirect();
