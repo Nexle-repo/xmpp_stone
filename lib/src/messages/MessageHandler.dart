@@ -1099,4 +1099,52 @@ class MessageHandler implements MessageApi {
     // Could not wait for the ack, there is no ack sent (r, c type)
     // return responseHandler.set<MessageStanza>(stanza.id!, stanza);
   }
+
+  Future<MessageStanza> _sendReceivedMessageStanza({
+    required Jid jid,
+    required String userId,
+    required String messageId,
+    required MessageParams additional,
+  }) async {
+    final stanza = MessageStanza(
+        additional.messageId.isEmpty ? AbstractStanza.getRandomId() : additional.messageId,
+        additional.messageType);
+    stanza.toJid = jid;
+    stanza.fromJid = _connection!.fullJid;
+    // Validation
+    if (stanza.toJid == null || stanza.fromJid == null) {
+      throw InvalidJidMessageStanzaException();
+    }
+
+    stanza.addReceivedReceipt(messageId);
+
+    await _connection!.writeStanzaWithQueue(stanza);
+
+    return stanza;
+  }
+
+  @override
+  Future<MessageStanza> sendReceivedMessage({
+    required Jid to,
+    required String userId,
+    required String messageId,
+    MessageParams additional = const MessageParams(
+        millisecondTs: 0,
+        customString: '',
+        messageId: '',
+        receipt: ReceiptRequestType.NONE,
+        messageType: MessageStanzaType.CHAT,
+        chatStateType: ChatStateType.None,
+        ampMessageType: AmpMessageType.None,
+        hasEncryptedBody: false,
+        options: XmppCommunicationConfig(shallWaitStanza: false)),
+    void Function(MessageStanza)? onStanzaCreated,
+  }) {
+    return _sendReceivedMessageStanza(
+      jid: to,
+      userId: userId,
+      messageId: messageId,
+      additional: additional,
+    );
+  }
 }

@@ -946,6 +946,31 @@ class XMPPClientManager {
     );
   }
 
+  Future<xmpp.MessageStanza> sendReceivedMessage(
+    {required String receiver,
+    required String userId,
+    required String messageId,
+    MessageParams additional = const MessageParams(
+        millisecondTs: 0,
+        customString: '',
+        messageId: '',
+        receipt: ReceiptRequestType.RECEIVED,
+        messageType: MessageStanzaType.CHAT,
+        chatStateType: ChatStateType.None,
+        ampMessageType: AmpMessageType.None,
+        options: XmppCommunicationConfig(shallWaitStanza: false),
+        hasEncryptedBody: false),
+    void Function(MessageStanza)? onStanzaCreated,
+  }) {
+    return _messageHandler.sendReceivedMessage(
+      to: xmpp.Jid.fromFullJid(receiver),
+      userId: userId,
+      messageId: messageId,
+      additional: additional,
+      onStanzaCreated: onStanzaCreated,
+    );
+  }
+
   // Pin or unpin a chat
   Future<xmpp.MessageStanza> pinChat(
     String receiver,

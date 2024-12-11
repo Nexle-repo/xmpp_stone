@@ -368,8 +368,8 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
-  ReceiptInterface addReceivedReceipt() {
-    addChild(ReceiptReceivedElement.build());
+  ReceiptInterface addReceivedReceipt(String id) {
+    addChild(ReceiptReceivedElement.build(id));
     return this;
   }
 

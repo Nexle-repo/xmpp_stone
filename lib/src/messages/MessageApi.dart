@@ -98,4 +98,11 @@ abstract class MessageApi {
     required String role,
     MessageParams additional,
   });
+
+  Future<MessageStanza> sendReceivedMessage({
+    required Jid to,
+    required String userId,
+    required String messageId,
+    MessageParams additional,
+  });
 }
