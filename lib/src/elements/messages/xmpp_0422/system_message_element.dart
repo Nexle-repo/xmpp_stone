@@ -12,7 +12,7 @@ class SystemMessageElement extends XmppElement {
   SystemMessageElement.addCustom() {
     name = SystemMessageElement.elementName;
     addAttribute(XmppAttribute('xmlns', 'rhp:urn:example:$elementName'));
-    addAttribute(XmppAttribute('expts', "0"));
+    addAttribute(XmppAttribute('expTs', "0"));
   }
 
   static XmppElement? parse(parent) {

@@ -10,21 +10,21 @@ class ExampleCustomElement extends XmppElement {
   ExampleCustomElement.buildQuote(String type, String expts, String text, String refMsgTitle) {
     name = ExampleCustomElement.elementName;
     addAttribute(XmppAttribute('xmlns', 'rhp:urn:example:custom'));
-    addAttribute(XmppAttribute('expts', expts));
+    addAttribute(XmppAttribute('expTs', expts));
     textValue = text;
   }
 
   ExampleCustomElement.buildEdit(String expts, String text) {
     name = ExampleCustomElement.elementName;
     addAttribute(XmppAttribute('xmlns', 'rhp:urn:example:custom'));
-    addAttribute(XmppAttribute('expts', expts));
+    addAttribute(XmppAttribute('expTs', expts));
     textValue = text;
   }
 
   ExampleCustomElement.addCustom() {
     name = ExampleCustomElement.elementName;
     addAttribute(XmppAttribute('xmlns', 'rhp:urn:example:custom'));
-    addAttribute(XmppAttribute('expts', "0"));
+    addAttribute(XmppAttribute('expTs', "0"));
   }
 
   static XmppElement? parse(parent) {
