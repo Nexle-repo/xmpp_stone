@@ -8,10 +8,9 @@ class EditMessageElement extends XmppElement {
     name = elementName;
   }
 
-  EditMessageElement.build(String reaction) {
+  EditMessageElement.build() {
     name = elementName;
     addAttribute(XmppAttribute('xmlns', 'rhp:urn:xmpp:$elementName'));
-    textValue = reaction;
   }
 
   static XmppElement? parse(parent) {

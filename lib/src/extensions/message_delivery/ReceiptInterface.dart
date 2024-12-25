@@ -4,7 +4,7 @@ enum ReceiptRequestType { NONE, REQUEST, RECEIVED }
 
 abstract class ReceiptInterface {
   ReceiptInterface addRequestReceipt();
-  ReceiptInterface addReceivedReceipt();
+  ReceiptInterface addReceivedReceipt(String id);
   XmppElement? getRequestReceipt();
   XmppElement? getReceivedReceipt();
 }

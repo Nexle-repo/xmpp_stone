@@ -98,7 +98,7 @@ class ApplyToElement extends XmppElement
     name = ApplyToElement.elementName;
     addDeleteMessage();
     addAttribute(XmppAttribute('xmlns', 'urn:xmpp:fasten:0'));
-    addAttribute(XmppAttribute('messageID', messageID));
+    addAttribute(XmppAttribute('id', messageID));
   }
 
   ApplyToElement.buildReactMessage(
@@ -115,14 +115,12 @@ class ApplyToElement extends XmppElement
     addReactMessage(reaction);
   }
 
-  ApplyToElement.buildEditMessage(
-    String id,
-    String content,
-  ) {
+  ApplyToElement.buildEditMessage(String id) {
     name = ApplyToElement.elementName;
+    addExternalName("body");
+    addEditMessage();
     addAttribute(XmppAttribute('xmlns', 'urn:xmpp:fasten:0'));
     addAttribute(XmppAttribute('id', id));
-    editMessage(content);
   }
 
   ApplyToElement.buildReadMessage(String userId, String messageId) {
@@ -247,12 +245,6 @@ class ApplyToElement extends XmppElement
   }
 
   @override
-  EditMessageInterface editMessage(String content) {
-    addChild(EditMessageElement.build(content));
-    return this;
-  }
-
-  @override
   XmppElement? getEditMessage() {
     // TODO: implement getEditMessage
     throw UnimplementedError();
@@ -289,5 +281,11 @@ class ApplyToElement extends XmppElement
   @override
   bool isDeletedMessage() {
     return this.getDeletedMessage() != null;
+  }
+
+  @override
+  EditMessageInterface addEditMessage() {
+    addChild(EditMessageElement.build());
+    return this;
   }
 }

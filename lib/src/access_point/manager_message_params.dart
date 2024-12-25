@@ -177,6 +177,10 @@ class XMPPMessageParams {
     return message!.isTyping();
   }
 
+  bool get isDisplayedMarkerMessage {
+    return message!.isDisplayedMarkerMessage();
+  }
+
   bool get isChangeMemberRole {
     return message!.isChangeMemberRole();
   }

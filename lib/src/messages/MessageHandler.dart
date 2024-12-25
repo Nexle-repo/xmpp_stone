@@ -143,6 +143,10 @@ class MessageHandler implements MessageApi {
       if (text.isNotEmpty) {
         stanza.body = text;
       }
+
+      stanza.addRequestReceipt();
+      stanza.addRequestMarkable();
+
       if (additional.millisecondTs != 0) {
         stanza.addTime(additional.millisecondTs);
       }
@@ -159,14 +163,6 @@ class MessageHandler implements MessageApi {
         ChatStateDecoration(message: stanza).setState(additional.chatStateType);
       }
     }
-
-    // For custome message
-    if (isCustom) {
-      stanza.addCustomMessage();
-    }
-
-    // Add receipt delivery
-    
 
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?
@@ -926,12 +922,6 @@ class MessageHandler implements MessageApi {
       ChatStateDecoration(message: stanza).setState(additional.chatStateType);
     }
 
-    // For custom message
-    stanza.addCustomMessage();
-
-    // Add receipt delivery
-    
-
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?
       stanza.addAmpDeliverDirect();
@@ -950,7 +940,8 @@ class MessageHandler implements MessageApi {
     Jid to,
     String messageId,
     String text,
-    String editContent, {
+    String editContent,
+    String? expts, {
     MessageParams additional = const MessageParams(
         millisecondTs: 0,
         customString: '',
@@ -969,6 +960,7 @@ class MessageHandler implements MessageApi {
       text,
       editContent,
       additional,
+      expts,
       onStanzaCreated: onStanzaCreated,
     );
   }
@@ -978,7 +970,8 @@ class MessageHandler implements MessageApi {
     String messageId,
     String text,
     String editContent,
-    MessageParams additional, {
+    MessageParams additional,
+    String? expts ,{
     void Function(MessageStanza)? onStanzaCreated,
   }) async {
     final stanza = MessageStanza(
@@ -990,11 +983,12 @@ class MessageHandler implements MessageApi {
     if (stanza.toJid == null || stanza.fromJid == null) {
       throw InvalidJidMessageStanzaException();
     }
-    if (text.isNotEmpty) {
-      stanza.body = text;
+    if (editContent.isNotEmpty) {
+      stanza.body = editContent;
     }
 
-    stanza.editMessage(messageId, editContent);
+    stanza.editMessage(messageId);
+    stanza.addEditCustom(expts ?? '0', text);
 
     if (additional.millisecondTs != 0) {
       stanza.addTime(additional.millisecondTs);
@@ -1011,12 +1005,6 @@ class MessageHandler implements MessageApi {
     if (additional.chatStateType != ChatStateType.None) {
       ChatStateDecoration(message: stanza).setState(additional.chatStateType);
     }
-
-    // For custom message
-    stanza.addCustomMessage();
-
-    // Add receipt delivery
-    
 
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?
@@ -1081,7 +1069,7 @@ class MessageHandler implements MessageApi {
       stanza.body = text;
     }
 
-    stanza.addReadMessage(userId: userId, messageId: messageId);
+    stanza.addDisplayMarker(messageId);
 
     if (additional.millisecondTs != 0) {
       stanza.addTime(additional.millisecondTs);
@@ -1099,16 +1087,6 @@ class MessageHandler implements MessageApi {
       ChatStateDecoration(message: stanza).setState(additional.chatStateType);
     }
 
-    // For custom message
-    stanza.addCustomMessage();
-
-    // Add receipt delivery
-    if (additional.receipt == ReceiptRequestType.RECEIVED) {
-      stanza.addReceivedReceipt();
-    } else if (additional.receipt == ReceiptRequestType.REQUEST) {
-      stanza.addRequestReceipt();
-    }
-
     if (additional.ampMessageType == AmpMessageType.Delivery) {
       // Add request stanza from server?
       stanza.addAmpDeliverDirect();
@@ -1120,5 +1098,53 @@ class MessageHandler implements MessageApi {
     return stanza;
     // Could not wait for the ack, there is no ack sent (r, c type)
     // return responseHandler.set<MessageStanza>(stanza.id!, stanza);
+  }
+
+  Future<MessageStanza> _sendReceivedMessageStanza({
+    required Jid jid,
+    required String userId,
+    required String messageId,
+    required MessageParams additional,
+  }) async {
+    final stanza = MessageStanza(
+        additional.messageId.isEmpty ? AbstractStanza.getRandomId() : additional.messageId,
+        additional.messageType);
+    stanza.toJid = jid;
+    stanza.fromJid = _connection!.fullJid;
+    // Validation
+    if (stanza.toJid == null || stanza.fromJid == null) {
+      throw InvalidJidMessageStanzaException();
+    }
+
+    stanza.addReceivedReceipt(messageId);
+
+    await _connection!.writeStanzaWithQueue(stanza);
+
+    return stanza;
+  }
+
+  @override
+  Future<MessageStanza> sendReceivedMessage({
+    required Jid to,
+    required String userId,
+    required String messageId,
+    MessageParams additional = const MessageParams(
+        millisecondTs: 0,
+        customString: '',
+        messageId: '',
+        receipt: ReceiptRequestType.NONE,
+        messageType: MessageStanzaType.CHAT,
+        chatStateType: ChatStateType.None,
+        ampMessageType: AmpMessageType.None,
+        hasEncryptedBody: false,
+        options: XmppCommunicationConfig(shallWaitStanza: false)),
+    void Function(MessageStanza)? onStanzaCreated,
+  }) {
+    return _sendReceivedMessageStanza(
+      jid: to,
+      userId: userId,
+      messageId: messageId,
+      additional: additional,
+    );
   }
 }

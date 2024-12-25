@@ -7,9 +7,10 @@ class ReceiptReceivedElement extends XmppElement {
     name = elementName;
   }
 
-  ReceiptReceivedElement.build() {
+  ReceiptReceivedElement.build(String id) {
     name = ReceiptReceivedElement.elementName;
     addAttribute(XmppAttribute('xmlns', 'urn:xmpp:receipts'));
+    addAttribute(XmppAttribute('id', id));
   }
 
   static XmppElement? parse(parent) {

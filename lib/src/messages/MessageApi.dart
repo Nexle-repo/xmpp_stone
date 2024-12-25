@@ -43,7 +43,8 @@ abstract class MessageApi {
     Jid to,
     String messageId,
     String text,
-    String editContent, {
+    String editContent,
+    String? expts, {
     MessageParams additional,
   });
 
@@ -95,6 +96,13 @@ abstract class MessageApi {
     Jid to, {
     required String userJid,
     required String role,
+    MessageParams additional,
+  });
+
+  Future<MessageStanza> sendReceivedMessage({
+    required Jid to,
+    required String userId,
+    required String messageId,
     MessageParams additional,
   });
 }
