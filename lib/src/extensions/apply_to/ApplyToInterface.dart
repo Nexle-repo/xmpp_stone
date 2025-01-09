@@ -47,4 +47,6 @@ abstract class ApplyToInterface {
   bool isPinChat();
 
   bool isReadMessage();
+
+  ReadMessageData? getReadData();
 }
