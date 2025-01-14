@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:universal_io/io.dart';
-import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/html.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:xmpp_stone/src/connection/XmppWebsocketApi.dart';
 
@@ -19,7 +19,7 @@ bool isTlsRequired() {
 class XmppWebSocketHtml extends XmppWebSocket {
   static String TAG = 'XmppWebSocketIo';
 
-  IOWebSocketChannel? _socket;
+  HtmlWebSocketChannel? _socket;
   late String Function(String event) _map;
 
   XmppWebSocketHtml();
@@ -33,7 +33,7 @@ class XmppWebSocketHtml extends XmppWebSocket {
     String? wsPath,
     String? customScheme,
   }) {
-    _socket = IOWebSocketChannel.connect(
+    _socket = HtmlWebSocketChannel.connect(
       Uri(
         scheme: customScheme ?? 'wss',
         host: host,
