@@ -24,7 +24,7 @@ dependencies:
   intl: any
   collection: ^1.16.0
   universal_io: ^2.2.0
-  web_socket_channel: ^2.2.0
+  web_socket_channel: ^3.0.1
   jose: ^0.3.2
 
 dev_dependencies:
