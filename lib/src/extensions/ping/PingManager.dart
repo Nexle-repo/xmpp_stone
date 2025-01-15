@@ -1,3 +1,4 @@
+import 'package:xmpp_stone/src/data/Jid.dart';
 import 'package:xmpp_stone/src/elements/XmppAttribute.dart';
 import 'package:xmpp_stone/src/elements/XmppElement.dart';
 import 'package:xmpp_stone/src/elements/stanzas/AbstractStanza.dart';
@@ -52,11 +53,13 @@ class PingManager {
   }
 
   Future sendPingMessage() async {
-    var iqStanza = IqStanza(AbstractStanza.getRandomId(), IqStanzaType.GET);
-    var element = XmppElement();
-    element.name = 'ping';
-    element.addAttribute(XmppAttribute('xmlns', 'urn:xmpp:ping'));
-    iqStanza.addChild(element);
+    var iqStanza = IqStanza(AbstractStanza.getRandomId(), IqStanzaType.GET)
+      ..fromJid = _connection.fullJid
+      ..toJid = Jid.fromFullJid(_connection.fullJid.domain ?? '')
+      ..addChild(XmppElement()
+        ..name = 'ping'
+        ..addAttribute(
+            XmppAttribute('xmlns', 'urn:xmpp:ping')));
     await _connection.writeStanzaWithQueue(iqStanza);
   }
 

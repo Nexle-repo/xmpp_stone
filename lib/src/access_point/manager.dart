@@ -189,7 +189,6 @@ class XMPPClientManager {
     onLog('Connected');
     _messageHandler = xmpp.MessageHandler.getInstance(_connection);
     _pingHandler = xmpp.PingManager.getInstance(_connection!);
-    _pingHandler.sendPingMessage();
     _pingHandler.listen(ClientPingListener(onPingReceived: (IqStanza stanza) {
       if (_onPing != null) {
         _onPing!();
