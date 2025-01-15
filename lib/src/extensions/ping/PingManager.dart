@@ -46,6 +46,10 @@ class PingManager {
             listener!.onPing(stanza);
           }
         }
+      }else if(stanza.type == IqStanzaType.RESULT){
+        if(listener != null){
+          listener!.onPing(stanza);
+        }
       } else if (stanza.type == IqStanzaType.ERROR) {
         //todo handle error cases
       }
