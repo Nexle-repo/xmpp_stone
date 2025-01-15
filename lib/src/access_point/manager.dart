@@ -1191,7 +1191,7 @@ class XMPPClientManager {
     });
   }
 
-  Future sendPingMessageToServer(sender) async{
+  Future sendPingMessageToServer() async{
     _pingHandler.sendPingMessage();
   }
 }
