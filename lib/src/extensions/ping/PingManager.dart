@@ -1,3 +1,5 @@
+import 'package:xmpp_stone/src/elements/XmppAttribute.dart';
+import 'package:xmpp_stone/src/elements/XmppElement.dart';
 import 'package:xmpp_stone/src/elements/stanzas/AbstractStanza.dart';
 import 'package:xmpp_stone/src/elements/stanzas/IqStanza.dart';
 import 'package:xmpp_stone/src/Connection.dart';
@@ -47,6 +49,15 @@ class PingManager {
         //todo handle error cases
       }
     }
+  }
+
+  Future sendPingMessage() async {
+    var iqStanza = IqStanza(AbstractStanza.getRandomId(), IqStanzaType.GET);
+    var element = XmppElement();
+    element.name = 'ping';
+    element.addAttribute(XmppAttribute('xmlns', 'urn:xmpp:ping'));
+    iqStanza.addChild(element);
+    await _connection.writeStanzaWithQueue(iqStanza);
   }
 
   void listen(PingListener _listener) {
