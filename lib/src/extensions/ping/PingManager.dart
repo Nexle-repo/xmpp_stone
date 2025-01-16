@@ -1,3 +1,6 @@
+import 'package:xmpp_stone/src/data/Jid.dart';
+import 'package:xmpp_stone/src/elements/XmppAttribute.dart';
+import 'package:xmpp_stone/src/elements/XmppElement.dart';
 import 'package:xmpp_stone/src/elements/stanzas/AbstractStanza.dart';
 import 'package:xmpp_stone/src/elements/stanzas/IqStanza.dart';
 import 'package:xmpp_stone/src/Connection.dart';
@@ -43,10 +46,25 @@ class PingManager {
             listener!.onPing(stanza);
           }
         }
+      }else if(stanza.type == IqStanzaType.RESULT){
+        if(listener != null){
+          listener!.onPing(stanza);
+        }
       } else if (stanza.type == IqStanzaType.ERROR) {
         //todo handle error cases
       }
     }
+  }
+
+  Future sendPingMessage() async {
+    var iqStanza = IqStanza(AbstractStanza.getRandomId(), IqStanzaType.GET)
+      ..fromJid = _connection.fullJid
+      ..toJid = Jid.fromFullJid(_connection.fullJid.domain ?? '')
+      ..addChild(XmppElement()
+        ..name = 'ping'
+        ..addAttribute(
+            XmppAttribute('xmlns', 'urn:xmpp:ping')));
+    await _connection.writeStanzaWithQueue(iqStanza);
   }
 
   void listen(PingListener _listener) {

@@ -1190,6 +1190,10 @@ class XMPPClientManager {
       }
     });
   }
+
+  Future sendPingMessageToServer() async{
+    _pingHandler.sendPingMessage();
+  }
 }
 
 class ConnectionResponseListener implements ResponseListener {
