@@ -113,8 +113,8 @@ class ConnectionNegotiationManager {
       supportedNegotiatorList
           .add(BindingResourceConnectionNegotiator(_connection));
       supportedNegotiatorList.add(SessionInitiationNegotiator(_connection));
-      supportedNegotiatorList
-          .add(streamManagement); //doesn't care if success it will be done
+      // supportedNegotiatorList.add(streamManagement);
+      //doesn't care if success it will be done
       // supportedNegotiatorList
       //     .add(ServiceDiscoveryNegotiator.getInstance(_connection));
       supportedNegotiatorList.add(CarbonsNegotiator.getInstance(_connection));
