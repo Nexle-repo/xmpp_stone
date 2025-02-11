@@ -683,18 +683,21 @@ class MessageHandler implements MessageApi {
   }
 
   @override
-  Future<MessageStanza> typingMessage(Jid jid,
-      {MessageParams additional = const MessageParams(
-          millisecondTs: 0,
-          customString: '',
-          messageId: '',
-          receipt: ReceiptRequestType.NONE,
-          messageType: MessageStanzaType.CHAT,
-          chatStateType: ChatStateType.None,
-          ampMessageType: AmpMessageType.None,
-          options: XmppCommunicationConfig(shallWaitStanza: false),
-          hasEncryptedBody: false)}) {
-    return _typingMessageStanza(jid, additional);
+  Future<MessageStanza> typingMessage(
+    Jid jid, {
+    MessageParams additional = const MessageParams(
+        millisecondTs: 0,
+        customString: '',
+        messageId: '',
+        receipt: ReceiptRequestType.NONE,
+        messageType: MessageStanzaType.CHAT,
+        chatStateType: ChatStateType.None,
+        ampMessageType: AmpMessageType.None,
+        options: XmppCommunicationConfig(shallWaitStanza: false),
+        hasEncryptedBody: false),
+    bool isNoCopyMessages = true,
+  }) {
+    return _typingMessageStanza(jid, additional, isNoCopyMessages);
   }
 
   @override
@@ -761,7 +764,7 @@ class MessageHandler implements MessageApi {
 
   Future<MessageStanza> _typingMessageStanza(
     Jid? jid,
-    MessageParams additional,
+    MessageParams additional, bool isNoCopyMessages,
   ) async {
     final stanza = MessageStanza(
         additional.messageId.isEmpty ? AbstractStanza.getRandomId() : additional.messageId,
@@ -786,6 +789,11 @@ class MessageHandler implements MessageApi {
 
     if (additional.chatStateType != ChatStateType.None) {
       ChatStateDecoration(message: stanza).setState(additional.chatStateType);
+    }
+
+    if (isNoCopyMessages){
+      stanza.addPrivateCarbon();
+      stanza.addNoCopy();
     }
 
     // Add receipt delivery

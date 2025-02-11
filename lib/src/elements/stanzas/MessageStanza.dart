@@ -9,6 +9,8 @@ import 'package:xmpp_stone/src/elements/messages/ReceiptRequestElement.dart';
 import 'package:xmpp_stone/src/elements/messages/TimeElement.dart';
 import 'package:xmpp_stone/src/elements/messages/TimeStampElement.dart';
 import 'package:xmpp_stone/src/elements/messages/carbon/ForwardedElement.dart';
+import 'package:xmpp_stone/src/elements/messages/carbon/NoCopy.dart';
+import 'package:xmpp_stone/src/elements/messages/carbon/PrivateCarbon.dart';
 import 'package:xmpp_stone/src/elements/messages/carbon/SentElement.dart';
 import 'package:xmpp_stone/src/elements/messages/chat_states/ChatStateComposingElement.dart';
 import 'package:xmpp_stone/src/elements/messages/chat_states/ChatStatePausedElement.dart';
@@ -36,6 +38,8 @@ import 'package:xmpp_stone/src/extensions/edit_message/edit_message_interface.da
 import 'package:xmpp_stone/src/extensions/example_custom/ExampleCustomInterface.dart';
 import 'package:xmpp_stone/src/extensions/mam/ArchiveResultInterface.dart';
 import 'package:xmpp_stone/src/extensions/mam/ArchiveStanzaIdInterface.dart';
+import 'package:xmpp_stone/src/extensions/message_carbon/NoCopyInterface.dart';
+import 'package:xmpp_stone/src/extensions/message_carbon/PrivateCarbonInterface.dart';
 import 'package:xmpp_stone/src/extensions/message_carbon/SentInterface.dart';
 import 'package:xmpp_stone/src/extensions/message_delivery/CustomInterface.dart';
 import 'package:xmpp_stone/src/extensions/message_delivery/DelayInterface.dart';
@@ -69,7 +73,9 @@ class MessageStanza extends AbstractStanza
         CustomIdInterface,
         ExampleCustomInterface,
         SystemMessageInterface,
-        RecalledMessageInterface {
+        RecalledMessageInterface,
+        PrivateCarbonInterface,
+        NoCopyInterface{
   MessageStanzaType? _type;
 
   MessageStanzaType? get type => _type;
@@ -679,6 +685,30 @@ class MessageStanza extends AbstractStanza
       return true;
     }
     return false;
+  }
+
+  @override
+  PrivateCarbonInterface addPrivateCarbon() {
+    addChild(PrivateCarbonElement.build());
+    return this;
+  }
+
+  @override
+  NoCopyInterface addNoCopy(){
+    addChild(NoCopyElement.build());
+    return this;
+  }
+
+  @override
+  XmppElement? getNoCopy() {
+    // TODO: implement getNoCopy
+    throw UnimplementedError();
+  }
+
+  @override
+  XmppElement? getPrivateCarbon() {
+    // TODO: implement getPrivateCarbon
+    throw UnimplementedError();
   }
 }
 

@@ -1047,8 +1047,7 @@ class XMPPClientManager {
   }
 
   Future<xmpp.MessageStanza> typingMessage(
-    String receiver,
-      {
+    String receiver, {
     MessageParams additional = const MessageParams(
         millisecondTs: 0,
         customString: '',
@@ -1059,8 +1058,9 @@ class XMPPClientManager {
         ampMessageType: AmpMessageType.None,
         options: XmppCommunicationConfig(shallWaitStanza: false),
         hasEncryptedBody: false),
+    bool isNoCopyMessages = true,
   }) {
-    return _messageHandler.typingMessage(xmpp.Jid.fromFullJid(receiver), additional: additional);
+    return _messageHandler.typingMessage(xmpp.Jid.fromFullJid(receiver), additional: additional, isNoCopyMessages: isNoCopyMessages);
   }
 
   Future<xmpp.MessageStanza> deleteMessage(
