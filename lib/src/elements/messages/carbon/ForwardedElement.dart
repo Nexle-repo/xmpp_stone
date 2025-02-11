@@ -1,7 +1,6 @@
 import 'package:xmpp_stone/xmpp_stone.dart';
 
 import '../../XmppAttribute.dart';
-import '../../XmppElement.dart';
 
 class ForwardedElement extends XmppElement {
   static String elementName = 'forwarded';
