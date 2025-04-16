@@ -26,11 +26,13 @@ import 'package:xmpp_stone/src/elements/messages/xmpp_0422/MUCInfoElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/PinnedElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/QuoteElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/RecalledElement.dart';
+import 'package:xmpp_stone/src/elements/messages/xmpp_0422/add_metadata_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/deleteElement.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/edit_message_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/pin_chat_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/reaction_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/system_message_element.dart';
+import 'package:xmpp_stone/src/extensions/add_metadata/add_metadata_interface.dart';
 import 'package:xmpp_stone/src/extensions/advanced_messaging_processing/AmpInterface.dart';
 import 'package:xmpp_stone/src/extensions/apply_to/ApplyToInterface.dart';
 import 'package:xmpp_stone/src/extensions/displayed_marker/displayed_marker_interface.dart';
@@ -605,6 +607,16 @@ class MessageStanza extends AbstractStanza
       return false;
     }
     var element = EditMessageElement.parse(applyTo);
+    return element != null;
+  }
+
+  @override
+  bool isAddMetadataMessage() {
+    var applyTo = ApplyToElement.parse(this);
+    if (applyTo == null) {
+      return false;
+    }
+    var element = AddMetadataElement.parse(applyTo);
     return element != null;
   }
 

@@ -36,6 +36,8 @@ abstract class ApplyToInterface {
 
   bool isEditMessage();
 
+  bool isAddMetadataMessage();
+
   bool isQuoteMessage();
 
   bool isDeletedMessage();
