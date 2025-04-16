@@ -2,20 +2,20 @@ import 'package:xmpp_stone/xmpp_stone.dart';
 
 import '../../XmppAttribute.dart';
 
-class ForwardedElement extends XmppElement {
-  static String elementName = 'forwarded';
-  ForwardedElement() {
+class PrivateCarbonElement extends XmppElement {
+  static String elementName = 'private';
+  PrivateCarbonElement() {
     name = elementName;
   }
 
-  ForwardedElement.build() {
+  PrivateCarbonElement.build() {
     name = elementName;
-    addAttribute(XmppAttribute('xmlns', 'urn:xmpp:forward:0'));
+    addAttribute(XmppAttribute('xmlns', 'urn:xmpp:carbons:2'));
   }
 
   static XmppElement? parse(parent) {
     return parent.children.firstWhere(
-        (child) => (child.name == ForwardedElement.elementName),
+            (child) => (child.name == PrivateCarbonElement.elementName),
         orElse: () => null);
   }
 
