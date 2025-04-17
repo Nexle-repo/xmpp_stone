@@ -32,12 +32,9 @@ import 'package:xmpp_stone/src/elements/messages/xmpp_0422/edit_message_element.
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/pin_chat_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/reaction_element.dart';
 import 'package:xmpp_stone/src/elements/messages/xmpp_0422/system_message_element.dart';
-import 'package:xmpp_stone/src/extensions/add_metadata/add_metadata_interface.dart';
-import 'package:xmpp_stone/src/extensions/add_metadata/link_message.dart';
 import 'package:xmpp_stone/src/extensions/advanced_messaging_processing/AmpInterface.dart';
 import 'package:xmpp_stone/src/extensions/apply_to/ApplyToInterface.dart';
 import 'package:xmpp_stone/src/extensions/displayed_marker/displayed_marker_interface.dart';
-import 'package:xmpp_stone/src/extensions/edit_message/edit_message_interface.dart';
 import 'package:xmpp_stone/src/extensions/example_custom/ExampleCustomInterface.dart';
 import 'package:xmpp_stone/src/extensions/mam/ArchiveResultInterface.dart';
 import 'package:xmpp_stone/src/extensions/mam/ArchiveStanzaIdInterface.dart';
@@ -78,7 +75,7 @@ class MessageStanza extends AbstractStanza
         SystemMessageInterface,
         RecalledMessageInterface,
         PrivateCarbonInterface,
-        NoCopyInterface{
+        NoCopyInterface {
   MessageStanzaType? _type;
 
   MessageStanzaType? get type => _type;
@@ -157,24 +154,6 @@ class MessageStanza extends AbstractStanza
         refUserId: int.parse(applyTo?.getAttribute("userId")?.value ?? ""),
         refUsername: applyTo?.getAttribute("username")?.value ?? "",
         refMsgTitle: custom?.getAttribute('refMsgTitle')?.value ?? "");
-    return model;
-  }
-
-  LinkMessage get addMetadata {
-    final applyTo = this.children.firstWhere((element) {
-      return element?.name == 'apply-to';
-    }, orElse: () => null);
-    final custom = this.children.firstWhere((element) {
-      return element?.name == 'custom';
-    }, orElse: () => null);
-    final model = LinkMessage(
-        category: applyTo?.getAttribute("category")?.value ?? "",
-        fullUrl: applyTo?.getAttribute("fullUrl")?.value ?? "",
-        inApp: custom?.getAttribute('inApp')?.value == "true",
-        url: applyTo?.getAttribute("url")?.value ?? "",
-        logo: applyTo?.getAttribute("logo")?.value ?? "",
-        title: applyTo?.getAttribute("title")?.value ?? "",
-        description: custom?.getAttribute('description')?.value ?? "");
     return model;
   }
 
@@ -725,7 +704,7 @@ class MessageStanza extends AbstractStanza
   }
 
   @override
-  NoCopyInterface addNoCopy(){
+  NoCopyInterface addNoCopy() {
     addChild(NoCopyElement.build());
     return this;
   }
