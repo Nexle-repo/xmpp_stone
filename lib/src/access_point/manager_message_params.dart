@@ -149,6 +149,10 @@ class XMPPMessageParams {
     return message!.isEditMessage();
   }
 
+  bool get isAddMetadataMessage {
+    return message!.isAddMetadataMessage();
+  }
+
   bool get isReadMessage {
     return message!.isReadMessage();
   }
